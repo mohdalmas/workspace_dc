@@ -1,0 +1,21 @@
+---  
+# Jupyter Hub Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jupyterhub-ingress
+  labels:
+    name: jupyterhub-ingress
+  annotations: 
+     ingress.kubernetes.io/rewrite-target: /
+     kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: jupyterhub.big-data2.safaricomet.net
+    http:
+      paths:
+      - path: /
+        backend:
+            serviceName: jupyterhub-service
+            servicePort: 8000
+        pathType: ImplementationSpecific

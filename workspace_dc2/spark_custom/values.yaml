@@ -1,0 +1,182 @@
+  
+image:
+  repository: et02-harbor.safaricomet.net/bigdata/spark
+  tag: spark-3.2.0-scala-2.12.0
+  pullPolicy: IfNotPresent
+
+serviceAccount: bigdata
+
+# Select antiAffinity as either hard or soft, default is soft
+antiAffinity: ""
+
+imagePullSecrets:
+- name: regcred
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "Hadoop"
+  effect: "NoSchedule"
+  
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: dedicated
+          operator: In
+          values:
+          - Hadoop
+
+spark_master:
+  resources: 
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+  
+spark_worker:
+  resources: 
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "8Gi"
+      cpu: "4"
+
+
+spark:
+  master:
+    url: spark://spark-master-0.spark-headless:7077
+    host: spark-master-0.spark-headless
+  worker:
+    executioncores: "4"
+
+## @section Traffic Exposure parameters
+
+## Service parameters
+##
+service:
+  ## @param service.type Kubernetes Service type
+  ##
+  type: ClusterIP
+  ## @param service.loadBalancerIP Load balancer IP if spark service type is `LoadBalancer`
+  ## Set the LoadBalancer service type to internal only
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  loadBalancerIP: ""
+
+## Configure the ingress resource that allows you to access the
+## Spark installation. Set up the URL
+## ref: https://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  ## @param ingress.enabled Enable ingress controller resource
+  ##
+  enabled: true
+  ## DEPRECATED: Use ingress.annotations instead of ingress.certManager
+  ## certManager: false
+  ##
+
+  ## @param ingress.pathType Ingress path type
+  ##
+  pathType: ImplementationSpecific
+  ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
+  ##
+  apiVersion: ""
+  ## @param ingress.hostname Default host for the ingress resource
+  ##
+  hostname: spark.big-data2.safaricomet.net
+  ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+  ##
+  path: /
+  extraPaths:
+  - path: /sm
+    pathType: ImplementationSpecific 
+    backend:
+      service:
+        name: spark-master-service
+        port:
+          number: 8080
+  - path: /sw
+    pathType: ImplementationSpecific 
+    backend:
+      service:
+        name: spark-worker-service
+        port:
+          number: 8081
+  - path: /static
+    pathType: ImplementationSpecific 
+    backend:
+      service:
+        name: spark-master-service
+        port:
+          number: 8080
+  - path: /wd
+    pathType: ImplementationSpecific 
+    backend:
+      service:
+        name: spark-worker-service
+        port:
+          number: 4040
+
+    
+    
+conf:
+  hadoopConfigMap: hadoop-hadoop
+  hiveSite:
+    javax.jdo.option.ConnectionURL: jdbc:postgresql://bigdata-psql-postgresql-headless/metastore
+    javax.jdo.option.ConnectionDriverName: org.postgresql.Driver
+    javax.jdo.option.ConnectionUserName: postgres
+    javax.jdo.option.ConnectionPassword: postgres
+    datanucleus.autoCreateSchema: false
+    hive.exec.scratchdir: /tmp/
+    hive.exec.stagingdir: /tmp/
+    hive.execution.engine: spark
+    hive.execution.mode: container
+    hive.metastore.event.db.notification.api.auth:  false
+    hive.metastore.schema.verification:  false
+    hive.metastore.schema.verification.record.version:  false
+    hive.metastore.uris: thrift://hive-0.hive-service:9083
+    hive.metastore.warehouse.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hive/warehouse
+    hive.server2.enable.doAs: false
+    hive.server2.zookeeper.namespace: hiveserver2
+    hive.spark.client.channel.log.level: ERROR
+    hive.spark.client.connect.timeout: 30000ms
+    hive.spark.client.rpc.server.address: hive-0
+    hive.spark.client.server.connect.timeout: 1000000ms
+    hive.spark.job.monitor.timeout:  360s
+    hive.zookeeper.client.port:  2181
+    hive.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
+    spark.eventLog.dir:  /var/log/spark
+    spark.eventLog.enabled:  false
+    spark.master:  spark://spark-master-0.spark-headless:7077
+    spark.serializer:  org.apache.spark.serializer.KryoSerializer
+    hive.support.concurrency:  true
+    hive.enforce.bucketing:  true
+    hive.exec.dynamic.partition.mode:  nonstrict
+    hive.txn.manager:  org.apache.hadoop.hive.ql.lockmgr.DbTxnManager
+    hive.compactor.initiator.on:  true
+    hive.stats.jdbc.timeout:  30   
+    hive.compactor.worker.threads:  1
+    spark.driver.cores:  2  
+    
+  spark-Defaults:
+    spark.master.rest.enabled: false
+    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0.hive-service:10000"
+    spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0.hive-service:9083"
+    spark.hadoop.hive.zookeeper.quorum: "zk-zookeeper-headless:2181"
+    spark.master: "spark://spark-master-0.spark-headless:7077"
+    spark.executor.memory: 4096m
+    spark.eventLog.enabled: false
+    spark.eventLog.dir: /var/log/spark
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    spark.driver.memory: 5g
+    spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
+    spark.yarn.submit.waitAppCompletion: true
+    spark.driver.cores: 2
+    spark.executor.cores: 1
+    spark.cores.max: 2
+    spark.default.parallelism: 7  

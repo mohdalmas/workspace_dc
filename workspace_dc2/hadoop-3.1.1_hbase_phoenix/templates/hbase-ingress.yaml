@@ -1,0 +1,21 @@
+---  
+# HBase Master UI Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hbase-ingress
+  labels:
+    name: hbase-ingress
+  annotations: 
+     ingress.kubernetes.io/rewrite-target: /
+     kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: hbase.big-data2.safaricomet.net
+    http:
+      paths:
+      - path: /
+        backend:
+            serviceName: hadoop-hadoop-hdfs-nn
+            servicePort: 16010
+        pathType: ImplementationSpecific

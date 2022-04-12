@@ -1,0 +1,82 @@
+#Jupyterhub-statefulset
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: jupyterhub-statefulset
+  labels: 
+    app: jupyterhub
+spec: 
+  replicas: 1
+  serviceName: jupyterhub-service
+  selector: 
+    matchLabels:
+      app: jupyterhub
+  template: 
+    metadata:
+      labels: 
+        app: jupyterhub 
+    spec:
+      serviceAccountName: bigdata
+      containers:
+      - name: jupyterhub-container 
+        image: mohdalmasansari/jupyterhub:v2.1.0-beta-ubi8.5
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: Africa/Nairobi
+        - name: http_proxy
+          value: "http://proxy2.safaricom.net:8080"
+        - name: https_proxy
+          value: "http://proxy2.safaricom.net:8080"          
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        # - mountPath: "/home"
+          # name: jupyterhub-home
+        # - mountPath: "/srv/jupyterhub/"
+          # name: jupyterhub-srv
+        - mountPath: "/etc/jupyterhub/jupyterhub_config.py"
+          name: jupyterhub-etc-config
+          subPath: jupyterhub_config.py
+      volumes:
+      # - name: jupyterhub-home
+        # persistentVolumeClaim:
+          # claimName: jupyterhub-pvc-home
+      # - name: jupyterhub-srv
+        # persistentVolumeClaim:
+          # claimName: jupyterhub-pvc-srv
+      - name: jupyterhub-etc-config
+        configMap:
+          name: jupyterhub-config
+          items:
+          - key: jupyterhub_config.py
+            path: jupyterhub_config.py
+---
+#Jupyterhub-service
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: jupyterhub-service
+spec: 
+  type: ClusterIP
+  clusterIP: None
+  ports: 
+  - name: jupyterhub-port
+    port: 8000
+    protocol: TCP
+  selector: 
+    app: jupyterhub
+
+# #Jupyterhub-service
+# apiVersion: v1 
+# kind: Service 
+# metadata: 
+  # name: jupyterhub--external
+# spec: 
+  # type: LoadBalancer
+  # ports: 
+  # - name: jupyterhub-port
+    # port: 8000
+    # protocol: TCP
+  # selector: 
+    # app: jupyterhub

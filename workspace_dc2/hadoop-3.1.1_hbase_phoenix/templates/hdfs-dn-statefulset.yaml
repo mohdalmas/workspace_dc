@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-dn
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/hadoop-configmap.yaml") . | sha256sum }}
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-dn
+spec:
+  serviceName: {{ include "hadoop.fullname" . }}-hdfs-dn
+  replicas: {{ .Values.hdfs.dataNode.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "hadoop.name" . }}
+      release: {{ .Release.Name }}
+      component: hdfs-dn
+  template:
+    metadata:
+      labels:
+        app: {{ include "hadoop.name" . }}
+        release: {{ .Release.Name }}
+        component: hdfs-dn
+    spec:
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      serviceAccountName: {{.Values.serviceAccount }}
+      affinity:
+        podAntiAffinity:
+        {{- if eq .Values.antiAffinity "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+                matchExpressions:
+                - key: dedicated
+                  operator: In
+                  values:
+                  - Hadoop
+        {{- else if eq .Values.antiAffinity "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchExpressions:
+                - key: dedicated
+                  operator: In
+                  values:
+                  - Hadoop
+        {{- end }}
+{{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+      terminationGracePeriodSeconds: 0
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+      containers:
+      - name: hdfs-dn
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+           - "/bin/bash"
+           - "/tmp/hadoop-config/bootstrap.sh"
+           - "-d"
+        resources:
+{{ toYaml .Values.hdfs.dataNode.resources | indent 10 }}
+        volumeMounts:
+        - name: hadoop-config
+          mountPath: /tmp/hadoop-config
+        - name: dfs
+          mountPath: /dfs/data
+      - name: hbase-regionserver
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+           - "/bin/bash"
+           - "/tmp/hbase-config/bootstrap.sh"
+           - "-d"
+           - "regionserver"
+        env:
+        - name: HADOOP_USER_NAME
+          value: {{ .Values.hbase_conf.hadoopUserName }}
+        - name: PHOENIX_HOME
+          value: "/opt/phoenix"
+        - name: TZ
+          value: Europe/Amsterdam
+        resources:
+{{ toYaml .Values.hbase.regionServer.resources | indent 10 }}
+        volumeMounts:
+        - name: hbase-config
+          mountPath: /tmp/hbase-config
+      volumes:
+      - name: hadoop-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}
+      - name: hbase-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}-hbase
+  volumeClaimTemplates:
+  - metadata:
+      name: dfs
+    spec:
+      accessModes:
+      - {{ .Values.persistence.dataNode.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.dataNode.size | quote }}
+{{- if .Values.persistence.dataNode.storageClass }}
+{{- if (eq "-" .Values.persistence.dataNode.storageClass) }}
+      storageClassName: ""
+{{- else }}
+      storageClassName: "{{ .Values.persistence.dataNode.storageClass }}"
+{{- end }}
+{{- end }}

@@ -1,0 +1,283 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nifi
+  namespace: tkg-bigdata-ns
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nifi
+  serviceName: nifi
+  template:
+    metadata:
+      labels:
+        app: nifi
+    spec:
+      containers:
+      - env:
+        - name: VERSION
+          value: "1.15"
+        - name: NAMESPACE
+          value: tkg-bigdata-ns
+        - name: BASE_DIR_SUFFIX
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: NIFI_CLUSTER_IS_NODE
+          value: "true"
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: NIFI_CLUSTER_NODE_ADDRESS
+          value: $(BASE_DIR_SUFFIX).nifi.$(NAMESPACE).svc.cluster.local
+        - name: NIFI_CLUSTER_NODE_PROTOCOL_PORT
+          value: "9088"
+        - name: NIFI_WEB_HTTPS_HOST
+          value: $(NIFI_CLUSTER_NODE_ADDRESS)
+        - name: NIFI_WEB_HTTPS_PORT
+          value: "8443"
+        - name: CERT_SUBJECT_ALT
+          value: nifi.big-data.blueprint.lab
+        - name: AUTH
+          value: ldap
+        - name: NIFI_ANALYTICS_PREDICT_ENABLED
+          value: "true"
+        - name: LDAP_AUTHENTICATION_STRATEGY
+          value: SIMPLE
+        - name: LDAP_MANAGER_DN
+          value: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
+        - name: LDAP_MANAGER_PASSWORD
+          value: v6Wpm9g!CA
+        - name: LDAP_URL
+          value: ldap://172.24.14.10:389
+        - name: LDAP_USER_SEARCH_BASE
+          value: OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab
+        - name: LDAP_USER_SEARCH_FILTER
+          value: (&(sAMAccountType=805306368)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(sAMAccountName={0}))
+        - name: LDAP_IDENTITY_STRATEGY
+          value: USE_USERNAME
+        - name: TOKEN
+          value: "1234578912345678912"
+        - name: OU
+          value: BIGDATA
+        - name: INITIAL_ADMIN_IDENTITY
+          value: Alphonce-BI
+        - name: INSTANCE_COUNT
+          value: "3"
+        - name: NIFI_WEB_PROXY_HOST
+          value: 192.168.21.18:8443,nifi.big-data.blueprint.lab,192.168.21.32:8443,192.168.21.34:8443
+        - name: NIFI_CLUSTER_NODE_PROTOCOL_THREADS
+          value: "5"
+        - name: NIFI_CLUSTER_NODE_PROTOCOL_MAX_THREADS
+          value: "15"
+        - name: NIFI_ELECTION_MAX_CANDIDATES
+          value: "3"
+        - name: NIFI_SENSITIVE_PROPS_KEY
+          value: p4262bsg0afaydh4sywgfagaj85dydw
+        - name: NIFI_ZK_CONNECT_STRING
+          value: zk-zookeeper-headless:2181
+        - name: NIFI_ELECTION_MAX_WAIT
+          value: 1 min
+        - name: NIFI_ZK_CONNECT_TIMEOUT
+          value: 40 secs
+        - name: NIFI_ZK_SESSION_TIMEOUT
+          value: 40 secs
+        - name: NIFI_JVM_HEAP_INIT
+          value: 4g
+        - name: NIFI_JVM_HEAP_MAX
+          value: 8g
+        - name: NIFI_FLOW_CONFIG_FILE
+          value: /opt/nifi/nifi-current/data/flow.xml.gz
+        image: kapkiai/nifi:1.15.3
+        imagePullPolicy: IfNotPresent
+        name: nifi
+        ports:
+        - containerPort: 8443
+          name: http-port
+          protocol: TCP
+        - containerPort: 22
+          name: ssh
+          protocol: TCP
+        - containerPort: 9088
+          name: cluster
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "3"
+            ephemeral-storage: 7Gi
+            memory: 12Gi
+          requests:
+            cpu: "2"
+            ephemeral-storage: 5Gi
+            memory: 8Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/nifi/nifi-current/data
+          name: data
+        # - mountPath: /opt/nifi/nifi-current/data/provenance_repository
+          # name: provenance-repository
+        # - mountPath: /opt/nifi/nifi-current/data/flowfile_repository
+          # name: flowfile-repository
+        # - mountPath: /opt/nifi/nifi-current/data/content_repository
+          # name: content-repository
+        - mountPath: /opt/nifi/nifi-current/auth_conf
+          name: auth
+        # - mountPath: /opt/nifi/nifi-current/data/database_repository
+          # name: database-repository
+        - mountPath: /opt/nifi/nifi-current/state
+          name: state-repository
+        - mountPath: /opt/nifi/nifi-current/logs
+          name: nifi-logs
+        - mountPath: /opt/nifi/nifi-current/ext-config/hive-site.xml
+          name: hive-config
+          subPath: hive-site.xml
+        - mountPath: /opt/nifi/nifi-current/ext-config/hbase-site.xml
+          name: hbase-config
+          subPath: hbase-site.xml
+        - mountPath: /opt/nifi/nifi-current/ext-config/core-site.xml
+          name: hadoop-config
+          subPath: core-site.xml
+        - mountPath: /opt/nifi/nifi-current/ext-config/hdfs-site.xml
+          name: hadoop-config
+          subPath: hdfs-site.xml
+        - mountPath: /opt/nifi/nifi-current/ext-config/mapred-site.xml
+          name: hadoop-config
+          subPath: mapred-site.xml
+        - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
+          name: hadoop-config
+          subPath: yarn-site.xml
+      - command:
+        - sh
+        - -c
+        - while true; do rm -rf /opt/nifi/nifi-current/logs/nifi-app*202*; sleep 10;
+          done
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: clean-logs
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/nifi/nifi-current/logs
+          name: nifi-logs
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: nifi-logs
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: hive-site.xml
+            path: hive-site.xml
+          name: hive-metastore
+        name: hive-config
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: hbase-site.xml
+            path: hbase-site.xml
+          name: hb-hbase
+        name: hbase-config
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: core-site.xml
+            path: core-site.xml
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+          - key: mapred-site.xml
+            path: mapred-site.xml
+          - key: yarn-site.xml
+            path: yarn-site.xml
+          name: hadoop-hadoop
+        name: hadoop-config
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: 100Gi
+        # limits:
+          # storage: 200Gi
+      storageClassName: nfs-bigdata
+  # - metadata:
+      # name: provenance-repository
+    # spec:
+      # accessModes:
+      # - ReadWriteMany
+      # resources:
+        # requests:
+          # storage: 5Gi
+      # storageClassName: nfs-bigdata
+  # - metadata:
+      # name: flowfile-repository
+    # spec:
+      # accessModes:
+      # - ReadWriteOnce
+      # resources:
+        # requests:
+          # storage: 10Gi
+      # storageClassName: vsphere-with-tanzu-storage-policy
+  # - metadata:
+      # name: content-repository
+    # spec:
+      # accessModes:
+      # - ReadWriteOnce
+      # resources:
+        # requests:
+          # storage: 50Gi
+      # storageClassName: vsphere-with-tanzu-storage-policy
+  - metadata:
+      name: auth
+      
+    spec:
+      accessModes: 
+      - ReadWriteMany
+      storageClassName: "nfs-bigdata"
+      resources:
+        requests:
+          storage: 100Mi
+        limits:
+          storage: 200Mi
+      
+  # - metadata:
+      # name: database-repository
+    # spec:
+      # accessModes:
+      # - ReadWriteOnce
+      # resources:
+        # requests:
+          # storage: 3Gi
+      # storageClassName: vsphere-with-tanzu-storage-policy
+      # volumeMode: Filesystem
+  - metadata:
+      name: state-repository
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+        limits:
+          storage: 2Gi
+      storageClassName: nfs-bigdata
+      volumeMode: Filesystem
+

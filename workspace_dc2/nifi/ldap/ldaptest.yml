@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldaptest
+  labels:
+    app.kubernetes.io/name: ldaptest
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ldaptest
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ldaptest
+    spec:
+      containers:
+        - name: ldaptest
+          image: docker.io/rroemhild/test-openldap
+          imagePullPolicy: "IfNotPresent"
+          
+        

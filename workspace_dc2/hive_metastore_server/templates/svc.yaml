@@ -1,0 +1,69 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service
+  labels:
+    app.kubernetes.io/name: {{ include "hive.name" . }}
+    app.kubernetes.io/component: hive
+    {{- include "hive.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: metastore-server
+    port: 9083
+    protocol: TCP
+    targetPort: 9083
+  - name: hive-server
+    port: 10000
+    protocol: TCP
+    targetPort: 10000
+  - name: hive-ui
+    port: 10002
+    protocol: TCP
+    targetPort: 10002
+  - name: spark-master-cluster
+    port: 7077
+    protocol: TCP
+    targetPort: cluster
+  - name: spark-http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: spark-api
+    port: 6066
+    protocol: TCP
+    targetPort: 6066
+  - name: spark-worker-cluster
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  - name: spark-worker-dtls
+    port: 4040
+    protocol: TCP
+    targetPort: 4040
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+---
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service-external
+  labels:
+    app.kubernetes.io/name: {{ include "hive.name" . }}
+    app.kubernetes.io/component: hive
+    {{- include "hive.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+  - name: hive-server
+    port: 10000
+    protocol: TCP
+    targetPort: 10000
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+
+
+

@@ -1,0 +1,53 @@
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: copy-pod
+  labels: 
+    app: copy-pod
+spec: 
+  replicas: 1
+  serviceName: ""
+  selector: 
+    matchLabels:
+      app: copy-pod
+  template: 
+    metadata:
+      labels: 
+        app: copy-pod 
+    spec:
+      #nodeName: "et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbx9m4w"
+      # tolerations:
+      # - key: "dedicated"
+        # operator: "Equal"
+        # value: "Kafka-Nifi"
+        # effect: "NoSchedule"
+      # affinity:
+        # nodeAffinity:
+          # requiredDuringSchedulingIgnoredDuringExecution:
+            # nodeSelectorTerms:
+            # - matchExpressions:
+              # - key: dedicated
+                # operator: In
+                # values:
+                # - Kafka-Nifi
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: copy-pod
+        image: busybox
+        env:
+        - name: TZ
+          value: Africa/Nairobi
+        # - name: http_proxy
+          # value: "http://proxy1.safaricomet.net:3128"
+        # - name: https_proxy
+          # value: "http://proxy1.safaricomet.net:3128"                  
+        command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: Always
+        # volumeMounts:
+        # - mountPath: "/var/lib/kafka/data"
+          # name: data
+      # volumes:
+      # - name: data
+        # persistentVolumeClaim:
+          # claimName: data-kafka-kafka-2

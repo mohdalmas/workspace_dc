@@ -1,0 +1,36 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"policy/v1beta1","kind":"PodSecurityPolicy","metadata":{"annotations":{"seccomp.security.alpha.kubernetes.io/allowedProfileNames":"*"},"name":"privileged"},"spec":{"allowPrivilegeEscalation":true,"allowedCapabilities":["*"],"fsGroup":{"rule":"RunAsAny"},"hostIPC":true,"hostNetwork":true,"hostPID":true,"hostPorts":[{"max":65535,"min":0}],"privileged":true,"runAsUser":{"rule":"RunAsAny"},"seLinux":{"rule":"RunAsAny"},"supplementalGroups":{"rule":"RunAsAny"},"volumes":["*"]}}
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+  creationTimestamp: "2022-02-22T03:54:12Z"
+  name: privileged
+  resourceVersion: "2793786"
+  uid: 599c14f8-582f-4d19-a50f-49e35a0779cd
+spec:
+  allowPrivilegeEscalation: true
+  allowedCapabilities:
+  - '*'
+  fsGroup:
+    rule: RunAsAny
+  hostIPC: true
+  hostNetwork: true
+  hostPID: true
+  hostPorts:
+  - max: 65535
+    min: 0
+  privileged: true
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - '*'

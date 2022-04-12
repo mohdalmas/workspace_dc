@@ -1,0 +1,23 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"annotations":{},"name":"bigdata-cluster","namespace":"et01-tkg-bigdata-prod"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"bigdata-cluster"},"subjects":[{"kind":"ServiceAccount","name":"bigdata","namespace":"et01-tkg-bigdata-prod"}]}
+  creationTimestamp: "2022-02-23T09:44:48Z"
+  name: bigdata-cluster
+  namespace: et01-tkg-bigdata-prod
+  resourceVersion: "3406077"
+  uid: dc67ef8e-02d6-4126-b40d-ef74ec2bab02
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: bigdata-cluster
+subjects:
+- kind: ServiceAccount
+  name: bigdata
+  namespace: et01-tkg-bigdata-prod

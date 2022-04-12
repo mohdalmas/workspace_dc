@@ -1,0 +1,174 @@
+# The base hadoop image to use for all components.
+# See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
+image:
+  repository: mohdalmasansari/hadoop-redhat
+  tag: hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
+  pullPolicy: IfNotPresent
+
+# The version of the hadoop libraries being used in the image.
+hadoopVersion: 3.1.1
+# The version of the hadoop libraries being used in the image.
+hbaseVersion: 2.0.2
+
+# Select antiAffinity as either hard or soft, default is soft
+antiAffinity: ""
+
+imagePullSecrets:
+- name: ""
+
+serviceAccount: bigdata
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "Hadoop"
+  effect: "NoSchedule"
+  
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: dedicated
+          operator: In
+          values:
+          - Hadoop
+  
+serviceAccountName: bigdata
+
+hdfs:
+  nameNode:
+    #pdbMinAvailable: 0
+
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "8Gi"
+        cpu: "2"
+
+  dataNode:
+    replicas: 6
+    pdbMinAvailable: 0
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+
+  webhdfs:
+    enabled: false
+
+yarn:
+  resourceManager:
+    #pdbMinAvailable: 0
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "8Gi"
+        cpu: "3"
+
+  nodeManager:
+    #pdbMinAvailable: 0
+
+    # The number of YARN NodeManager instances.
+    replicas: 2
+
+    # Create statefulsets in parallel (K8S 1.7+)
+    parallelCreate: false
+
+    # CPU and memory resources allocated to each node manager pod.
+    # This should be tuned to fit your workload.
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+hbase:
+  master:
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "8Gi"
+        cpu: "2"
+  regionServer:
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+        
+ingress:
+  nameNode:
+    host: hdfs.big-data.safaricomet.net
+    enabled: true
+  yarn:
+    host: yarn.big-data.safaricomet.net
+    enabled: true
+  hbase:
+    host: hbase.big-data.safaricomet.net
+    enabled: true
+
+persistence:
+  nameNode:
+    enabled: true
+    storageClass: "topology-aware-standard"
+    accessMode: ReadWriteOnce
+    size: 200Gi
+
+  dataNode:
+    enabled: true
+    storageClass: "topology-aware-standard"
+    accessMode: ReadWriteOnce
+    size: 2000Gi
+    
+hbase_conf:
+  hadoopUserName: root
+  hbaseSite:
+    hbase.rootdir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase 
+    hbase.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
+    hbase.master.maxclockskew: "500000"
+    hbase.cluster.distributed: true
+    phoenix.schema.isNamespaceMappingEnabled: true
+    hbase.unsafe.stream.capability.enforce: false
+    hbase.regionserver.executor.openregion.threads: "100"
+    hbase.hregion.majorcompaction: "604800000"
+    hbase.hregion.majorcompaction.jitter: "0.50"
+    hbase.hregion.max.filesize: "10737418240"
+    hbase.hregion.memstore.block.multiplier: "4"
+    hbase.hregion.memstore.flush.size: "134217728"
+    hbase.hregion.memstore.mslab.enabled: true
+    hbase.hstore.blockingStoreFiles: "100"
+    hbase.hstore.compaction.max: "10"
+    hbase.hstore.compactionThreshold: "3"
+    hbase.master.wait.on.regionservers.timeout: "90000"
+    hbase.region.server.rpc.scheduler.factory.class: org.apache.hadoop.hbase.ipc.PhoenixRpcSchedulerFactory
+    hbase.regionserver.executor.openregion.threads: "20"
+    hbase.regionserver.global.memstore.size: "0.4"
+    hbase.regionserver.handler.count: "100"
+    hbase.regionserver.info.port: "16030"
+    hbase.regionserver.port: "16020"
+    hbase.regionserver.thread.compaction.small: "3"
+    hbase.regionserver.wal.codec: org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec
+    hbase.thrift.support.proxyuser: true
+    hbase.regionserver.thrift.http: true
+    timeline.metrics.service.operation.mode: distributed
+    hbase.zookeeper.property.clientPort: "2181"
+    phoenix.query.timeoutMs: "1200000"
+    hbase.rpc.timeout: "90000"
+    hbase.master.namespace.init.timeout: "2400000"
+    phoenix.rpc.index.handler.count: "30"
+    zookeeper.recovery.retry: "6"
+    zookeeper.session.timeout: "90000"
+    zookeeper.znode.parent: /hbase

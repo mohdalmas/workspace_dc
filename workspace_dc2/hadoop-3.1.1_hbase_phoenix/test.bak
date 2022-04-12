@@ -1,0 +1,1 @@
+*/1 * * * * su root -c "$HBASE_PREFIX/conf/regionserver-monitor.sh"
