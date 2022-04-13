@@ -54,7 +54,7 @@ spec:
         - name: NIFI_REGISTRY_WEB_HTTPS_PORT
           value: "18443"  
         - name: NIFI_REGISTRY_WEB_HTTPS_HOST
-          value: $(HOSTNAME).nifi-registry.tkg-bigdata-ns.svc.cluster.local
+          value: $(HOSTNAME).nifi-registry.et01-tkg-bigdata-prod.svc.cluster.local
 # I have tried documenting some configs here. Configs that are nifi related can be read from official nifi documenation and changes 
 # effected to this configurations
           # LDAP Integration
@@ -65,7 +65,7 @@ spec:
         - name: LDAP_AUTHENTICATION_STRATEGY
           value: SIMPLE
         - name: LDAP_MANAGER_DN
-          value: CN=Bigdata Service Account,OU=Service Accounts,OU=Domain Users,DC=safaricomet,DC=net
+          value: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
         - name: LDAP_MANAGER_PASSWORD
           value: lyOdmSBwCsZnD4dLnOAE
         - name: LDAP_URL
@@ -76,20 +76,20 @@ spec:
           value: (sAMAccountName={0})
         - name: LDAP_IDENTITY_STRATEGY
           value: USE_USERNAME
-        # - name: NIFI_REGISTRY_DB_URL
-          # value: jdbc:postgresql://hive-postgresql-headless:5432/nifireg
-        # - name: NIFI_REGISTRY_DB_CLASS
-          # value: org.postgresql.Driver
-        # - name: NIFI_REGISTRY_DB_DIR
-          # value: /opt/nifi-registry/jars
-        # - name: NIFI_REGISTRY_DB_USER
-          # value: hive
-        # - name: NIFI_REGISTRY_DB_PASS
-          # value: hive
+        - name: NIFI_REGISTRY_DB_URL
+          value: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/nifireg  
+        - name: NIFI_REGISTRY_DB_CLASS
+          value: org.postgresql.Driver
+        - name: NIFI_REGISTRY_DB_DIR
+          value: /opt/nifi-registry/jars
+        - name: NIFI_REGISTRY_DB_USER
+          value: nifireg
+        - name: NIFI_REGISTRY_DB_PASS
+          value: " NiFiR3g@123!"
 
-          # CA Configs
-        # - name: NIFI_CA_HOST    #NiFI CA as specified in CA server. default one is 'nifi-ca-cs', hostname for ca server. Make sure it marches with ca server
-        #   value: nifi-ca-cs 
+         # CA Configs
+        - name: NIFI_CA_HOST    #NiFI CA as specified in CA server. default one is 'nifi-ca-cs', hostname for ca server. Make sure it marches with ca server
+          value: nifi-ca-cs  
         - name: TOKEN     # Token to get cert from CA. Useful to prevent MITM attacks
           value: "1234578912345678912" 
         - name: OU    # You desired OU to generate certificates
@@ -107,7 +107,7 @@ spec:
           value: "jks"
 
         - name: INITIAL_ADMIN_IDENTITY
-          value: "Alphonce-BI" 
+          value: "Mathew.Kiprop" 
         - name: NIFI_WEB_PROXY_HOST  # Important when accessing nifi via LB/nodeIP else nifi will reject you
           value: "nifi-registry.big-data.safaricomet.net"
 
@@ -120,38 +120,38 @@ spec:
             name: auth
           - mountPath: /opt/nifi-registry/nifi-registry-current/logs
             name: logs
-          # - mountPath: /opt/nifi-registry/nifi-registry-current/conf/providers.tmp
-            # name: providers
-            # subPath: providers.tmp
+          - mountPath: /opt/nifi-registry/nifi-registry-current/conf/providers.tmp
+            name: providers
+            subPath: providers.tmp
       volumes:
         - emptyDir:
             medium: Memory
             sizeLimit: 2Gi
           name: logs    
-        # - name: "providers"
-          # configMap:
-            # name: nifiregproviders
-            # items:
-              # - key: "nifiregproviders.xml"
-                # path: "providers.tmp"
+        - name: "providers"
+          configMap:
+            name: nifiregproviders
+            items:
+              - key: "nifiregproviders.xml"
+                path: "providers.tmp"
 
 
   volumeClaimTemplates:
   - metadata:
       name: database
     spec:
-      storageClassName: topology-aware-standard
+      storageClassName: nfs-bigdata
       accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
       resources:
         requests:
           storage: 12Gi
   - metadata:
       name: flow-storage
     spec:
-      storageClassName: topology-aware-standard
+      storageClassName: nfs-bigdata
       accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
       resources:
         requests:
           storage: 12Gi
@@ -161,7 +161,7 @@ spec:
     spec:
       storageClassName: nfs-bigdata
       accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
       resources:
         requests:
           storage: 5Gi
