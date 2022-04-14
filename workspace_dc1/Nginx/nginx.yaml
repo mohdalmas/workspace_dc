@@ -334,6 +334,7 @@ subjects:
 apiVersion: v1
 data:
   allow-snippet-annotations: "true"
+  force-ssl-redirect: "true"
 kind: ConfigMap
 metadata:
   labels:
@@ -346,8 +347,6 @@ metadata:
     helm.sh/chart: ingress-nginx-4.0.18
   name: ingress-nginx-controller
   namespace: ingress-nginx
-data:
-  force-ssl-redirect: "true"
 ---
 apiVersion: v1
 kind: Service
