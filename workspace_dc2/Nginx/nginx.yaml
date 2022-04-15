@@ -334,6 +334,7 @@ subjects:
 apiVersion: v1
 data:
   allow-snippet-annotations: "true"
+  force-ssl-redirect: "true"
 kind: ConfigMap
 metadata:
   labels:
@@ -449,6 +450,7 @@ spec:
         - --validating-webhook=:8443
         - --validating-webhook-certificate=/usr/local/certificates/cert
         - --validating-webhook-key=/usr/local/certificates/key
+        - --default-ssl-certificate=ingress-nginx/dc2-tls-secret
         env:
         - name: POD_NAME
           valueFrom:
