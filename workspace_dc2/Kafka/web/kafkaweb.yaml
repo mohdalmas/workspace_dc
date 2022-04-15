@@ -2,7 +2,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: kafkaweb
   name: kafkaweb
@@ -14,7 +13,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: kafkaweb
     spec:
@@ -29,7 +27,7 @@ spec:
             memory: "500Mi"
         env:
         - name: kafka.brokerConnect
-          value: 10.3.41.32:9094
+          value: 10.3.141.30:9094
         - name: kafka.isSecured
           value: "true"
         - name: kafka.saslMechanism
@@ -46,31 +44,10 @@ spec:
       volumes:
       - name: foo
         configMap:
-          name: jaas-config
+          name: kafkaweb-jaas-config
           defaultMode: 0777
           items:
             - key: "jaas.conf"
               path: "kaas_local_jaas.conf"
         
           
-status: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  labels:
-    app: kafkaweb
-  name: kafkaweb
-spec:
-  ports:
-  - name: kafkaweb-9000
-    port: 9000
-    protocol: TCP
-    targetPort: 9000
-  selector:
-    app: kafkaweb
-  type: LoadBalancer
-status:
-  loadBalancer: {}

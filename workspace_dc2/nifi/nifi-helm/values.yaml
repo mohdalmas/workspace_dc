@@ -7,13 +7,20 @@ image:
   tag: "1.15.10"
   pullPolicy: "IfNotPresent"
 
+global:
+  namespace: default
+  ca:
+    token: 123h456789123456
+
+
 # securityContext:
   # runAsUser: 1000
   # fsGroup: 1000
 imagePullSecrets:
 - name: regcred
 
-serviceAccount: bigdata
+serviceAccount: ""
+
 
 sts:
   podManagementPolicy: Parallel
@@ -293,7 +300,8 @@ envFrom: []
 
 ca:
   ## If true, enable the nifi-toolkit certificate authority
-  enabled: false
+  enabled: true
+
   persistence:
     enabled: true
   server: "nifi-ca-cs"

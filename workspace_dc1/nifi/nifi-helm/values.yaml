@@ -4,18 +4,26 @@ replicaCount: 3
 
 image:
   repository: kapkiai/nifi
-  tag: "1.15.6"
+  tag: "1.15.10"
   pullPolicy: "IfNotPresent"
+
+global:
+  namespace: default
+  ca:
+    token: 123h456789123456
 
 # securityContext:
   # runAsUser: 1000
   # fsGroup: 1000
+imagePullSecrets:
+- name: regcred
 
-serviceAccount: bigdata
+serviceAccount: ""
 
 sts:
   podManagementPolicy: Parallel
-  AntiAffinity: soft
+  AntiAffinity: "soft"
+
   useHostNetwork: null
   hostPort: null
   pod:
@@ -33,6 +41,7 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443 
+
   webProxyHost: "nifi.big-data.safaricomet.net"
   clusterPort: 6007
   provenanceStorage: "4 GB"
@@ -61,7 +70,8 @@ auth:
     host: ldap://safaricomet.net:389
     searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
-    username: Mohd.Almas
+    username: Mathew.Kiprop
+
     pass: lyOdmSBwCsZnD4dLnOAE
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
@@ -163,12 +173,13 @@ persistence:
 
 resources: 
   limits:
-   cpu: 8
-   memory: 42Gi
+   cpu: 5
+   memory: 30Gi
    ephemeral-storage: 5Gi
   requests:
-   cpu: 7
-   memory: 36Gi
+   cpu: 2
+   memory: 8Gi
+
    ephemeral-storage: 4Gi
 
 logresources:
@@ -291,7 +302,7 @@ envFrom: []
 
 ca:
   ## If true, enable the nifi-toolkit certificate authority
-  enabled: false
+  enabled: true
   persistence:
     enabled: true
   server: "nifi-ca-cs"
