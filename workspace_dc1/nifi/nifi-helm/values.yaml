@@ -23,6 +23,7 @@ serviceAccount: ""
 sts:
   podManagementPolicy: Parallel
   AntiAffinity: "soft"
+
   useHostNetwork: null
   hostPort: null
   pod:
@@ -40,7 +41,8 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443 
-  webProxyHost: "nifi.big-data2.safaricomet.net"
+
+  webProxyHost: "nifi.big-data.safaricomet.net"
   clusterPort: 6007
   provenanceStorage: "4 GB"
   siteToSite:
@@ -69,6 +71,7 @@ auth:
     searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     username: Mathew.Kiprop
+
     pass: lyOdmSBwCsZnD4dLnOAE
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
@@ -126,7 +129,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   tls: []
   hosts: 
-    - nifi.big-data2.safaricomet.net
+    - nifi.big-data.safaricomet.net
   path: /
   pathType: ImplementationSpecific
   
@@ -143,7 +146,7 @@ sidecar:
 persistence:
   enabled: true
 
-  storageClass: standard
+  storageClass: topology-aware-standard
 
   accessModes:  [ReadWriteOnce]
   ## Storage Capacities for persistent volumes
@@ -153,7 +156,7 @@ persistence:
     size: 100Mi
   # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
   dataStorage:
-    size: 5000Gi
+    size: 1000Gi
   # Storage capacity for the FlowFile repository
   flowfileRepoStorage:
     size: 2000Gi
@@ -176,6 +179,7 @@ resources:
   requests:
    cpu: 2
    memory: 8Gi
+
    ephemeral-storage: 4Gi
 
 logresources:

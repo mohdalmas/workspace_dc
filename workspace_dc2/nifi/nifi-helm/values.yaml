@@ -3,7 +3,7 @@
 replicaCount: 3
 
 image:
-  repository: kapkiai/nifi
+  repository: et02-harbor.safaricomet.net/bigdata/nifi
   tag: "1.15.10"
   pullPolicy: "IfNotPresent"
 
@@ -12,6 +12,7 @@ global:
   ca:
     token: 123h456789123456
 
+
 # securityContext:
   # runAsUser: 1000
   # fsGroup: 1000
@@ -19,6 +20,7 @@ imagePullSecrets:
 - name: regcred
 
 serviceAccount: ""
+
 
 sts:
   podManagementPolicy: Parallel
@@ -135,7 +137,7 @@ ingress:
 jvmMemory: 24g
 
 sidecar:
-  image: busybox
+  image: et02-harbor.safaricomet.net/bigdata/busybox
   tag: "latest"
   imagePullPolicy: "IfNotPresent"
 
@@ -143,7 +145,7 @@ sidecar:
 persistence:
   enabled: true
 
-  storageClass: standard
+  storageClass: topology-aware-standard
 
   accessModes:  [ReadWriteOnce]
   ## Storage Capacities for persistent volumes
@@ -153,7 +155,7 @@ persistence:
     size: 100Mi
   # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
   dataStorage:
-    size: 5000Gi
+    size: 1000Gi
   # Storage capacity for the FlowFile repository
   flowfileRepoStorage:
     size: 2000Gi
@@ -299,6 +301,7 @@ envFrom: []
 ca:
   ## If true, enable the nifi-toolkit certificate authority
   enabled: true
+
   persistence:
     enabled: true
   server: "nifi-ca-cs"
