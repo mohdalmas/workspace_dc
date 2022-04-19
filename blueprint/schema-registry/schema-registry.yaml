@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: schema-registry
+  name: schema-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schema-registry
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: schema-registry
+    spec:
+      containers:
+      - image: kapkiai/schema-registry:1.0.1
+        name: schema-registry
+        resources: {}
+        ports:
+        - containerPort: 9099
+          name: http-port
+        - containerPort: 9098
+          name: ssh
+        env:
+          - name: CONFIG_FILE
+            value: /opt/conf/registry.yaml
+        volumeMounts:
+          - mountPath: /opt/conf/registry.yaml
+            name: schema-config
+            subPath: registry.yaml
+      volumes:
+        - name: schema-config
+          configMap:
+            name: schema-config
+            items:
+              - key: registry-dev-ssl.yaml
+                path: registry.yaml
+
