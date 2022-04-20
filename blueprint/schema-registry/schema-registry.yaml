@@ -54,10 +54,10 @@ spec:
             prop_replace () {
               target_file=/opt/config/registry.yaml
               echo "updating ${1} in ${target_file}"
-              if egrep "^${1}:" ${target_file} &> /dev/null; then
-                  sed -i -e "s|^$1:.*$|$1:$2|"  ${target_file}
+              if egrep "${1}:" ${target_file} &> /dev/null; then
+                  sed -i -e "s|$1:.*$|$1: $2|"  ${target_file}
               else
-                  echo ${1}=${2} >> ${target_file}
+                  echo "Not replacing anything"
               fi }
               
 
