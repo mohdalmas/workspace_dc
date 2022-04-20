@@ -19,6 +19,6 @@ spec:
           service:
             name: schema-registry
             port:
-              number: 8445
+              number: 9099
         path: /
         pathType: ImplementationSpecific

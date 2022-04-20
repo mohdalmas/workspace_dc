@@ -6,9 +6,9 @@ metadata:
   name: schema-registry
 spec:
   ports:
-  - port: 8445
+  - port: 9099
     protocol: TCP
-    targetPort: 8445
+    targetPort: 9099
   selector:
     app: schema-registry
   sessionAffinity: None
