@@ -98,5 +98,6 @@ spec:
 
 
 # kubectl create cm schemareg-config --from-file=configs/registry-inmemory.yaml --from-file=configs/registry-oracle-ssl.yaml --from-file=configs/registry-oracle.yaml --from-file=configs/registry-postgres.yaml --from-file=configs/registry-mysql.yaml --from-file=configs/registry-ssl.yaml --from-file=configs/registry.yaml --dry-run=client -o yaml > schema-reg-cm.yaml
+schemareg/password123
         
 
