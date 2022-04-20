@@ -5,6 +5,8 @@ metadata:
     app: schema-registry
   name: schema-registry
 spec:
+  securityContext:
+    runAsUser: 0
   replicas: 1
   selector:
     matchLabels:
@@ -36,9 +38,11 @@ spec:
           - name: CONFIG_FILE
             value: /opt/conf/registry.yaml
         volumeMounts:
-          - mountPath: /opt/conf
-            name: schema-config
+          # - mountPath: /opt/conf
+          #   name: schema-config
             # subPath: registry.yaml
+          - mountPath: /opt/config
+            name: config-dir
       initContainers:
         - name: cert-fetcher
           image: kapkiai/nifi-toolkit:1.15.1
@@ -48,7 +52,7 @@ spec:
           - |
 
             prop_replace () {
-              target_file=/opt/conf/registry.yaml
+              target_file=/opt/config/registry.yaml
               echo "updating ${1} in ${target_file}"
               if egrep "^${1}:" ${target_file} &> /dev/null; then
                   sed -i -e "s|^$1:.*$|$1:$2|"  ${target_file}
@@ -63,23 +67,32 @@ spec:
             KEYSTORE_PASSWORD=`jq -r '.keyStorePassword' ./config.json`
             TRUSTSTORE_PASSWORD=`jq -r '.trustStorePassword' ./config.json`
 
-            mv ./keystore.jks /opt/conf/
-            mv ./truststore.jks /opt/conf/
+            cat /opt/conf/registry.yaml > /opt/config/registry.yaml
 
-            prop_replace keyStorePath /opt/conf/keystore.jks
+            mv ./keystore.jks /opt/config/
+            mv ./truststore.jks /opt/config/
+
+            prop_replace keyStorePath /opt/config/keystore.jks
             prop_replace keyStorePassword ${KEYSTORE_PASSWORD}
 
           volumeMounts:
             - mountPath: /opt/conf/registry.yaml
               name: schema-config
               subPath: registry.yaml
+            - mountPath: /opt/config
+              name: config-dir
 
           
       volumes:
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
+          name: config-dir
         - name: schema-config
           configMap:
             name: schema-config
             items:
               - key: registry-dev-ssl.yaml
                 path: registry.yaml
+        
 
