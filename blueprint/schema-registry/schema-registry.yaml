@@ -18,6 +18,12 @@ spec:
       containers:
       - image: kapkiai/schema-registry:1.0.1
         name: schema-registry
+        command:
+          - "sh"
+          - "-c"
+          - |
+            ./bootstrap/bootstrap-storage.sh create
+            ../scripts/startup.sh
         resources: 
           requests:
             cpu: "1"
