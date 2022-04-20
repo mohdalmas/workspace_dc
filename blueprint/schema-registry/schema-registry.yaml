@@ -33,7 +33,7 @@ spec:
         - containerPort: 9098
           name: ssh
         env:
-          - name: CONFIG_FILE
+          - name: CONFIG_FILE2
             value: /opt/conf/registry.yaml
         volumeMounts:
           - mountPath: /opt/conf/registry.yaml
