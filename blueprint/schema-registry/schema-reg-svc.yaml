@@ -1,21 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2022-04-19T18:34:42Z"
   labels:
     app: schema-registry
   name: schema-registry
-  namespace: default
-  resourceVersion: "1880"
-  uid: cb4ca212-7404-4671-a005-8f5ade73da21
 spec:
-  clusterIP: 10.99.53.141
-  clusterIPs:
-  - 10.99.53.141
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
   ports:
   - port: 8445
     protocol: TCP

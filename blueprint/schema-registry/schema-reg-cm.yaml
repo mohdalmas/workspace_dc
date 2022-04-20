@@ -68,8 +68,4 @@ data:
     1024\n#  keepAlive: 0ms\n#  retries: 10\n#  userAgent: Storm-Client\n\n"
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2022-04-19T18:42:52Z"
   name: schema-config
-  namespace: default
-  resourceVersion: "989"
-  uid: a41faee1-a039-4587-9960-7e3d2cd33633

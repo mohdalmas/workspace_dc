@@ -18,7 +18,15 @@ spec:
       containers:
       - image: kapkiai/schema-registry:1.0.1
         name: schema-registry
-        resources: {}
+        resources: 
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+            ephemeral-storage: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "3Gi"
+            ephemeral-storage: "3Gi"
         ports:
         - containerPort: 9099
           name: http-port
