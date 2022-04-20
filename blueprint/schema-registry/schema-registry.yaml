@@ -16,7 +16,7 @@ spec:
         app: schema-registry
     spec:
       containers:
-      - image: kapkiai/schema-registry:1.0.1
+      - image: kapkiai/schema-registry:1.0.2
         name: schema-registry
         command:
           - "sh"
