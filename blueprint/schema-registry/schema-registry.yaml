@@ -28,9 +28,9 @@ spec:
             memory: "3Gi"
             ephemeral-storage: "3Gi"
         ports:
-        - containerPort: 9099
-          name: http-port
-        - containerPort: 9098
+        - containerPort: 8445
+          name: https-port
+        - containerPort: 8446
           name: ssh
         env:
           - name: CONFIG_FILE2
