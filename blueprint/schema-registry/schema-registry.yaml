@@ -36,7 +36,7 @@ spec:
           name: ssh
         env:
           - name: CONFIG_FILE
-            value: /opt/conf/registry.yaml
+            value: /opt/config/registry.yaml
         volumeMounts:
           # - mountPath: /opt/conf
           #   name: schema-config
