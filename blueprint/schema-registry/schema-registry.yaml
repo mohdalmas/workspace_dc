@@ -33,7 +33,7 @@ spec:
         - containerPort: 8446
           name: ssh
         env:
-          - name: CONFIG_FILE2
+          - name: CONFIG_FILE
             value: /opt/conf/registry.yaml
         volumeMounts:
           - mountPath: /opt/conf/registry.yaml
