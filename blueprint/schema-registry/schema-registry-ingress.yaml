@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    
+  labels:
+    name: schema-registry-ingress
+  name: schema-registry-ingress
+spec:
+  rules:
+  - host: schemareg.big-data.blueprint.lab
+    http:
+      paths:
+      - backend:
+          service:
+            name: schema-registry
+            port:
+              number: 8445
+        path: /
+        pathType: ImplementationSpecific
