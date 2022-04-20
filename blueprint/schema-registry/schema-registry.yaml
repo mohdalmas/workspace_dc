@@ -41,6 +41,8 @@ spec:
         env:
           - name: CONFIG_FILE
             value: /opt/config/registry.yaml
+          - name: CONFIG_FILE_PATH
+            value: /opt/config/registry.yaml
         volumeMounts:
           - mountPath: /opt/config/registry.yaml
             name: schema-config
