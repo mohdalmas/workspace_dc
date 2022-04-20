@@ -22,6 +22,7 @@ spec:
           - "sh"
           - "-c"
           - |
+            cat /opt/config/registry.yaml > /${SCHEMA_REG_HOME}/conf/registry.yaml
             ./bootstrap/bootstrap-storage.sh create
             ../scripts/startup.sh
         resources: 
