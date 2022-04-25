@@ -1,0 +1,47 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: my-mirror-maker-2
+spec:
+  version: 3.0.0
+  replicas: 1
+  connectCluster: "my-source-cluster"
+  clusters:
+  - alias: "my-source-cluster"
+    bootstrapServers: kafka-kafka-bootstrap:9092
+    # authentication:
+      # type: scram-sha-512
+      # username: admin
+      # passwordSecret:
+        # secretName: admin
+        # password: password
+  - alias: "my-target-cluster"
+    bootstrapServers: 192.168.21.80:9094
+    authentication:
+      username: admin
+      type: scram-sha-512
+      passwordSecret:
+        secretName: admin-bkp
+        password: password
+    config:
+      # -1 means it will use the default replication factor configured in the broker
+      config.storage.replication.factor: -1
+      offset.storage.replication.factor: -1
+      status.storage.replication.factor: -1
+  mirrors:
+  - sourceCluster: "my-source-cluster"
+    targetCluster: "my-target-cluster"
+    sourceConnector:
+      config:
+        replication.factor: 1
+        offset-syncs.topic.replication.factor: 1
+        sync.topic.acls.enabled: "true"
+    heartbeatConnector:
+      config:
+        heartbeats.topic.replication.factor: 1
+    checkpointConnector:
+      config:
+        checkpoints.topic.replication.factor: 1
+        sync.group.offsets.enabled: "true"
+    topicsPattern: ".*"
+    groupsPattern: ".*"
