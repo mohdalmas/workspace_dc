@@ -2,6 +2,8 @@ kubectl vsphere login --insecure-skip-tls-verify --server 10.3.40.1 --tanzu-kube
 wFB&9N2pku!G
 
 Safaricomet\Mohd.Almas
+Safaricomet\svc-bigdata-admin
+lyOdmSBwCsZnD4dLnOAE
 
 http://proxy2.safaricom.net:8080
 
@@ -14,6 +16,9 @@ kubectl config current-context
 kubectl config set-context --current --namespace=et01-tkg-bigdata-prod
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
+
+kubectl create secret docker-registry regcred --docker-server=et01-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
+
 
 
 et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697c94n6d   Ready    <none>                 6d17h   v1.20.12+vmware.1
@@ -81,31 +86,40 @@ docker pull busybox:latest
 docker pull mohdalmasansari/spark:spark-3.2.0-scala-2.12.0
 docker pull zookeeper:3.5.5
 docker pull k8s.gcr.io/ingress-nginx/controller:v1.1.2@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c
-docker pull et01-harbor.safaricomet.net/bigdata/nginx-kube-webhook-certgen:v1.1.1
+docker pull k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1@sha256:64d8c73dca984af206adf9d6d7e46aa550362b1d7a01f3a0a91b20cc67868660
 docker pull quay.io/strimzi/operator:0.27.1
 docker pull kapkiai/nifi-toolkit:1.15.1
 docker pull mohdalmasansari/jupyterhub:v2.1.0-beta-ubi8.5
 docker pull docker.io/provectuslabs/kafka-ui:8d10eb69e8b91cf6b807cdba3f68f038efa931fc 
+docker pull quay.io/strimzi/kafka-bridge:0.21.3
+docker pull quay.io/strimzi/jmxtrans:0.27.1
+docker pull quay.io/strimzi/kaniko-executor:0.27.1
+docker pull quay.io/strimzi/maven-builder:0.27.1
+
 
 docker tag mohdalmasansari/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0                 et01-harbor.safaricomet.net/bigdata/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
 docker tag mohdalmasansari/hive-spark:hive-3.1.0-spark-2.3.0-scala-2.11.6                       et01-harbor.safaricomet.net/bigdata/hive-spark:hive-3.1.0-spark-2.3.0-scala-2.11.6
 docker tag bitnami/postgresql:11.10.0-debian-10-r83                                             et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
-docker tag quay.io/strimzi/kafka:0.27.1-kafka-3.0.0                                             et01-harbor.safaricomet.net/bigdata/kafka:0.27.1-kafka-3.0.0
+docker tag quay.io/strimzi/kafka:0.27.1-kafka-3.0.0                                             et01-harbor.safaricomet.net/bigdata/strimzi/kafka:0.27.1-kafka-3.0.0
 docker tag kapkiai/nifi@sha256:7be438fcb8a74249d3799c8b7f9020d2ccf484625689f45d802a3249ac305667 et01-harbor.safaricomet.net/bigdata/nifi:1.15.10
 docker tag busybox:latest                                                                       et01-harbor.safaricomet.net/bigdata/busybox:latest
 docker tag mohdalmasansari/spark:spark-3.2.0-scala-2.12.0                                       et01-harbor.safaricomet.net/bigdata/spark:spark-3.2.0-scala-2.12.0
-docker tag zookeeper:3.5.5                                                                      czookeeper:3.5.5
+docker tag zookeeper:3.5.5                                                                      et01-harbor.safaricomet.net/bigdata/zookeeper:3.5.5
 docker tag k8s.gcr.io/ingress-nginx/controller:v1.1.2@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c et01-harbor.safaricomet.net/bigdata/nginx-controller:1.1.2
-docker tag et01-harbor.safaricomet.net/bigdata/nginx-kube-webhook-certgen:v1.1.1 et01-harbor.safaricomet.net/bigdata/nginx-kube-webhook-certgen:v1.1.1
+docker tag k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1@sha256:64d8c73dca984af206adf9d6d7e46aa550362b1d7a01f3a0a91b20cc67868660 et01-harbor.safaricomet.net/bigdata/nginx-kube-webhook-certgen:v1.1.1
 docker tag quay.io/strimzi/operator:0.27.1 et01-harbor.safaricomet.net/bigdata/strimzi-operator:0.27.1
 docker tag kapkiai/nifi-toolkit:1.15.1 et01-harbor.safaricomet.net/bigdata/nifi-toolkit:1.15.1
 docker tag mohdalmasansari/jupyterhub:v2.1.0-beta-ubi8.5 et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
 docker tag provectuslabs/kafka-ui:8d10eb69e8b91cf6b807cdba3f68f038efa931fc  et01-harbor.safaricomet.net/bigdata/kafka-ui:8d10eb69e8b91cf6b807cdba3f68f038efa931fc  
+docker tag quay.io/strimzi/kafka-bridge:0.21.3    et01-harbor.safaricomet.net/bigdata/strimzi/kafka-bridge:0.21.3 
+docker tag quay.io/strimzi/jmxtrans:0.27.1        et01-harbor.safaricomet.net/bigdata/strimzi/jmxtrans:0.27.1
+docker tag quay.io/strimzi/kaniko-executor:0.27.1 et01-harbor.safaricomet.net/bigdata/strimzi/kaniko-executor:0.27.1
+docker tag quay.io/strimzi/maven-builder:0.27.1   et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
 
 docker push et01-harbor.safaricomet.net/bigdata/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
 docker push et01-harbor.safaricomet.net/bigdata/hive-spark:hive-3.1.0-spark-2.3.0-scala-2.11.6
 docker push et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
-docker push et01-harbor.safaricomet.net/bigdata/kafka:0.27.1-kafka-3.0.0
+docker push et01-harbor.safaricomet.net/bigdata/strimzi/kafka:0.27.1-kafka-3.0.0
 docker push et01-harbor.safaricomet.net/bigdata/nifi:1.15.10
 docker push et01-harbor.safaricomet.net/bigdata/busybox:latest
 docker push et01-harbor.safaricomet.net/bigdata/spark:spark-3.2.0-scala-2.12.0
@@ -115,4 +129,8 @@ docker push et01-harbor.safaricomet.net/bigdata/nginx-kube-webhook-certgen:v1.1.
 docker push et01-harbor.safaricomet.net/bigdata/strimzi-operator:0.27.1
 docker push et01-harbor.safaricomet.net/bigdata/nifi-toolkit:1.15.1
 docker push et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
-docker push et01-harbor.safaricomet.netr/bigdata/kafka-ui:8d10eb69e8b91cf6b807cdba3f68f038efa931fc 
+docker push et01-harbor.safaricomet.net/bigdata/kafka-ui:8d10eb69e8b91cf6b807cdba3f68f038efa931fc
+docker push et01-harbor.safaricomet.net/bigdata/strimzi/kafka-bridge:0.21.3 
+docker push et01-harbor.safaricomet.net/bigdata/strimzi/jmxtrans:0.27.1
+docker push et01-harbor.safaricomet.net/bigdata/strimzi/kaniko-executor:0.27.1
+docker push et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
