@@ -1,6 +1,0 @@
-dependencies:
-- name: nifi-ca
-  repository: ""
-  version: 0.1.0
-digest: sha256:5c5447a417662c97116db1e2cd01a8821d4a10a53d14752d1b6baac0cfbfe0e8
-generated: "2022-04-07T20:49:33.654891554+03:00"
