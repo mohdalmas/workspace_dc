@@ -1,0 +1,74 @@
+kubectl vsphere login --server=192.168.21.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name tkg-cluster-bigdata --tanzu-kubernetes-cluster-namespace it-w01-bigdata-ns01 --vsphere-username=Alphonce-BI@blueprint.lab
+K)hqXM&W7%
+
+172.24.40.70, sftpuser / sxV1PHcvxY604LmC0QJA
+
+K)hqXM&W7%
+kubectl config set-context --current --namespace=tkg-bigdata-ns
+
+
+docker-credential-vsphere login 192.168.21.2 --user Alphonce-BI@blueprint.lab
+K)hqXM&W7%
+
+proxy: 172.24.14.197:3128
+
+smsc: 196.30.132.248
+port: 5016
+system-id: nifi
+password: NIFI
+
+Ankit-BI / W8T%mb5tCH
+
+FTP KE : 172.29.250.178 user: svdt1wkndalab04 /
+Oracle KE : 10.197.14.222 host: svdt8dodb-scan:1521  user: IC_STAGE / BIDB_Dev
+
+export KAFKA_OPTS="-Djava.security.auth.login.config=/tmp/kafka_jaas.conf";./bin/kafka-console-producer.sh --topic my-topic --bootstrap-server 192.168.21.57:9094 --producer.config /tmp/consumer.properties
+
+./bin/kafka-configs.sh --zookeeper zk-zookeeper-headless:2181 --alter --add-config 'SCRAM-SHA-256=[iterations=8192,password=bigdata],SCRAM-SHA-512=[password=!@#$%]' --entity-type users --entity-name bigdata
+
+kafka-acls.sh --authorizer-properties zookeeper.connect=zk-zookeeper-headless:2181 --add --group my-group --operation read  --allow-principal User:bigdata
+
+security.protocol=SASL_PLAINTEXT
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;
+sasl.mechanism=SCRAM-SHA-512
+
+ldap
+------------
+ldapsearch -H ldap://172.24.14.10:389 -x -b "OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab" -D "CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab" -w 'v6Wpm9g!CA' '(sAMAccountName=Mo-BI)'
+
+# You have to create the namespace before executing following command
+helm install nifikop orange-incubator/nifikop --namespace=mattest --version 0.7.5 --set certManager.enabled=false --set image.tag=v0.7.5-release --set resources.requests.memory=256Mi --set resources.requests.cpu=250m --set resources.limits.memory=256Mi --set resources.limits.cpu=250m    --set namespaces={"mattest"}
+
+ CREATE TABLE `sales`(                            
+   `Region` string,                                 
+   `Country` string,
+   `ItemType` string,                            
+   `SalesChannel` string,                                   
+   `OrderPriority` string,
+   `OrderDate` string,                            
+   `OrderID` string,                                   
+   `ShipDate` string,
+   `UnitsSold` string,                            
+   `UnitPrice` string,                                   
+   `UnitCost` string,
+   `TotalRevenue` string,                            
+   `TotalCost` string,                                  
+   `TotalProfit` string
+   )
+   COMMENT 'Sales Table'
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
+ TBLPROPERTIES("skip.header.line.count"="1");
+ 
+ CREATE TABLE temp 
+  ( 
+     name STRING, 
+     id   INT 
+  ) 
+row format delimited fields terminated BY '\t' lines terminated BY '\n' 
+tblproperties("skip.header.line.count"="1");
+
+ 
+  LOAD DATA [LOCAL] INPATH '/tmp/5000_Sales_Records_202220304.csv' into table mattest.sales [INPUTFORMAT 'inputformat' SERDE 'serde'] ;
+  
+  LOAD DATA LOCAL INPATH '/tmp/5000_Sales_Records_202220304.csv' into table mattest.sales INPUTFORMAT 'csv' SERDE 'serde' ;

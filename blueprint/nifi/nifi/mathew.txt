@@ -1,0 +1,33 @@
+kubectl vsphere login --server=192.168.21.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name tkg-cluster-bigdata --tanzu-kubernetes-cluster-namespace it-w01-bigdata-ns01 --vsphere-username=Alphonce-BI@blueprint.lab
+K)hqXM&W7%
+
+172.24.40.70, sftpuser / sxV1PHcvxY604LmC0QJA
+
+
+kubectl config set-context --current --namespace=tkg-bigdata-ns
+
+
+docker-credential-vsphere login 192.168.21.2 --user Alphonce-BI@blueprint.lab
+K)hqXM&W7%
+
+proxy: 172.24.14.197:3128
+
+smsc: 196.30.132.248
+port: 5016
+system-id: nifi
+password: NIFI
+
+Ankit-BI / W8T%mb5tCH
+
+FTP KE : 172.29.250.178
+Oracle KE : 10.197.14.222
+
+export KAFKA_OPTS="-Djava.security.auth.login.config=/tmp/kafka_jaas.conf";./bin/kafka-console-producer.sh --topic test --bootstrap-server kafka-0:9092 --producer.config /tmp/consumer.properties
+
+./bin/kafka-configs.sh --zookeeper zk-zookeeper-headless:2181 --alter --add-config 'SCRAM-SHA-256=[iterations=8192,password=bigdata],SCRAM-SHA-512=[password=!@#$%]' --entity-type users --entity-name bigdata
+
+kafka-acls.sh --authorizer-properties zookeeper.connect=zk-zookeeper-headless:2181 --add --group my-group --operation read  --allow-principal User:bigdata
+
+security.protocol=SASL_PLAINTEXT
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;
+sasl.mechanism=SCRAM-SHA-512

@@ -1,0 +1,15 @@
+kubectl delete pvc auth-conf-nifi-1              
+kubectl delete pvc provenance-repository-nifi-1
+kubectl delete pvc config-data-nifi-1             
+kubectl delete pvc logs-nifi-1                    
+kubectl delete pvc content-repository-nifi-1      
+kubectl delete pvc flowfile-repository-nifi-1     
+kubectl delete pvc data-nifi-1                    
+
+kubectl delete pvc data-nifi-0                    
+kubectl delete pvc flowfile-repository-nifi-0    
+kubectl delete pvc content-repository-nifi-0      
+kubectl delete pvc logs-nifi-0                    
+kubectl delete pvc provenance-repository-nifi-0   
+kubectl delete pvc auth-conf-nifi-0               
+kubectl delete pvc config-data-nifi-0            

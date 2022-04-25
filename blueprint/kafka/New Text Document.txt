@@ -1,0 +1,19 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: d6
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      # Example ACL rules for consuming from my-test-topic using consumer group my-test-group
+      - resource:
+          type: topic
+          name: "6d.*"
+          patternType: prefix
+        operation: Write
+        host: "*"
