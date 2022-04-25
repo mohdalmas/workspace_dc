@@ -51,6 +51,9 @@ spec:
             {{- end }}
             - secretRef:
                 name: {{ include "kafka-ui.fullname" . }}
+          env:
+          - name: KAFKA_CLUSTERS_0_READONLY
+            value: "true"        
           ports:
             - name: http
               containerPort: 8080

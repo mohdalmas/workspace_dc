@@ -5,7 +5,7 @@ image:
   repository: bigdata/kafka-ui
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "8d10eb69e8b91cf6b807cdba3f68f038efa931fc"
+  tag: "latest"
 
 imagePullSecrets:
 - name: regcred
@@ -32,10 +32,7 @@ envs:
     KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: "SASL_PLAINTEXT"
     KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: "SCRAM-SHA-512"
     KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="nv6t5s8EuPJd";
-    AUTH_TYPE: "LOGIN_FORM"
-    SPRING_SECURITY_USER_NAME: "admin"
-    SPRING_SECURITY_USER_PASSWORD: "password143"
-    KAFKA_CLUSTERS_0_READONLY: "true"
+    # AUTH_TYPE: "LDAP"
     # SPRING_LDAP_URLS: "ldap://safaricomet.net:389"
     # SPRING_LDAP_DN_PATTERN: "CN={0},OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net"
     # #USER SEARCH FILTER INSTEAD OF DN
