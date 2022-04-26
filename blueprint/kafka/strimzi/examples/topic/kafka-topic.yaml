@@ -1,12 +1,12 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: tests
+  name: my-topic
   labels:
-    strimzi.io/cluster: kafka
+    strimzi.io/cluster: kafka-prod
 spec:
   partitions: 6
-  topicName: test2
+  topicName: my-topic
   replicas: 2
   config:
     retention.ms: 7200000

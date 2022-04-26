@@ -30,7 +30,7 @@ spec:
         - name: kafka.brokerConnect
           value: 192.168.21.80:9094
         - name: kafka.isSecured
-          value: "true"
+          value: "false"
         - name: kafka.saslMechanism
           value: "SCRAM-SHA-512"
         - name: kafka.securityProtocol

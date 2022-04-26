@@ -1,14 +1,14 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaMirrorMaker2
 metadata:
-  name: my-mirror-maker-2
+  name: kafka-prod-mm2
 spec:
   version: 3.0.0
   replicas: 1
   connectCluster: "kafka-prod"
   clusters:
   - alias: "kafka-prod"
-    bootstrapServers: kafka-prod-kafka-bootstrap:9092
+    bootstrapServers: 192.168.21.80:9094
     # authentication:
       # type: scram-sha-512
       # username: admin
@@ -16,7 +16,7 @@ spec:
         # secretName: admin
         # password: password
   - alias: "kafka-bkp"
-    bootstrapServers: kafka-bkp-kafka-bootstrap:9092
+    bootstrapServers: 192.168.21.76:9094
     # authentication:
       # username: admin
       # type: scram-sha-512
