@@ -62,26 +62,26 @@ spec:
             - name: {{ $key }}
 {{ toYaml $port | indent 14 }}
 {{- end }}
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - /config-scripts/ok
-            initialDelaySeconds: 20
-            periodSeconds: 30
-            timeoutSeconds: 5
-            failureThreshold: 2
-            successThreshold: 1
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - /config-scripts/ready
-            initialDelaySeconds: 20
-            periodSeconds: 30
-            timeoutSeconds: 5
-            failureThreshold: 2
-            successThreshold: 1
+          # livenessProbe:
+            # exec:
+              # command:
+                # - sh
+                # - /config-scripts/ok
+            # initialDelaySeconds: 20
+            # periodSeconds: 30
+            # timeoutSeconds: 5
+            # failureThreshold: 2
+            # successThreshold: 1
+          # readinessProbe:
+            # exec:
+              # command:
+                # - sh
+                # - /config-scripts/ready
+            # initialDelaySeconds: 20
+            # periodSeconds: 30
+            # timeoutSeconds: 5
+            # failureThreshold: 2
+            # successThreshold: 1
           env:
             - name: ZK_REPLICAS
               value: {{ .Values.replicaCount | quote }}
@@ -115,6 +115,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /config-scripts
+            - name: keytabs
+              mountPath: /etc/security/keytabs
         - name: clean-logs
           image: 192.168.21.2/it-w01-bigdata-ns01/busybox:latest
           imagePullPolicy: IfNotPresent
@@ -125,7 +127,6 @@ spec:
               name: data
             - mountPath: /logs
               name: logs
-
 {{- if .Values.exporters.jmx.enabled }}
         - name: jmx-exporter
           image: "{{ .Values.exporters.jmx.image.repository }}:{{ .Values.exporters.jmx.image.tag }}"
@@ -155,7 +156,6 @@ spec:
               mountPath: /opt/jmx_exporter/config.yml
               subPath: config.yml
 {{- end }}
-
 {{- if .Values.exporters.zookeeper.enabled }}
         - name: zookeeper-exporter
           image: "{{ .Values.exporters.zookeeper.image.repository }}:{{ .Values.exporters.zookeeper.image.tag }}"
@@ -197,6 +197,9 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       volumes:
+        - name: keytabs
+          persistentVolumeClaim:
+            claimName: keytab-pvc
         - name: config
           configMap:
             name: {{ template "zookeeper.fullname" . }}

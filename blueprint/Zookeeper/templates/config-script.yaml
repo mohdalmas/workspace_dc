@@ -49,8 +49,7 @@ data:
       DOMAIN=`hostname -d`
       ZOOCFG=zoo.cfg
       ZOOCFGDIR=$ZK_CONF_DIR
-      JVMFLAGS="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE"
-
+      
       APPJAR=$(echo $ROOT/*jar)
       CLASSPATH="${ROOT}/lib/*:${APPJAR}:${ZK_CONF_DIR}:"
 
@@ -79,6 +78,28 @@ data:
       echo "autopurge.snapRetainCount=$ZK_SNAP_RETAIN_COUNT" >> $ZK_CONFIG_FILE
       echo "autopurge.purgeInterval=$ZK_PURGE_INTERVAL" >> $ZK_CONFIG_FILE
       echo "4lw.commands.whitelist=*" >> $ZK_CONFIG_FILE
+      
+            
+      # echo "172.24.40.106   bigdata-krb-01.blueprint.lab" >> /etc/hosts
+      
+      # cat /config-scripts/krb5.conf > /etc/krb5.conf
+      
+      if [ "x$SECURED" = "x" ]
+      then
+        JVMFLAGS="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE"
+      else
+        echo "authProvider.1 = org.apache.zookeeper.server.auth.SASLAuthenticationProvider" >> $ZK_CONFIG_FILE
+        echo "kerberos.removeHostFromPrincipal = true" >> $ZK_CONFIG_FILE
+        echo "kerberos.removeRealmFromPrincipal = true" >> $ZK_CONFIG_FILE
+        echo "jaasLoginRenew = 3600000" >> $ZK_CONFIG_FILE
+        # echo "requireClientAuthScheme = sasl " >> $ZK_CONFIG_FILE
+        export JVMFLAGS0="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE -Djava.security.auth.login.config=/config-scripts/zk0-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+        export JVMFLAGS1="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE -Djava.security.auth.login.config=/config-scripts/zk1-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+        export JVMFLAGS2="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE -Djava.security.auth.login.config=/config-scripts/zk2-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+        export SERVER_JVMFLAGS="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE -Djava.security.auth.login.config=/config-scripts/server-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+        export CLIENT_JVMFLAGS="-Xmx$ZK_HEAP_SIZE -Xms$ZK_HEAP_SIZE -Djava.security.auth.login.config=/config-scripts/client-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+        
+      fi
 
       for (( i=1; i<=$ZK_REPLICAS; i++ ))
       do
@@ -110,4 +131,58 @@ data:
       fi
 
       set -x
-      exec java -cp "$CLASSPATH" $JVMFLAGS $MAIN $ZK_CONFIG_FILE
+      
+      if [ "$(hostname)" = "zk-zookeeper-0" ]
+      then
+        exec java -cp "$CLASSPATH" $JVMFLAGS0 $MAIN $ZK_CONFIG_FILE
+      elif [ "$(hostname)" = "zk-zookeeper-1" ]
+      then
+        exec java -cp "$CLASSPATH" $JVMFLAGS1 $MAIN $ZK_CONFIG_FILE
+      else 
+        exec java -cp "$CLASSPATH" $JVMFLAGS2 $MAIN $ZK_CONFIG_FILE
+      fi
+    zk0-jaas.conf: |
+      Server { com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="/etc/security/keytabs/zk0.service.keytab" storeKey=true useTicketCache=false principal="zookeeper/zk-zookeeper-0.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local@BIG-DATA.BLUEPRINT.LAB"; };
+    
+    zk1-jaas.conf: |
+      Server { com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="/etc/security/keytabs/zk1.service.keytab" storeKey=true useTicketCache=false principal="zookeeper/zk-zookeeper-1.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local@BIG-DATA.BLUEPRINT.LAB"; };
+    
+    zk2-jaas.conf: |
+      Server { com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="/etc/security/keytabs/zk2.service.keytab" storeKey=true useTicketCache=false principal="zookeeper/zk-zookeeper-2.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local@BIG-DATA.BLUEPRINT.LAB"; };
+    
+    server-jaas.conf: |
+      Server { com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="/etc/security/keytabs/zookeeper.service.keytab" storeKey=true useTicketCache=false principal="zookeeper/zookeeper@BIG-DATA.BLUEPRINT.LAB"; };
+    client-jaas.conf: |
+      Client { com.sun.security.auth.module.Krb5LoginModule required useKeyTab=false useTicketCache=true; };
+  
+    krb5.conf: |
+      # To opt out of the system crypto-policies configuration of krb5, remove the
+      # symlink at /etc/krb5.conf.d/crypto-policies which will not be recreated.
+      includedir /etc/krb5.conf.d/
+      
+      [logging]
+          default = FILE:/var/log/krb5libs.log
+          kdc = FILE:/var/log/krb5kdc.log
+          admin_server = FILE:/var/log/kadmind.log
+      
+      [libdefaults]
+          dns_lookup_realm = true
+          dns_lookup_kdc = true
+          ticket_lifetime = 24h
+          renew_lifetime = 7d
+          forwardable = true
+          rdns = false
+          pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+          spake_preauth_groups = edwards25519
+          default_realm = {{ .Values.realm }}
+          # default_ccache_name = KEYRING:persistent:%{uid}
+      
+      [realms]
+       {{ .Values.realm }} = {
+           kdc = bigdata-krb-01.blueprint.lab
+           admin_server = bigdata-krb-01.blueprint.lab
+       }
+      
+      [domain_realm]
+       .{{ .Values.realm }} = {{ .Values.realm }}
+       {{ .Values.realm }} = {{ .Values.realm }}

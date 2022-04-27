@@ -9,6 +9,8 @@ podDisruptionBudget:
 
 terminationGracePeriodSeconds: 1800  # Duration in seconds a Zokeeper pod needs to terminate gracefully.
 
+realm: "BIG-DATA.BLUEPRINT.LAB"
+
 updateStrategy:
   type: RollingUpdate
 
@@ -88,8 +90,8 @@ podLabels:   # Key/value pairs that are attached to zookeeper pods.
   # service: "zookeeper"
 
 securityContext:
-  fsGroup: 1000
-  runAsUser: 1000
+  fsGroup: 0
+  runAsUser: 0
 
 ## Useful, if you want to use an alternate image.
 command:
@@ -135,13 +137,13 @@ persistence:
 exporters:
 
   jmx:
-    enabled: true
+    enabled: false
     image:
       repository: sscaling/jmx-prometheus-exporter
       tag: 0.3.0
       pullPolicy: IfNotPresent
     config:
-      lowercaseOutputName: true
+      lowercaseOutputName: false
       ## ref: https://github.com/prometheus/jmx_exporter/blob/master/example_configs/zookeeper.yaml
       rules:
         # replicated Zookeeper
@@ -267,7 +269,7 @@ env:
   ## Options related to JMX exporter.
   ## ref: https://github.com/apache/zookeeper/blob/master/bin/zkServer.sh#L36
   JMXAUTH: "false"
-  JMXDISABLE: "false"
+  # JMXDISABLE: "false"
   JMXPORT: 1099
   JMXSSL: "false"
 
@@ -294,6 +296,10 @@ env:
   ZOO_AUTOPURGE_PURGEINTERVAL: 6
   ZOO_AUTOPURGE_SNAPRETAINCOUNT: 3
   ZOO_STANDALONE_ENABLED: false
+  SECURED: true
+  JVMFLAGS: "-Djava.security.auth.login.config=/config-scripts/zk0-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+  SERVER_JVMFLAGS: "-Djava.security.auth.login.config=/config-scripts/zk0-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
+  CLIENT_JVMFLAGS: "-Djava.security.auth.login.config=/config-scripts/zk0-jaas.conf  -Dsun.security.krb5.debug=true  -Djava.security.krb5.conf=/config-scripts/krb5.conf"
 
 jobs:
   ## ref: http://zookeeper.apache.org/doc/r3.4.10/zookeeperProgrammers.html#ch_zkSessions
