@@ -93,6 +93,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: STRIMZI_FEATURE_GATES
               value: ""
+            - name: STRIMZI_IMAGE_PULL_SECRETS
+              value: "regcred"
           livenessProbe:
             httpGet:
               path: /healthy
