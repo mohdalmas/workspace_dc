@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: copy
+  name: copy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: copy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: copy
+    spec:
+      containers:
+      - image: kapkiai/kafkaweb:v2
+        name: copy
+        resources: 
+          limits:
+            memory: "1000Mi"
+          requests:
+            memory: "500Mi"
+        env:
+        - name: kafka.brokerConnect
+          value: my-cluster-kafka-brokers:9094
+        - name: kafka.isSecured
+          value: "true"
+        - name: kafka.saslMechanism
+          value: "SCRAM-SHA-512"
+        - name: kafka.securityProtocol
+          value: "SASL_PLAINTEXT"
+        - name: acl.aclEnabled
+          value: "true"
+
+        volumeMounts:
+          - mountPath: /var/lib/zookeeper
+            name: foo
+            
+      volumes:
+        - name: foo
+          persistentVolumeClaim:
+            claimName: data-my-cluster-zookeeper-1  

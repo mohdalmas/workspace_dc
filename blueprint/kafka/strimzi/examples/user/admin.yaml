@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: admin
+  labels:
+    strimzi.io/cluster: kafka-bkp
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls: []
+      # Example consumer Acls for topic my-topic using consumer group my-group
+     

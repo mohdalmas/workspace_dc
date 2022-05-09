@@ -1,0 +1,37 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kapp.k14s.io/identity: v1;tanzu-system-ingress//Service/envoy;v1
+    kapp.k14s.io/original: '{"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"kapp.k14s.io/app":"1639581701830560644","kapp.k14s.io/association":"v1.f755d1e42b78042b3ad204fdc0e72cb9"},"name":"envoy","namespace":"tanzu-system-ingress"},"spec":{"externalTrafficPolicy":"Cluster","ports":[{"name":"http","port":80,"protocol":"TCP"},{"name":"https","port":443,"protocol":"TCP"}],"selector":{"app":"envoy","kapp.k14s.io/app":"1639581701830560644"},"type":"LoadBalancer"}}'
+    kapp.k14s.io/original-diff-md5: 86ba6ef8fb39794d1f4a519274bf7dcd
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    kapp.k14s.io/app: "1639581701830560644"
+    kapp.k14s.io/association: v1.f755d1e42b78042b3ad204fdc0e72cb9
+  name: envoy
+  namespace: tanzu-system-ingress
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    nodePort: 30594
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    nodePort: 31872
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: envoy
+    kapp.k14s.io/app: "1639581701830560644"
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 192.168.21.18

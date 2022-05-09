@@ -90,7 +90,7 @@ conf:
     javax.jdo.option.ConnectionURL: jdbc:postgresql://bigdata-psql-postgresql-headless/metastore
     javax.jdo.option.ConnectionUserName: hive
     hive.support.concurrency: true
-    hive.exec.reducers.bytes.per.reducer: 256000000
+    hive.exec.reducers.bytes.per.reducer: "256000000"
     hive.exec.reducers.max: 1009
     hive.compactor.initiator.on: true
     hive.enforce.bucketing: true

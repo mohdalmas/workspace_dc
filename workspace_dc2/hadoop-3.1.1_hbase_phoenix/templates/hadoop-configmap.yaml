@@ -7,7 +7,10 @@ metadata:
     chart: {{ include "hadoop.chart" . }}
     release: {{ .Release.Name }}
 data:
-    
+
+  ownhive.sh: |
+    hdfs dfs -chown -R hive:hive /hive
+  
   datanode-monitor.sh: |
     code=$(curl -s -o /dev/null -w "%{http_code}" 'http://localhost:9864')
     if [[ $code != 200 || $code != 503 ]]; then
@@ -23,9 +26,8 @@ data:
     : ${HADOOP_HOME:=/opt/hadoop}    
     . $HADOOP_HOME/etc/hadoop/hadoop-env.sh
     CONFIG_DIR="/tmp/hadoop-config"
-
     # Copy hadoop config files from volume mount
-    for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml capacity-scheduler.xml datanode-monitor.sh; do
+    for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml capacity-scheduler.xml datanode-monitor.sh ownhive.sh; do
       if [[ -e ${CONFIG_DIR}/$f ]]; then
         cp ${CONFIG_DIR}/$f $HADOOP_HOME/etc/hadoop/$f
       else
@@ -33,7 +35,6 @@ data:
         exit 1
       fi
     done
-
     
     # installing libraries if any - (resource urls added comma separated to the ACP system variable)
     cd $HADOOP_HOME/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
@@ -76,7 +77,6 @@ data:
     usermod -a -G hdpusers infra-solr
     usermod -a -G hdpusers livy
     usermod -a -G hdpusers ambari-qa
-
     
     chown -R hdfs:hdpusers /dfs
     chown -R hdfs:hdpusers /opt/hadoop   
@@ -99,9 +99,7 @@ data:
       $HADOOP_HOME/bin/hdfs --daemon start namenode
    
     fi
-
     if [[ "${HOSTNAME}" =~ "hdfs-dn" ]]; then
-
     
       # #  wait up to 30 seconds for namenode
       (while [[ $count -lt 30 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-hdfs-nn:9870` ]]; do ((count=count+1)) ; echo "Waiting for {{ include "hadoop.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 30 ]])
@@ -149,14 +147,26 @@ data:
          hdfs dfs -chmod g+w /hive
          hdfs dfs -chown -R hive:hive /hive
       fi    
+      chmod 777 -R /opt/hadoop/etc/hadoop/datanode-monitor.sh
+      chmod +x /opt/hadoop/etc/hadoop/datanode-monitor.sh  
+      chmod 777 -R /opt/hadoop/etc/hadoop/ownhive.sh
+      chmod +x /opt/hadoop/etc/hadoop/ownhive.sh
       
       #Monitor DataNodes
-      chmod 777 -R /opt/hadoop/etc/hadoop/datanode-monitor.sh
-      chmod +x /opt/hadoop/etc/hadoop/datanode-monitor.sh
-      while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done
-
+      while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done &
     fi
-    
+ 
+    if [[ "${HOSTNAME}" =~ "hdfs-dn-0" ]]; then
+      #owning hive in every 2mins
+      while true; do $HADOOP_HOME/etc/hadoop/ownhive.sh; sleep 120; done
+    fi
+
+    if [[ "${HOSTNAME}" =~ "yarn-rm" ]]; then
+      cp ${CONFIG_DIR}/start-yarn-rm.sh $HADOOP_HOME/sbin/
+      cd $HADOOP_HOME/sbin
+      chmod +x start-yarn-rm.sh
+      ./start-yarn-rm.sh
+    fi
 
     if [[ "${HOSTNAME}" =~ "yarn-rm" ]]; then
       cp ${CONFIG_DIR}/start-yarn-rm.sh $HADOOP_HOME/sbin/
@@ -242,7 +252,7 @@ data:
 {{- end -}}
       <property>
         <name>dfs.client.datanode-restart.timeout</name>
-        <value>30</value>
+        <value>30s</value>
       </property>
       <property>
         <name>dfs.datanode.use.datanode.hostname</name>
