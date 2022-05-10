@@ -252,7 +252,7 @@ data:
 {{- end -}}
       <property>
         <name>dfs.client.datanode-restart.timeout</name>
-        <value>30s</value>
+        <value>30</value>
       </property>
       <property>
         <name>dfs.datanode.use.datanode.hostname</name>

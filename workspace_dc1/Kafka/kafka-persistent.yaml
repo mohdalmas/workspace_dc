@@ -6,8 +6,6 @@ spec:
   kafka:
     template:
       pod:
-        imagePullSecrets:
-        - name: regcred
         tolerations:
         - key: "dedicated"
           operator: "Equal"
@@ -84,8 +82,6 @@ spec:
   zookeeper:
     template:
       pod:
-        imagePullSecrets:
-        - name: regcred
         metadata:
           annotations:
             prometheus.io/scrape: "true"
