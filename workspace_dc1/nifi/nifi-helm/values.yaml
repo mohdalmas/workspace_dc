@@ -10,12 +10,14 @@ image:
 # securityContext:
   # runAsUser: 1000
   # fsGroup: 1000
+imagePullSecrets:
+- name: regcred
 
 serviceAccount: bigdata
 
 sts:
   podManagementPolicy: Parallel
-  AntiAffinity: soft
+  AntiAffinity: "soft"
   useHostNetwork: null
   hostPort: null
   pod:
@@ -61,7 +63,7 @@ auth:
     host: ldap://safaricomet.net:389
     searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
-    username: Mohd.Almas
+    username: Mathew.Kiprop
     pass: lyOdmSBwCsZnD4dLnOAE
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
@@ -128,7 +130,7 @@ ingress:
 jvmMemory: 24g
 
 sidecar:
-  image: busybox
+  image: et01-harbor.safaricomet.net/bigdata/busybox
   tag: "latest"
   imagePullPolicy: "IfNotPresent"
 
@@ -146,7 +148,7 @@ persistence:
     size: 100Mi
   # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
   dataStorage:
-    size: 1000Gi
+    size: 1Ti
   # Storage capacity for the FlowFile repository
   flowfileRepoStorage:
     size: 2000Gi
@@ -163,12 +165,12 @@ persistence:
 
 resources: 
   limits:
-   cpu: 8
-   memory: 42Gi
+   cpu: 5
+   memory: 30Gi
    ephemeral-storage: 5Gi
   requests:
-   cpu: 7
-   memory: 36Gi
+   cpu: 2
+   memory: 8Gi
    ephemeral-storage: 4Gi
 
 logresources:
@@ -209,58 +211,58 @@ initContainers: {}
     # - mountPath: /opt/nifi/ext-nar
       # name: ext-nar
     
-extraVolumeMounts: []
-  # - mountPath: /opt/nifi/nifi-current/ext-config/hive-site.xml
-    # name: hive-config
-    # subPath: hive-site.xml
-  # - mountPath: /opt/nifi/nifi-current/ext-config/hbase-site.xml
-    # name: hbase-config
-    # subPath: hbase-site.xml
-  # - mountPath: /opt/nifi/nifi-current/ext-config/core-site.xml
-    # name: hadoop-config
-    # subPath: core-site.xml
-  # - mountPath: /opt/nifi/nifi-current/ext-config/hdfs-site.xml
-    # name: hadoop-config
-    # subPath: hdfs-site.xml
-  # - mountPath: /opt/nifi/nifi-current/ext-config/mapred-site.xml
-    # name: hadoop-config
-    # subPath: mapred-site.xml
-  # - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
-    # name: hadoop-config
-    # subPath: yarn-site.xml
+extraVolumeMounts: 
+  - mountPath: /opt/nifi/nifi-current/ext-config/hive-site.xml
+    name: hive-config
+    subPath: hive-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/hbase-site.xml
+    name: hbase-config
+    subPath: hbase-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/core-site.xml
+    name: hadoop-config
+    subPath: core-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/hdfs-site.xml
+    name: hadoop-config
+    subPath: hdfs-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/mapred-site.xml
+    name: hadoop-config
+    subPath: mapred-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
+    name: hadoop-config
+    subPath: yarn-site.xml
   # - mountPath: /opt/nifi/external-nar
     # name: ext-nar
   # - mountPath: /opt/nifi/external-jar
     # name: ext-jar
 
-extraVolumes: []
-  # - configMap:
-      # defaultMode: 420
-      # items:
-      # - key: hive-site.xml
-        # path: hive-site.xml
-      # name: hive-metastore
-    # name: hive-config
-  # - configMap:
-      # defaultMode: 420
-      # items:
-      # - key: hbase-site.xml
-        # path: hbase-site.xml
-      # name: hb-hbase
-    # name: hbase-config
-  # - configMap:
-      # defaultMode: 420
-      # items:
-      # - key: core-site.xml
-        # path: core-site.xml
-      # - key: hdfs-site.xml
-        # path: hdfs-site.xml
-      # - key: mapred-site.xml
-        # path: mapred-site.xml
-      # - key: yarn-site.xml
-        # path: yarn-site.xml
-      # name: hadoop-hadoop
-    # name: hadoop-config
+extraVolumes: 
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: hive-site.xml
+        path: hive-site.xml
+      name: hive-cm
+    name: hive-config
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: hbase-site.xml
+        path: hbase-site.xml
+      name: hadoop-hadoop-hbase
+    name: hbase-config
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: core-site.xml
+        path: core-site.xml
+      - key: hdfs-site.xml
+        path: hdfs-site.xml
+      - key: mapred-site.xml
+        path: mapred-site.xml
+      - key: yarn-site.xml
+        path: yarn-site.xml
+      name: hadoop-hadoop
+    name: hadoop-config
 
 ## Extra containers
 extraContainers: []
