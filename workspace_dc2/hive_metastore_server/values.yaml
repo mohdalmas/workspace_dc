@@ -65,6 +65,9 @@ ingress:
   hive:
     enabled: true
     host: hive.big-data2.safaricomet.net
+  hive_exec:
+    enabled: true
+    host: hive-exec.big-data2.safaricomet.net
     
 
 conf:
@@ -123,7 +126,10 @@ conf:
     spark.executor.memory: "3480m"
     hive.stats.column.autogather: false
     hive.optimize.sort.dynamic.partition: true
-    
+    hive.server2.session.check.interval: "300000" # 5 minutes 
+    hive.server2.idle.operation.timeout: "480000" # 8 minutes
+    hive.server2.idle.session.timeout: "600000" # 10 minutes
+
   spark-Defaults:
     spark.master.rest.enabled: false
     spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0:10000"
@@ -140,3 +146,7 @@ conf:
     spark.driver.cores: 2
     spark.executor.cores: 2
     spark.default.parallelism: 7  
+    spark.dynamicAllocation.enabled: true 
+    spark.dynamicAllocation.executorIdleTimeout: 120
+    spark.dynamicAllocation.minExecutors: 0
+    

@@ -32,35 +32,44 @@ spec:
             name: {{ include "hive.name" . }}-service
             port:
               number: 10002
-  - host: {{ .Values.ingress.hive.host }}
+  - host: {{ .Values.ingress.hive_exec.host }}
     http:
       paths:
-      - path: /hive/sm
+      - path: /sm
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8080
-  - host: {{ .Values.ingress.hive.host }}
+  - host: {{ .Values.ingress.hive_exec.host }}
     http:
       paths:
-      - path: /hive/sw
+      - path: /sw
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8081
-  - host: {{ .Values.ingress.hive.host }}
+  - host: {{ .Values.ingress.hive_exec.host }}
     http:
       paths:
-      - path: /hive/wd
+      - path: /wd
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 4040
-
+  - host: {{ .Values.ingress.hive_exec.host }}
+    http:
+      paths:
+      - path: /static
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "hive.name" . }}-service
+            port:
+              number: 8080
 {{- end -}}
