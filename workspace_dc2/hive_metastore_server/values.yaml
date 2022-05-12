@@ -65,9 +65,6 @@ ingress:
   hive:
     enabled: true
     host: hive.big-data2.safaricomet.net
-  hive_exec:
-    enabled: true
-    host: hive-exec.big-data2.safaricomet.net
     
 
 conf:
@@ -149,4 +146,5 @@ conf:
     spark.dynamicAllocation.enabled: true 
     spark.dynamicAllocation.executorIdleTimeout: 120
     spark.dynamicAllocation.minExecutors: 0
+    #spark.shuffle.service.enabled: true
     

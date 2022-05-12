@@ -114,6 +114,13 @@ ingress:
         name: spark-master-service
         port:
           number: 8080
+  - path: /app
+    pathType: ImplementationSpecific 
+    backend:
+      service:
+        name: spark-master-service
+        port:
+          number: 8080
   - path: /wd
     pathType: ImplementationSpecific 
     backend:

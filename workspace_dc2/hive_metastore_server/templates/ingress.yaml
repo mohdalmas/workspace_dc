@@ -22,54 +22,34 @@ spec:
             name: {{ include "hive.name" . }}-service
             port:
               number: 10002
-  - host: {{ .Values.ingress.hive.host }}
+  - host: hive-exec-sm.big-data2.safaricomet.net
     http:
       paths:
-      - path: /static
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 10002
-  - host: {{ .Values.ingress.hive_exec.host }}
-    http:
-      paths:
-      - path: /sm
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8080
-  - host: {{ .Values.ingress.hive_exec.host }}
+  - host: hive-exec-sw.big-data2.safaricomet.net
     http:
       paths:
-      - path: /sw
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8081
-  - host: {{ .Values.ingress.hive_exec.host }}
+  - host: hive-exec-wd.big-data2.safaricomet.net
     http:
       paths:
-      - path: /wd
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: {{ include "hive.name" . }}-service
             port:
               number: 4040
-  - host: {{ .Values.ingress.hive_exec.host }}
-    http:
-      paths:
-      - path: /static
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 8080
 {{- end -}}
