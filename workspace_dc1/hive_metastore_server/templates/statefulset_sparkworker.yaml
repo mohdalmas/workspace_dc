@@ -45,9 +45,7 @@ spec:
         - name: SPARK_MASTER_URL
           value: spark://hive-0.hive-service:7077
         - name: SPARK_EXECUTION_CORES
-          value: "4"
-        # - name: SPARK_DIST_CLASSPATH
-          # value: $HADOOP_CLASSPATH
+          value: {{ .Values.hive_spark_worker.cores | quote}}
         resources:
 {{ toYaml .Values.hive_spark_worker.resources | indent 10 }}
         volumeMounts:

@@ -22,7 +22,7 @@ spec:
             name: {{ include "hive.name" . }}-service
             port:
               number: 10002
-  - host: hive-exec-sm.big-data.safaricomet.net
+  - host: hive-exec-sm.big-data2.safaricomet.net
     http:
       paths:
       - path: /
@@ -32,7 +32,7 @@ spec:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8080
-  - host: hive-exec-sw.big-data.safaricomet.net
+  - host: hive-exec-sw.big-data2.safaricomet.net
     http:
       paths:
       - path: /
@@ -42,7 +42,7 @@ spec:
             name: {{ include "hive.name" . }}-service
             port:
               number: 8081
-  - host: hive-exec-wd.big-data.safaricomet.net
+  - host: hive-exec-wd.big-data2.safaricomet.net
     http:
       paths:
       - path: /

@@ -90,15 +90,15 @@ spec:
         #   initialDelaySeconds: 10
         #   timeoutSeconds: 2
         volumeMounts:
-        - mountPath: /opt/spark/conf/startup.sh
-          name: spark-config
-          subPath: startup.sh 
         - mountPath: /opt/spark/conf/hive-site.xml
           name: spark-config
           subPath: hive-site.xml
         - mountPath: /opt/spark/conf/spark-defaults.conf
           name: spark-config
           subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/startup.sh
+          name: spark-config
+          subPath: startup.sh
         - mountPath: /opt/spark/conf/core-site.xml
           name: hadoop-config
           subPath: core-site.xml

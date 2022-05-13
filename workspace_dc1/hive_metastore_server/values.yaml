@@ -2,14 +2,12 @@
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
   
 image:
-  repository: mohdalmasansari/hive-spark
+  repository: et02-harbor.safaricomet.net/bigdata/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
   pullPolicy: IfNotPresent
 
-serviceAccount: bigdata
-
 imagePullSecrets:
-- name: ""
+- name: regcred
 
 tolerations:
 - key: "dedicated"
@@ -27,6 +25,15 @@ affinity:
           values:
           - Hadoop
 
+hive_metastore: 
+  resources: 
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+      
 hive_metastore: 
   resources: 
     requests:
@@ -56,13 +63,14 @@ hive_spark_master:
   
 hive_spark_worker:
   replicas: 1
+  cores: 7
   resources: 
     requests:
-      memory: "2Gi"
-      cpu: "1"
+      memory: "3Gi"
+      cpu: "2"
     limits:
-      memory: "8Gi"
-      cpu: "4"
+      memory: "14Gi"
+      cpu: "7"
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -73,18 +81,18 @@ hive_spark_worker:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 60
+          averageUtilization: 80
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 60
+          averageUtilization: 80
 
 ingress:
   hive:
     enabled: true
-    host: hive.big-data.safaricomet.net
+    host: hive.big-data2.safaricomet.net
 
 conf:
   hadoopConfigMap: hadoop-hadoop
@@ -97,7 +105,7 @@ conf:
     hive.metastore.event.db.notification.api.auth: false
     hive.metastore.schema.verification: false
     hive.metastore.schema.verification.record.version: false
-    hive.metastore.uris: thrift://hive-0:9083
+    hive.metastore.uris: thrift://hive-0.hive-service:9083
     hive.metastore.warehouse.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hive/warehouse
     hive.server2.enable.doAs: false
     hive.server2.zookeeper.namespace: hiveserver2
@@ -131,25 +139,26 @@ conf:
     hive.txn.retryable.sqlex.regex: ""
     NO_AUTO_COMPACTION: false
     hive.compactor.max.num.delta: 10
-    hive.compactor.check.interval: 30
+    hive.compactor.check.interval: 300
     hive.log.explain.output: true
     hive.metastore.runworker.in: hs2
     hive.compactor.worker.threads: 1
     hive.compactor.job.queue: compaction
-    #spark.cores.max: 1
-    #spark.executor.cores: 1
-    #spark.executor.memory: "2048m"
     hive.stats.column.autogather: false
     hive.optimize.sort.dynamic.partition: true
     hive.server2.session.check.interval: "300000" # 5 minutes 
     hive.server2.idle.operation.timeout: "480000" # 8 minutes
     hive.server2.idle.session.timeout: "600000" # 10 minutes
-    spark.driver.memory: 2048m
-    spark.executor.memory: 2048m
-    spark.cores.max: 1
+    spark.driver.memory: 1024m
+    spark.executor.memory: 3072m
+    spark.cores.max: 2
     spark.driver.cores: 1
-    spark.executor.cores: 1
+    spark.executor.cores: 2
     spark.default.parallelism: 7 
+    hive.server2.authentication: NOSASL
+    hive.server2.transport.mode: http
+    hive.server2.thrift.http.port: 10000
+    hive.server2.thrift.http.path:  cliservice
     
   spark-Defaults:
     spark.master.rest.enabled: false
@@ -162,12 +171,14 @@ conf:
     spark.serializer: org.apache.spark.serializer.KryoSerializer
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
-    spark.driver.memory: 2048m
-    spark.executor.memory: 2048m
-    spark.cores.max: 1
+    spark.driver.memory: 1024m
+    spark.executor.memory: 3072m
+    spark.cores.max: 2
     spark.driver.cores: 1
-    spark.executor.cores: 1
+    spark.executor.cores: 2
     spark.default.parallelism: 7  
     spark.dynamicAllocation.enabled: true 
     spark.dynamicAllocation.executorIdleTimeout: 60s
     spark.dynamicAllocation.minExecutors: 0
+    spark.worker.memory: 14g
+    
