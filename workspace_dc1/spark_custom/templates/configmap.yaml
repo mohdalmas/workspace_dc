@@ -6,6 +6,8 @@ metadata:
     app.kubernetes.io/name: {{ include "spark.name" . }}
     {{- include "spark.labels" . | nindent 4 }}
 data:
+  startup.sh: |-
+{{ tpl (.Files.Get "files/startup.sh") . | indent 4 }}
   spark-defaults.conf: |
     {{- if index .Values.conf "spark-Defaults" }}
     {{- range $key, $value := index .Values.conf "spark-Defaults" }}

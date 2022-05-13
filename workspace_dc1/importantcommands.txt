@@ -5,7 +5,10 @@ Safaricomet\Mohd.Almas
 Safaricomet\svc-bigdata-admin
 lyOdmSBwCsZnD4dLnOAE
 
-http://proxy2.safaricom.net:8080
+export http_proxy=http://proxy2.safaricomet.net:3128
+export https_proxy=http://proxy2.safaricomet.net:3128
+export HTTP_PROXY=http://proxy2.safaricomet.net:3128
+export HTTPS_PROXY=http://proxy2.safaricomet.net:3128
 
 Sunil.Kumar
 Y4T&zcX9d(ns

@@ -48,13 +48,14 @@ hive_server:
 hive_spark_master:
   resources: 
     requests:
-      memory: "2Gi"
+      memory: "1Gi"
       cpu: "1"
     limits:
-      memory: "4Gi"
-      cpu: "2"
+      memory: "2Gi"
+      cpu: "1"
   
 hive_spark_worker:
+  replicas: 4
   resources: 
     requests:
       memory: "2Gi"
@@ -98,14 +99,13 @@ conf:
     hive.exec.dynamic.partition.mode: nonstrict
     hive.spark.client.channel.log.level: ERROR
     hive.spark.client.connect.timeout: 30000ms
-    hive.spark.client.rpc.server.address: hive-0
+    hive.spark.client.rpc.server.address: hive-0.hive-service
     hive.spark.client.server.connect.timeout: 1000000ms
     hive.spark.job.monitor.timeout: 360s
     hive.stats.jdbc.timeout: 30
-    spark.driver.cores: 2
     spark.eventLog.dir: /var/log/spark
     spark.eventLog.enabled: false
-    spark.master: spark://hive-0:7077
+    spark.master: spark://hive-0.hive-service:7077
     spark.serializer: org.apache.spark.serializer.KryoSerializer
     hive.compactor.initiator.on: true
     hive.compactor.delta.num.threshold: 2
@@ -119,31 +119,38 @@ conf:
     hive.metastore.runworker.in: hs2
     hive.compactor.worker.threads: 1
     hive.compactor.job.queue: compaction
-    spark.cores.max: 2
-    spark.executor.cores: 1
-    spark.executor.memory: "3480m"
+    #spark.cores.max: 1
+    #spark.executor.cores: 1
+    #spark.executor.memory: "2048m"
     hive.stats.column.autogather: false
     hive.optimize.sort.dynamic.partition: true
     hive.server2.session.check.interval: "300000" # 5 minutes 
     hive.server2.idle.operation.timeout: "480000" # 8 minutes
     hive.server2.idle.session.timeout: "600000" # 10 minutes
+    spark.driver.memory: 2048m
+    spark.executor.memory: 2048m
+    spark.cores.max: 1
+    spark.driver.cores: 1
+    spark.executor.cores: 1
+    spark.default.parallelism: 7 
     
   spark-Defaults:
     spark.master.rest.enabled: false
-    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0:10000"
-    spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0:9083"
+    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0.hive-service:10000"
+    spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0.hive-service:9083"
     spark.hadoop.hive.zookeeper.quorum: "bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181"
-    spark.master: "spark://hive-0:7077"
-    spark.executor.memory: 4096m
+    spark.master: "spark://hive-0.hive-service:7077"
     spark.eventLog.enabled: false
     spark.eventLog.dir: /var/log/spark
     spark.serializer: org.apache.spark.serializer.KryoSerializer
-    spark.driver.memory: 5g
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
-    spark.driver.cores: 2
-    spark.executor.cores: 2
+    spark.driver.memory: 2048m
+    spark.executor.memory: 2048m
+    spark.cores.max: 1
+    spark.driver.cores: 1
+    spark.executor.cores: 1
     spark.default.parallelism: 7  
     spark.dynamicAllocation.enabled: true 
-    spark.dynamicAllocation.executorIdleTimeout: 300
+    spark.dynamicAllocation.executorIdleTimeout: 60s
     spark.dynamicAllocation.minExecutors: 0

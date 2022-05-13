@@ -13,7 +13,7 @@ spec:
       app.kubernetes.io/component: worker
       app.kubernetes.io/instance: {{ .Release.Name | quote }}
   serviceName: {{ .Release.Name }}-headless
-  replicas: 1
+  replicas: {{ .Values.spark_worker.replicas  }}
   template:
     metadata:
       labels:
@@ -65,6 +65,9 @@ spec:
         - name: cluster
           containerPort: 7077
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+          - /bin/bash
+          - /opt/spark/conf/startup.sh
         env:
         - name: SPARK_MODE
           value: "worker"
@@ -89,6 +92,9 @@ spec:
         #   initialDelaySeconds: 10
         #   timeoutSeconds: 2
         volumeMounts:
+        - mountPath: /opt/spark/conf/startup.sh
+          name: spark-config
+          subPath: startup.sh 
         - mountPath: /opt/spark/conf/hive-site.xml
           name: spark-config
           subPath: hive-site.xml
@@ -115,7 +121,9 @@ spec:
           - key: hive-site.xml
             path: hive-site.xml
           - key: spark-defaults.conf
-            path: spark-defaults.conf
+            path: spark-defaults.conf          
+          - key: startup.sh
+            path: startup.sh
       - name: hadoop-config
         configMap:
           {{- if .Values.conf.hadoopConfigMap }}

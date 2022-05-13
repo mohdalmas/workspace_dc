@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: jupyterhub-config
 data:
+  startup.sh: |
+    yum -y update
+    yum install -y nano
   jupyterhub_config.py: |
     # Configuration file for jupyterhub.
 
@@ -24,7 +27,7 @@ data:
     c.LDAPAuthenticator.lookup_dn_user_dn_attribute = 'cn'
     c.LDAPAuthenticator.escape_userdn = False
     c.LDAPAuthenticator.use_lookup_dn_username = False
-    c.Authenticator.admin_users = {'Mohd.Almas'}
+    c.Authenticator.admin_users = {'Mohd.Almas','Umesha.Gowda','Alphonce.Oniala'}
     #c.Authenticator.allowed_users = {'Mohd.Almas'}
     
 
@@ -34,7 +37,9 @@ data:
             pwd.getpwnam(username)   
         except KeyError:
             subprocess.check_call(['useradd', '-ms', '/bin/bash', username])
-            #subprocess.check_call(['chown', '-R', username+':'+username, '/home/'+username])
+            subprocess.check_call(['chown', '-R', username+':'+username, '/home/'+username])
+            subprocess.check_call(['usermod', '-aG', 'wheel', username])
+            subprocess.check_call(['sed', '-i', '/# %wheel/c\%wheel   ALL=(ALL)   NOPASSWD: ALL', '/etc/sudoers' ])
 
     c.Spawner.pre_spawn_hook = pre_spawn_hook
     c.Spawner.default_url = '/lab'

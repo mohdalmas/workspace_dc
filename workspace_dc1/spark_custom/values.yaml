@@ -1,7 +1,7 @@
   
 image:
-  repository: mohdalmasansari/spark
-  tag: spark-3.2.0-scala-2.12.0
+  repository: mohdalmasansari/hive-spark
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
   pullPolicy: IfNotPresent
 
 serviceAccount: bigdata
@@ -31,13 +31,14 @@ affinity:
 spark_master:
   resources: 
     requests:
-      memory: "2Gi"
+      memory: "1Gi"
       cpu: "1"
     limits:
-      memory: "4Gi"
-      cpu: "2"
+      memory: "2Gi"
+      cpu: "1"
   
 spark_worker:
+  replicas: 4
   resources: 
     requests:
       memory: "2Gi"

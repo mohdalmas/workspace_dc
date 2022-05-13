@@ -62,28 +62,6 @@
 # rm /opt/hadoop/share/hadoop/hdfs/lib/guava-11.0.2.jar
 # cp /opt/hadoop/share/hadoop/yarn/hadoop-yarn-api-3.1.1.jar /opt/hadoop/share/hadoop/yarn/hadoop-yarn-common-3.1.1.jar /opt/hadoop/share/hadoop/yarn/hadoop-yarn-services-api-3.1.1.jar /opt/hadoop/share/hadoop/common/hadoop-common-3.1.1.jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-core-3.1.1.jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-common-3.1.1.jar /opt/hive/lib/
 # mkdir /var/log/spark
-rm -rf  $SPARK_HOME/jars/hive*1.2.1*
-if [ "$HIVE_MODE" == "server" ]; then
-   # if [[ whoami != hive ]]
-   # then 
-      # echo "Switching to hive user";
-      # su hive -c "/opt/hive/bin/hive --service hiveserver2 --hiveconf hive.server2.thrift.port=10000 --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console"
-   # else
-      # /opt/hive/bin/hive --service hiveserver2 --hiveconf hive.server2.thrift.port=10000 --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console  
-   # fi	  
-   /opt/hive/bin/hive --service hiveserver2 --hiveconf hive.server2.thrift.port=10000 --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console  
-fi
-
-if [ "$HIVE_MODE" == "metastore" ]; then
-   # if [[ whoami != hive ]];
-   # then 
-      # echo "Switching to hive user";
-      # su hive -c "/opt/hive/bin/hive --service metastore --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console"
-   # else
-      # /opt/hive/bin/hive --service metastore --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console  
-   # fi	
-   /opt/hive/bin/hive --service metastore --hiveconf hive.root.logger=DEBUG,ERROR,INFO,console   
-fi
 
 . /opt/spark/conf/spark-env.sh
 
