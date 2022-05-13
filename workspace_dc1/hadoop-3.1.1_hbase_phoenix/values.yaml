@@ -172,3 +172,5 @@ hbase_conf:
     zookeeper.recovery.retry: "6"
     zookeeper.session.timeout: "90000"
     zookeeper.znode.parent: /hbase
+    phoenix.functions.allowUserDefinedFunctions: true
+    hbase.dynamic.jars.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase/lib

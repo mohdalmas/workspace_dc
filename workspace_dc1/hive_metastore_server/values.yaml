@@ -55,7 +55,7 @@ hive_spark_master:
       cpu: "1"
   
 hive_spark_worker:
-  replicas: 4
+  replicas: 1
   resources: 
     requests:
       memory: "2Gi"
@@ -63,6 +63,23 @@ hive_spark_worker:
     limits:
       memory: "8Gi"
       cpu: "4"
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 6
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 60
 
 ingress:
   hive:
