@@ -15,15 +15,18 @@ spec:
       labels: 
         app: copy-pod 
     spec:
+      serviceAccountName: bigdata
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: copy-pod
-        image: ubuntu
+        image: et01-harbor.safaricomet.net/bigdata/hive-spark:hive-3.1.0-spark-2.3.0-scala-2.11.6
         command: ["/bin/sleep", "3650d"]
         imagePullPolicy: Always
-        volumeMounts:
-        - mountPath: "/bitnami/kafka"
-          name: data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: data-kafka-0
+        # volumeMounts:
+        # - mountPath: "/bitnami/kafka"
+          # name: data
+      # volumes:
+      # - name: data
+        # persistentVolumeClaim:
+          # claimName: data-kafka-0

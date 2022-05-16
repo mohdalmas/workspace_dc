@@ -58,7 +58,7 @@ data:
     useradd --comment "Oozie user" -u 514 --shell /bin/bash -M -r -g hdpusers oozie
     useradd --comment "Infra-Solr user" -u 515 --shell /bin/bash -M -r -g hdpusers infra-solr
     useradd --comment "Livy user" -u 516 --shell /bin/bash -M -r -g hdpusers livy
-    useradd --comment "Ambari QA user" -u 517 --shell /bin/bash -M -r -g hdpusers ambari-qa
+    useradd --comment "Druid user" -u 518 --shell /bin/bash -M -r -g hdpusers druid
     usermod -a -G hdpusers root
     usermod -a -G hdpusers hive
     usermod -a -G hdpusers hbase
@@ -78,7 +78,7 @@ data:
     usermod -a -G hdpusers infra-solr
     usermod -a -G hdpusers livy
     usermod -a -G hdpusers ambari-qa
-
+    usermod -a -G hdpusers druid
     
     chown -R hdfs:hdpusers /dfs
     chown -R hdfs:hdpusers /opt/hadoop   
