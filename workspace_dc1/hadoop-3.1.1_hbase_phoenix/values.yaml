@@ -1,7 +1,7 @@
 # The base hadoop image to use for all components.
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
 image:
-  repository: mohdalmasansari/hadoop-redhat
+  repository: et01-harbor.safaricomet.net/bigdata/hadoop-redhat
   tag: hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
   pullPolicy: IfNotPresent
 
@@ -14,7 +14,7 @@ hbaseVersion: 2.0.2
 antiAffinity: ""
 
 imagePullSecrets:
-- name: ""
+- name: regcred
 
 serviceAccount: bigdata
 
