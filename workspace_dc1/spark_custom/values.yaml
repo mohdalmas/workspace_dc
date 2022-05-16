@@ -1,6 +1,6 @@
   
 image:
-  repository: et02-harbor.safaricomet.net/bigdata/hive-spark
+  repository: et01-harbor.safaricomet.net/bigdata/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
   pullPolicy: IfNotPresent
 
@@ -107,11 +107,11 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress resource
   ##
-  hostname: spark.big-data2.safaricomet.net
+  hostname: spark.big-data.safaricomet.net
   ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   hostPaths:
-  - host: spark-sm.big-data2.safaricomet.net
+  - host: spark-sm.big-data.safaricomet.net
     http:
       paths:
       - path: /
@@ -121,7 +121,7 @@ ingress:
             name: spark-master-service
             port:
               number: 8080
-  - host: spark-sw.big-data2.safaricomet.net
+  - host: spark-sw.big-data.safaricomet.net
     http:
       paths:
       - path: /
@@ -131,7 +131,7 @@ ingress:
             name: spark-worker-service
             port:
               number: 8081
-  - host: spark-wd.big-data2.safaricomet.net
+  - host: spark-wd.big-data.safaricomet.net
     http:
       paths:
       - path: /

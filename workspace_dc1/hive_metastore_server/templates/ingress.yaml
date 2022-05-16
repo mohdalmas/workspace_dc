@@ -1,4 +1,4 @@
-{{- if .Values.ingress.hive.enabled -}}
+{{- if .Values.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -12,44 +12,5 @@ metadata:
      kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: {{ .Values.ingress.hive.host }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 10002
-  - host: hive-exec-sm.big-data2.safaricomet.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 8080
-  - host: hive-exec-sw.big-data2.safaricomet.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 8081
-  - host: hive-exec-wd.big-data2.safaricomet.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "hive.name" . }}-service
-            port:
-              number: 4040
+    {{- toYaml .Values.ingress.hostPaths | nindent 10 }}
 {{- end -}}

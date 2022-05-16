@@ -2,12 +2,14 @@
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
   
 image:
-  repository: et02-harbor.safaricomet.net/bigdata/hive-spark
+  repository: et01-harbor.safaricomet.net/bigdata/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
 - name: regcred
+
+serviceAccount: bigdata
 
 tolerations:
 - key: "dedicated"
@@ -90,10 +92,48 @@ hive_spark_worker:
           averageUtilization: 80
 
 ingress:
-  hive:
-    enabled: true
-    host: hive.big-data2.safaricomet.net
-
+  enabled: true
+  hostPaths:
+  - host: hive.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 10002
+  - host: hive-exec-sm.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 8080
+  - host: hive-exec-sw.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 8081
+  - host: hive-exec-wd.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 4040
 conf:
   hadoopConfigMap: hadoop-hadoop
   hiveSite:
