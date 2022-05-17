@@ -4,7 +4,7 @@ replicaCount: 3
 
 image:
   repository: kapkiai/nifi
-  tag: "1.15.10"
+  tag: "1.16.1"
   pullPolicy: "IfNotPresent"
 
 # securityContext:
@@ -43,6 +43,10 @@ properties:
   safetyValve:
     nifi.web.http.network.interface.default: eth0
     nifi.web.http.network.interface.lo: lo
+  nifiRegUrl: https://nifi-registry:18443
+  hdfsConfig: /opt/nifi/nifi-current/ext-config/core-site.xml,/opt/nifi/nifi-current/ext-config/hdfs-site.xml
+  hdfsUrl: hdfs://hdfs-location
+  hdfsPath: /nifi/nars
 
   # customLibPath: "/opt/nifi/external-nar"
 
