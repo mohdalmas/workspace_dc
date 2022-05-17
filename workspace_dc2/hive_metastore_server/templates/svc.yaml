@@ -56,6 +56,7 @@ metadata:
     {{- include "hive.labels" . | nindent 4 }}
 spec:
   type: LoadBalancer
+  loadBalancerIP: 10.3.141.44
   ports:
   - name: hive-server
     port: 10000

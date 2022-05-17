@@ -59,6 +59,9 @@ spec:
       - name: spark-master
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+          - /bin/bash
+          - /opt/spark/conf/startup.sh
         ports:
         - name: http
           containerPort: 8080
@@ -93,6 +96,9 @@ spec:
         - mountPath: /opt/spark/conf/spark-defaults.conf
           name: spark-config
           subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/startup.sh
+          name: spark-config
+          subPath: startup.sh
         - mountPath: /opt/spark/conf/core-site.xml
           name: hadoop-config
           subPath: core-site.xml
@@ -114,6 +120,8 @@ spec:
             path: hive-site.xml
           - key: spark-defaults.conf
             path: spark-defaults.conf
+          - key: startup.sh
+            path: startup.sh
       - name: hadoop-config
         configMap:
           {{- if .Values.conf.hadoopConfigMap }}

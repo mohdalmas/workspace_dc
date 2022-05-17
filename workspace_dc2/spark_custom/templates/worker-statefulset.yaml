@@ -13,7 +13,7 @@ spec:
       app.kubernetes.io/component: worker
       app.kubernetes.io/instance: {{ .Release.Name | quote }}
   serviceName: {{ .Release.Name }}-headless
-  replicas: 1
+  replicas: {{ .Values.spark_worker.replicas }}
   template:
     metadata:
       labels:
@@ -58,6 +58,9 @@ spec:
       containers:
       - name: spark-worker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command:
+          - /bin/bash
+          - /opt/spark/conf/startup.sh
         ports:
         - name: http
           containerPort: 8081
@@ -74,6 +77,8 @@ spec:
           value: {{ .Values.spark.master.url | quote }}
         - name: SPARK_EXECUTION_CORES
           value: {{ .Values.spark.worker.executioncores | quote }}
+        - name: SPARK_EXECUTION_MEMORY
+          value: {{ .Values.spark.worker.executionmemory | quote }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         # readinessProbe:
@@ -95,6 +100,9 @@ spec:
         - mountPath: /opt/spark/conf/spark-defaults.conf
           name: spark-config
           subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/startup.sh
+          name: spark-config
+          subPath: startup.sh
         - mountPath: /opt/spark/conf/core-site.xml
           name: hadoop-config
           subPath: core-site.xml
@@ -116,6 +124,8 @@ spec:
             path: hive-site.xml
           - key: spark-defaults.conf
             path: spark-defaults.conf
+          - key: startup.sh
+            path: startup.sh
       - name: hadoop-config
         configMap:
           {{- if .Values.conf.hadoopConfigMap }}

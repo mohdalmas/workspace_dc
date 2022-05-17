@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-worker
+  labels:
+    app.kubernetes.io/name: {{ include "hive.name" . }}
+    app.kubernetes.io/component: hive
+    {{- include "hive.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "hive.name" . }}
+      app.kubernetes.io/component: hive
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  serviceName: {{ .Release.Name }}-service
+  replicas: {{ .Values.hive_spark_worker.replicas }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "hive.name" . }}
+        app.kubernetes.io/component: hive
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    spec:
+      serviceAccountName: {{.Values.serviceAccount }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      containers:
+      - name: hive-spark-worker
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+          - /bin/bash
+          - /opt/hive/conf/startup.sh
+        env:
+        - name: SPARK_MODE
+          value: "worker"
+        - name: HADOOP_USER_NAME
+          value: "hive"
+        - name: SPARK_MASTER_HOST
+          value: hive-0
+        - name: SPARK_MASTER_URL
+          value: spark://hive-0.hive-service:7077
+        - name: SPARK_EXECUTION_CORES
+          value: {{ .Values.hive_spark_worker.cores | quote}}
+        resources:
+{{ toYaml .Values.hive_spark_worker.resources | indent 10 }}
+        volumeMounts:
+        - mountPath: /opt/hive/conf/startup.sh
+          name: hive-config
+          subPath: startup.sh 
+        - mountPath: /opt/hive/conf/hive-site.xml
+          name: hive-config
+          subPath: hive-site.xml 
+        - mountPath: /opt/spark/conf/hive-site.xml
+          name: hive-config
+          subPath: hive-site.xml
+        - mountPath: /opt/spark/conf/spark-defaults.conf
+          name: hive-config
+          subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/core-site.xml
+          name: hadoop-config
+          subPath: core-site.xml
+        - mountPath: /opt/spark/conf/hdfs-site.xml
+          name: hadoop-config
+          subPath: hdfs-site.xml
+        - mountPath: /opt/spark/conf/yarn-site.xml
+          name: hadoop-config
+          subPath: yarn-site.xml
+        - mountPath: /opt/spark/conf/mapred-site.xml
+          name: hadoop-config
+          subPath: mapred-site.xml    
+      volumes:
+      - name: hive-config
+        configMap:
+          name: {{ include "hive.name" . }}-cm
+          items:
+          - key: hive-site.xml
+            path: hive-site.xml
+          - key: spark-defaults.conf
+            path: spark-defaults.conf
+          - key: startup.sh
+            path: startup.sh
+      - name: hadoop-config
+        configMap:
+          {{- if .Values.conf.hadoopConfigMap }}
+          name: {{ .Values.conf.hadoopConfigMap }}
+          {{- end }}

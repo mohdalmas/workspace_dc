@@ -16,41 +16,79 @@ spec:
       labels: 
         app: jupyterhub 
     spec:
+      imagePullSecrets:
+      - name: regcred
       serviceAccountName: bigdata
+      # initContainers:
+      # - name: install-prestart
+        # image: et02-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
+        # imagePullPolicy: IfNotPresent
+        # env:
+        # - name: TZ
+          # value: Africa/Nairobi
+        # - name: http_proxy
+          # value: "http://proxy1.safaricomet.net:3128"
+        # - name: https_proxy
+          # value: "http://proxy1.safaricomet.net:3128" 
+        # command:  
+           # - "/bin/bash"
+           # - "/etc/jupyterhub/startup.sh"
+        # volumeMounts:
+        # - mountPath: "/usr/lib/python3.6/site-packages"
+          # name: emp-dir
+        # - mountPath: "/etc/jupyterhub/startup.sh"
+          # name: jupyterhub-etc-config
+          # subPath: startup.sh
       containers:
       - name: jupyterhub-container 
-        image: mohdalmasansari/jupyterhub:v2.1.0-beta-ubi8.5
+        image: et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: Africa/Nairobi
+        - name: JAVA_HOME
+          value: "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64"                    
         - name: http_proxy
-          value: "http://proxy2.safaricom.net:8080"
+          value: "http://proxy1.safaricomet.net:3128"
         - name: https_proxy
-          value: "http://proxy2.safaricom.net:8080"          
+          value: "http://proxy1.safaricomet.net:3128"          
         ports:
         - containerPort: 8000
         volumeMounts:
-        # - mountPath: "/home"
-          # name: jupyterhub-home
-        # - mountPath: "/srv/jupyterhub/"
-          # name: jupyterhub-srv
+        # - mountPath: "/usr/lib/python3.6/site-packages"
+          # name: emp-dir
+        - mountPath: "/home"
+          name: jupyterhub-home
+        - mountPath: "/srv/jupyterhub/"
+          name: jupyterhub-srv
         - mountPath: "/etc/jupyterhub/jupyterhub_config.py"
           name: jupyterhub-etc-config
           subPath: jupyterhub_config.py
+        - mountPath: "/usr/bin"
+          name: jupyterhub-soft
+        - mountPath: "/usr/lib/python3.6/site-packages"
+          name: jupyterhub-python
       volumes:
-      # - name: jupyterhub-home
-        # persistentVolumeClaim:
-          # claimName: jupyterhub-pvc-home
-      # - name: jupyterhub-srv
-        # persistentVolumeClaim:
-          # claimName: jupyterhub-pvc-srv
+      - name: jupyterhub-home
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-home
+      - name: jupyterhub-srv
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-srv
       - name: jupyterhub-etc-config
         configMap:
           name: jupyterhub-config
           items:
           - key: jupyterhub_config.py
             path: jupyterhub_config.py
+          - key: startup.sh
+            path: startup.sh
+      - name: jupyterhub-soft
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-soft
+      - name: jupyterhub-python
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-python
 ---
 #Jupyterhub-service
 apiVersion: v1 
@@ -66,17 +104,3 @@ spec:
     protocol: TCP
   selector: 
     app: jupyterhub
-
-# #Jupyterhub-service
-# apiVersion: v1 
-# kind: Service 
-# metadata: 
-  # name: jupyterhub--external
-# spec: 
-  # type: LoadBalancer
-  # ports: 
-  # - name: jupyterhub-port
-    # port: 8000
-    # protocol: TCP
-  # selector: 
-    # app: jupyterhub

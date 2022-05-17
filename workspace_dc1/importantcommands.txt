@@ -5,7 +5,10 @@ Safaricomet\Mohd.Almas
 Safaricomet\svc-bigdata-admin
 lyOdmSBwCsZnD4dLnOAE
 
-http://proxy2.safaricom.net:8080
+export http_proxy=http://proxy2.safaricomet.net:3128
+export https_proxy=http://proxy2.safaricomet.net:3128
+export HTTP_PROXY=http://proxy2.safaricomet.net:3128
+export HTTPS_PROXY=http://proxy2.safaricomet.net:3128
 
 Sunil.Kumar
 Y4T&zcX9d(ns
@@ -16,6 +19,7 @@ kubectl config current-context
 kubectl config set-context --current --namespace=et01-tkg-bigdata-prod
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
+kubectl config set-context --current --namespace=tanzu-system-monitoring
 
 kubectl create secret docker-registry regcred --docker-server=et01-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
 

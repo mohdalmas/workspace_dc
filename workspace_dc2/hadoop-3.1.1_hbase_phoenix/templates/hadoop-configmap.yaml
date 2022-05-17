@@ -252,7 +252,7 @@ data:
 {{- end -}}
       <property>
         <name>dfs.client.datanode-restart.timeout</name>
-        <value>30s</value>
+        <value>30</value>
       </property>
       <property>
         <name>dfs.datanode.use.datanode.hostname</name>
@@ -336,6 +336,7 @@ data:
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
       </property> 
+      <property><name>yarn.app.mapreduce.am.resource.mb</name><value>2048</value></property> 
     </configuration>
 
   slaves: |
@@ -518,7 +519,7 @@ data:
       </property>
       <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>13312</value>
+        <value>8192</value>
       </property>
       <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>

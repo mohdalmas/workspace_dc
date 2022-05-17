@@ -19,6 +19,9 @@ spec:
       component: hdfs-nn
   template:
     metadata:
+      annotations:
+        prometheus.io/port: "17106"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ include "hadoop.name" . }}
         release: {{ .Release.Name }}
@@ -65,6 +68,13 @@ spec:
         - "/bin/bash"
         - "/tmp/hadoop-config/bootstrap.sh"
         - "-d"
+        env:
+        # - name: HDFS_NAMENODE_OPTS
+          # value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6444  -javaagent:/opt/jmx_prometheus_javaagent-0.14.0.jar=17106:/tmp/namenode.yaml $HADOOP_NAMENODE_OPTS"
+        ports:
+        - containerPort: 17106
+          name: tcp-jmx-metrics
+          protocol: TCP
         resources:
 {{ toYaml .Values.hdfs.nameNode.resources | indent 10 }}
         readinessProbe:
