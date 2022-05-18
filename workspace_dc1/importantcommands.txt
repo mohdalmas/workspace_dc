@@ -10,6 +10,9 @@ export https_proxy=http://proxy2.safaricomet.net:3128
 export HTTP_PROXY=http://proxy2.safaricomet.net:3128
 export HTTPS_PROXY=http://proxy2.safaricomet.net:3128
 
+unset https_proxy http_proxy
+
+
 Sunil.Kumar
 Y4T&zcX9d(ns
 
@@ -99,6 +102,7 @@ docker pull quay.io/strimzi/kafka-bridge:0.21.3
 docker pull quay.io/strimzi/jmxtrans:0.27.1
 docker pull quay.io/strimzi/kaniko-executor:0.27.1
 docker pull quay.io/strimzi/maven-builder:0.27.1
+docker pull apache/druid:0.22.1
 
 
 docker tag mohdalmasansari/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0                 et01-harbor.safaricomet.net/bigdata/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
@@ -119,6 +123,7 @@ docker tag quay.io/strimzi/kafka-bridge:0.21.3    et01-harbor.safaricomet.net/bi
 docker tag quay.io/strimzi/jmxtrans:0.27.1        et01-harbor.safaricomet.net/bigdata/strimzi/jmxtrans:0.27.1
 docker tag quay.io/strimzi/kaniko-executor:0.27.1 et01-harbor.safaricomet.net/bigdata/strimzi/kaniko-executor:0.27.1
 docker tag quay.io/strimzi/maven-builder:0.27.1   et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
+docker tag apache/druid:0.22.1   et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
 
 docker push et01-harbor.safaricomet.net/bigdata/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
 docker push et01-harbor.safaricomet.net/bigdata/hive-spark:hive-3.1.0-spark-2.3.0-scala-2.11.6
@@ -138,3 +143,11 @@ docker push et01-harbor.safaricomet.net/bigdata/strimzi/kafka-bridge:0.21.3
 docker push et01-harbor.safaricomet.net/bigdata/strimzi/jmxtrans:0.27.1
 docker push et01-harbor.safaricomet.net/bigdata/strimzi/kaniko-executor:0.27.1
 docker push et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
+
+
+docker pull apache/druid:0.22.1
+docker tag apache/druid:0.22.1   et01-harbor.safaricomet.net/bigdata/druid:0.22.1
+docker push et01-harbor.safaricomet.net/bigdata/druid:0.22.1
+docker pull kenchir/postgresql:11.10.0-debian-10
+docker tag kenchir/postgresql:11.10.0-debian-10 et01-harbor.safaricomet.net/bigdata/postgresql.10.0-debian-10-r83
+docker push et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
