@@ -149,5 +149,23 @@ docker pull apache/druid:0.22.1
 docker tag apache/druid:0.22.1   et01-harbor.safaricomet.net/bigdata/druid:0.22.1
 docker push et01-harbor.safaricomet.net/bigdata/druid:0.22.1
 docker pull kenchir/postgresql:11.10.0-debian-10
-docker tag kenchir/postgresql:11.10.0-debian-10 et01-harbor.safaricomet.net/bigdata/postgresql.10.0-debian-10-r83
+docker tag kenchir/postgresql:11.10.0-debian-10 et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
 docker push et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
+
+
+
+
+Druid Authorization::
+curl -i -v  -H "Content-Type: application/json" -u svc-bigdata-admin -X POST http://druid-coordinator-0.druid-coordinator.et01-tkg-bigdata-prod.svc.cluster.local:8081/druid-ext/basic-security/authentication/db/ldap/users/Alphonce.Oniala 
+
+curl -i -v  -H "Content-Type: application/json" -u svc-bigdata-admin -X POST http://druid-coordinator-0.druid-coordinator.et01-tkg-bigdata-prod.svc.cluster.local:8081/druid-ext/basic-security/authorization/db/ldapauth/users/Kenneth.Kipkogei 
+curl -i -v  -H "Content-Type: application/json" -u svc-bigdata-admin -X POST http://druid-coordinator-0.druid-coordinator.et01-tkg-bigdata-prod.svc.cluster.local:8081/druid-ext/basic-security/authorization/db/ldapauth/users/Kenneth.Kipkogei/roles/admin 
+
+
+
+PSQL after LDAP:::
+for Authorization:::-->
+CREATE ROLE "svc-bigdata-admin" WITH SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
+GRANT ALL PRIVILEGES ON DATABASE metastore TO "svc-bigdata-admin";
+GRANT ALL PRIVILEGES ON DATABASE nifireg TO "svc-bigdata-admin";
+GRANT ALL PRIVILEGES ON DATABASE druid TO "svc-bigdata-admin";

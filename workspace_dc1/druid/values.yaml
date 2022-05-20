@@ -92,6 +92,7 @@ broker:
   replicaCount: 2
   port: 8082
   serviceType: LoadBalancer
+  loadBalancerIP: 10.3.41.41
   securityContext:
     runAsUser: 0
     runAsGroup: 0
@@ -442,8 +443,8 @@ zookeeper:
 mysql:
   enabled: false
   mysqlRootPassword: druidroot
-  mysqlUser: druid
-  mysqlPassword: druid
+  mysqlUser: svc-bigdata-admin
+  mysqlPassword: lyOdmSBwCsZnD4dLnOAE
   mysqlDatabase: druid
   configurationFiles:
     mysql_collate.cnf: |-
@@ -457,8 +458,8 @@ mysql:
 postgresql:
   enabled: false
   postgresqlUrl: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/druid
-  postgresqlUsername: druid
-  postgresqlPassword: druid
+  postgresqlUsername: svc-bigdata-admin
+  postgresqlPassword: lyOdmSBwCsZnD4dLnOAE
   postgresqlDatabase: druid
   service:
     port: 5432

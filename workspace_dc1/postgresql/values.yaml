@@ -20,7 +20,7 @@ image:
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -319,16 +319,16 @@ postgresqlPghbaRemoveFilters:
 ## LDAP configuration
 ##
 ldap:
-  enabled: false
+  enabled: true
   url: ''
-  server: ''
-  port: ''
+  server: 'safaricomet.net'
+  port: '389'
   prefix: ''
   suffix: ''
-  baseDN: ''
-  bindDN: ''
-  bind_password:
-  search_attr: ''
+  baseDN: 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  bindDN: 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  bind_password: lyOdmSBwCsZnD4dLnOAE
+  search_attr: 'sAMAccountName'
   search_filter: ''
   scheme: ''
   tls: {}

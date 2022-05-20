@@ -16,6 +16,9 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
+# For Authorization #
+| curl -i -v  -H "Content-Type: application/json" -u svc-bigdata-admin -X POST http://druid-coordinator-0.druid-coordinator.et01-tkg-bigdata-prod.svc.cluster.local:8081/druid-ext/basic-security/authorization/db/ldapauth/users/<AD User> |
+| curl -i -v  -H "Content-Type: application/json" -u svc-bigdata-admin -X POST http://druid-coordinator-0.druid-coordinator.et01-tkg-bigdata-prod.svc.cluster.local:8081/druid-ext/basic-security/authorization/db/ldapauth/users/<AD User>/roles/<Role name> |
 
 # Apache Druid
 
