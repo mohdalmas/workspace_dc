@@ -1,5 +1,3 @@
-#!/bin/bash
-
 . /opt/spark/conf/spark-env.sh
 
 if [ "$SPARK_MODE" == "master" ]; then

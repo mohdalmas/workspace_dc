@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ldaptest
-  namespace: tkg-bigdata-ns
   labels:
     app.kubernetes.io/name: ldaptest
 spec:
@@ -15,6 +14,7 @@ spec:
       labels:
         app.kubernetes.io/name: ldaptest
     spec:
+      serviceAccountName: "bigdata"
       containers:
         - name: ldaptest
           image: docker.io/rroemhild/test-openldap

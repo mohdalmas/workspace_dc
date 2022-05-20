@@ -153,9 +153,9 @@ conf:
     hive.zookeeper.client.port: "2181"
     hive.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
     javax.jdo.option.ConnectionDriverName: org.postgresql.Driver
-    javax.jdo.option.ConnectionPassword: hive
+    javax.jdo.option.ConnectionPassword: lyOdmSBwCsZnD4dLnOAE
     javax.jdo.option.ConnectionURL: jdbc:postgresql://bigdata-psql-postgresql-headless/metastore
-    javax.jdo.option.ConnectionUserName: hive
+    javax.jdo.option.ConnectionUserName: svc-bigdata-admin
     hive.support.concurrency: true
     hive.exec.reducers.bytes.per.reducer: "256000000"
     hive.exec.reducers.max: "1009"
