@@ -16,7 +16,7 @@ modules:
       # schema cache properties
       cache:
         enableCaching : true
-#       Define caching properties below
+      # Define caching properties below
         properties:
           # inmemory schema versions cache size
           schemaCacheSize: 10000
@@ -103,20 +103,30 @@ enableCors: false
 #httpProxyPassword: "password"
 
 server:
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
   applicationConnectors:
-    - type: https
-      port: 8445
-      keyStorePath: ./keystore.p12 
-      keyStorePassword: 6366107884598f3e2c4a7734522ce2bf 
-      validateCerts: false
-      validatePeers: false 
+    - type: http
+      port: 9090
+#    - type: https
+#      port: 8443
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+# this requires the alpn-boot library on the JVM's boot classpath
+#    - type: spdy3
+#      port: 8445
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
   adminConnectors:
-    - type: https
-      port: 8446
-      keyStorePath: ./keystore.p12 
-      keyStorePassword: 6366107884598f3e2c4a7734522ce2bf
-      validateCerts: false
-      validatePeers: false
+    - type: http
+      port: 9091
+#    - type: https
+#      port: 8444
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
 
 # Logging settings.
 logging:
