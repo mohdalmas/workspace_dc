@@ -128,7 +128,7 @@ spec:
         - name: LDAP_MANAGER_PASSWORD
           value: lyOdmSBwCsZnD4dLnOAE
         - name: LDAP_URL
-          value: ldap://safaricomet.net:389
+          value: ldap://10.3.108.11:389
         - name: LDAP_USER_SEARCH_BASE
           value: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
         - name: LDAP_USER_SEARCH_FILTER
@@ -142,9 +142,9 @@ spec:
         - name: NIFI_REGISTRY_DB_DIR
           value: /opt/nifi-registry/jars
         - name: NIFI_REGISTRY_DB_USER
-          value: nifireg
+          value: svc-bigdata-admin
         - name: NIFI_REGISTRY_DB_PASS
-          value: " NiFiR3g@123!"
+          value: lyOdmSBwCsZnD4dLnOAE
 
          # CA Configs
         - name: NIFI_CA_HOST    #NiFI CA as specified in CA server. default one is 'nifi-ca-cs', hostname for ca server. Make sure it marches with ca server

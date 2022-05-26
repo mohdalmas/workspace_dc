@@ -60,7 +60,7 @@ auth:
 
   ldap:
     enabled: true
-    host: ldap://safaricomet.net:389
+    host: ldap://10.3.108.11:389
     searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     username: Mathew.Kiprop
