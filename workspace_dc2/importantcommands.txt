@@ -1,6 +1,8 @@
 kubectl vsphere login --server 10.3.141.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name et02-tkg-bigdata-prod-workload-cluster --tanzu-kubernetes-cluster-namespace et02-tkg-bigdata-prod --vsphere-username=Safaricomet\Mohd.Almas
 wFB&9N2pku!G
 
+svc-bigdata-admin@safaricomet.net 
+lyOdmSBwCsZnD4dLnOAE
 
 Safaricomet\Mohd.Almas
 
@@ -136,3 +138,13 @@ docker push et02-harbor.safaricomet.net/bigdata/kafka-ui:8d10eb69e8b91cf6b807cdb
 
 sed -i 's/cluster.id=Ml9qPxcCQ92HNMOt6qDk9g/cluster.id=9V4QUE4tQ02AmOYrBsU2hA/' /var/lib/kafka/data/kafka-log1/meta.properties
 sed -i 's/cluster.id=Ml9qPxcCQ92HNMOt6qDk9g/cluster.id=9V4QUE4tQ02AmOYrBsU2hA/' /var/lib/kafka/data/kafka-log2/meta.properties
+
+
+
+- install Java - 8 jdk-8
+
+- Set JAVA_HOME
+
+- copy spark.jar and postgres.jar to /tmp/ persistent value
+
+
