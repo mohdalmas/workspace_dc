@@ -5,13 +5,13 @@ replicaCount: 3
 image:
   repository: kapkiai/nifi
   tag: "1.16.1"
-  pullPolicy: "IfNotPresent"
+  pullPolicy: "Always"
 
-# securityContext:
-  # runAsUser: 1000
-  # fsGroup: 1000
-imagePullSecrets:
-- name: regcred
+securityContext:
+  runAsUser: 0
+  fsGroup: 0
+# imagePullSecrets:
+# - name: regcred
 
 serviceAccount: bigdata
 
@@ -35,7 +35,7 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443 
-  webProxyHost: "nifi.big-data.safaricomet.net"
+  webProxyHost: "nifi.big-data.safaricomet.net,10.3.41.39:8443"
   clusterPort: 6007
   provenanceStorage: "4 GB"
   siteToSite:
@@ -43,9 +43,9 @@ properties:
   safetyValve:
     nifi.web.http.network.interface.default: eth0
     nifi.web.http.network.interface.lo: lo
-  nifiRegUrl: https://nifi-registry:18443
+  nifiRegUrl: https://nifi-registry-0.nifi-registry.et01-tkg-bigdata-prod.svc.cluster.local:18443
   hdfsConfig: /opt/nifi/nifi-current/ext-config/core-site.xml,/opt/nifi/nifi-current/ext-config/hdfs-site.xml
-  hdfsUrl: hdfs://hdfs-location
+  hdfsUrl: hdfs://hadoop-hadoop-hdfs-nn:9000
   hdfsPath: /nifi/nars
 
   # customLibPath: "/opt/nifi/external-nar"
@@ -64,7 +64,7 @@ auth:
 
   ldap:
     enabled: true
-    host: ldap://safaricomet.net:389
+    host: ldap://10.3.108.11:389
     searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     username: Mathew.Kiprop
@@ -234,6 +234,8 @@ extraVolumeMounts:
   - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
     name: hadoop-config
     subPath: yarn-site.xml
+  # - mountPath: /opt/nifi/extensions
+  #   name: nifi-extensions
   # - mountPath: /opt/nifi/external-nar
     # name: ext-nar
   # - mountPath: /opt/nifi/external-jar

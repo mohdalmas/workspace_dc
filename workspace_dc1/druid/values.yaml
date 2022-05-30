@@ -43,9 +43,9 @@ configVars:
   ## Druid Common Configurations. ref: https://druid.aache.org/docs/latest/configuration/index.html#common-configurations
   druid_extensions_loadList: '["druid-datasketches","druid-basic-security","druid-histogram", "druid-datasketches", "druid-lookups-cached-global", "postgresql-metadata-storage", "druid-hdfs-storage","druid-kafka-indexing-service"]'
   druid_metadata_storage_type: postgresql
-  druid_metadata_storage_connector_connectURI: jdbc:postgresql://postgres:5432/druid
-  druid_metadata_storage_connector_user: druid
-  druid_metadata_storage_connector_password: druid
+  druid_metadata_storage_connector_connectURI: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/druid
+  druid_metadata_storage_connector_user: svc-bigdata-admin
+  druid_metadata_storage_connector_password: lyOdmSBwCsZnD4dLnOAE
   druid_storage_type: hdfs
   druid_storage_storageDirectory: /druid/segments
   # \\druid_indexer_logs_type: file
@@ -62,7 +62,7 @@ configVars:
   druid_auth_authenticator_ldap_type: basic
   druid_auth_authenticator_ldap_enableCacheNotifications: 'true'
   druid_auth_authenticator_ldap_credentialsValidator_type: ldap
-  druid_auth_authenticator_ldap_credentialsValidator_url: ldap://safaricomet.net:389
+  druid_auth_authenticator_ldap_credentialsValidator_url: ldap://10.3.108.11:389
   druid_auth_authenticator_ldap_credentialsValidator_bindUser: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
   druid_auth_authenticator_ldap_credentialsValidator_bindPassword: lyOdmSBwCsZnD4dLnOAE
   druid_auth_authenticator_ldap_credentialsValidator_baseDn: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
