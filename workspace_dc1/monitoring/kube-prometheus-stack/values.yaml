@@ -28,6 +28,11 @@ commonLabels: {}
 # scmhash: abc123
 # myLabel: aakkmd
 
+# envConfigVars:
+  # http_proxy: "http://proxy1.safaricomet.net:3128"
+  # https_proxy: "http://proxy1.safaricomet.net:3128"
+  
+
 ## Create default rules for monitoring the cluster
 ##
 defaultRules:
@@ -90,13 +95,12 @@ defaultRules:
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
-additionalPrometheusRulesMap: {}
-#  rule-name:
-#    groups:
-#    - name: my_group
-#      rules:
-#      - record: my_record
-#        expr: 100 * my_record
+additionalPrometheusRulesMap:
+  alerting:
+    alertmanagers:
+    - static_configs:
+      - targets:
+         - alertmanager-operated:9093
 
 ##
 global:
@@ -164,39 +168,59 @@ alertmanager:
   ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
   ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
   ##
-  config:
+  config:  
     global:
       resolve_timeout: 5m
-      slack_api_url: "https://hooks.slack.com/services/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"
+      # slack_api_url: "https://hooks.slack.com/services/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"
     route:
       group_by: ['job']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
-      receiver: 'null'
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 24h
+      receiver: 'email'
       routes:
-      - receiver: 'null'
-        matchers:
-          - alertname =~ "InfoInhibitor|Watchdog"
+      # - receiver: 'null'
+        # matchers:
+          # - alertname =~ "InfoInhibitor|Watchdog"
+      # - match:
+        # receiver: 'slack'
+        # continue: true
       - match:
-        receiver: 'slack'
+        receiver: 'email'
         continue: true
+        matchers:
+        - alertname: "NoMessageForTooLong"
+        
     receivers:
-    - name: 'null'
-    - name: 'slack'
-      slack_configs:
-      - channel: '#alerts'
-        send_resolved: false
+    - name: 'email'
+      email_configs:
+      - to: 'mohd.almas@safaricom.et,mathew.kapkiai@safaricom.et,alphonce.oniala@safaricom.et'
+        from: 'Bigdata.Alerts@safaricom.et'
+        smarthost: 10.3.124.25:25
+        auth_username: 'Bigdata.Alerts@safaricom.et'
+        auth_identity: 'Bigdata.Alerts@safaricom.et'
+        auth_password: ''
+        require_tls: false
         title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Monitoring Event Notification'
-        text: >-
-          {{ range .Alerts }}
-            *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
-            *Description:* {{ .Annotations.description }}
-            *Graph:* <{{ .GeneratorURL }}|:chart_with_upwards_trend:> *Runbook:* <{{ .Annotations.runbook }}|:spiral_note_pad:>
-            *Details:*
-            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-            {{ end }}
-          {{ end }}
+        text: "Testing alert"
+        send_resolved: true
+    
+    # receivers:
+    # - name: 'null'
+    # - name: 'slack'
+      # slack_configs:
+      # - channel: '#alerts'
+        # send_resolved: false
+        # title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Monitoring Event Notification'
+        # text: >-
+          # {{ range .Alerts }}
+            # *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+            # *Description:* {{ .Annotations.description }}
+            # *Graph:* <{{ .GeneratorURL }}|:chart_with_upwards_trend:> *Runbook:* <{{ .Annotations.runbook }}|:spiral_note_pad:>
+            # *Details:*
+            # {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+            # {{ end }}
+          # {{ end }}
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -439,6 +463,7 @@ alertmanager:
     ##
     podMetadata: {}
 
+
     ## Image of Alertmanager
     ##
     image:
@@ -626,7 +651,7 @@ alertmanager:
 
     ## Containers allows injecting additional containers. This is meant to allow adding an authentication proxy to an Alertmanager pod.
     ##
-    containers: []
+    containers: [] 
 
     # Additional volumes on the output StatefulSet definition.
     volumes: []
