@@ -1,4 +1,13 @@
+DC1:::
 kubectl vsphere login --insecure-skip-tls-verify --server 10.3.40.1 --tanzu-kubernetes-cluster-name et01-tkg-bigdata-prod-workload-cluster --tanzu-kubernetes-cluster-namespace et01-tkg-bigdata-prod --vsphere-username=Safaricomet\Mohd.Almas
+
+kubectl config set-context --current --namespace=et01-tkg-bigdata-prod
+
+DC2:::
+kubectl vsphere login --server 10.3.141.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name et02-tkg-bigdata-prod-workload-cluster --tanzu-kubernetes-cluster-namespace et02-tkg-bigdata-prod --vsphere-username=Safaricomet\Mohd.Almas
+
+kubectl config set-context --current --namespace=et02-tkg-bigdata-prod
+
 wFB&9N2pku!G
 
 Safaricomet\Mohd.Almas
@@ -23,6 +32,7 @@ kubectl config set-context --current --namespace=et01-tkg-bigdata-prod
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
 kubectl config set-context --current --namespace=tanzu-system-monitoring
+kubectl config set-context --current --namespace=bigdata-monitoring
 
 kubectl create secret docker-registry regcred --docker-server=et01-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
 
@@ -148,8 +158,8 @@ docker push et01-harbor.safaricomet.net/bigdata/strimzi/maven-builder:0.27.1
 docker pull apache/druid:0.22.1
 docker tag apache/druid:0.22.1   et01-harbor.safaricomet.net/bigdata/druid:0.22.1
 docker push et01-harbor.safaricomet.net/bigdata/druid:0.22.1
-docker pull kenchir/postgresql:11.10.0-debian-10
-docker tag kenchir/postgresql:11.10.0-debian-10 et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
+docker pull kenchir/postgres:11.10.0-v2
+docker tag kenchir/postgres:11.10.0-v2 et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
 docker push et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
 
 
@@ -169,3 +179,4 @@ CREATE ROLE "svc-bigdata-admin" WITH SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN
 GRANT ALL PRIVILEGES ON DATABASE metastore TO "svc-bigdata-admin";
 GRANT ALL PRIVILEGES ON DATABASE nifireg TO "svc-bigdata-admin";
 GRANT ALL PRIVILEGES ON DATABASE druid TO "svc-bigdata-admin";
+GRANT ALL PRIVILEGES ON DATABASE sce TO "svc-bigdata-admin";

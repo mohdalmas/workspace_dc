@@ -41,6 +41,14 @@ spec:
     port: 4040
     protocol: TCP
     targetPort: 4040
+  - name: hive-server-exporter
+    port: 17101
+    protocol: TCP
+    targetPort: 17101
+  - name: hive-metastore-exporter
+    port: 17102
+    protocol: TCP
+    targetPort: 17102
   selector:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
