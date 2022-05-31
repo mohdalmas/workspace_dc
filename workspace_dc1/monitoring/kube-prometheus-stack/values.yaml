@@ -28,10 +28,15 @@ commonLabels: {}
 # scmhash: abc123
 # myLabel: aakkmd
 
+# envConfigVars:
+  # http_proxy: "http://proxy1.safaricomet.net:3128"
+  # https_proxy: "http://proxy1.safaricomet.net:3128"
+  
+
 ## Create default rules for monitoring the cluster
 ##
 defaultRules:
-  create: false
+  create: true
   rules:
     alertmanager: true
     etcd: true
@@ -90,13 +95,12 @@ defaultRules:
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
-additionalPrometheusRulesMap: {}
-#  rule-name:
-#    groups:
-#    - name: my_group
-#      rules:
-#      - record: my_record
-#        expr: 100 * my_record
+additionalPrometheusRulesMap:
+  alerting:
+    alertmanagers:
+    - static_configs:
+      - targets:
+         - alertmanager-operated:9093
 
 ##
 global:
@@ -200,7 +204,8 @@ alertmanager:
         title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Monitoring Event Notification'
         text: "Testing alert"
         send_resolved: true
-        
+    
+    # receivers:
     # - name: 'null'
     # - name: 'slack'
       # slack_configs:
@@ -458,6 +463,7 @@ alertmanager:
     ##
     podMetadata: {}
 
+
     ## Image of Alertmanager
     ##
     image:
@@ -645,7 +651,7 @@ alertmanager:
 
     ## Containers allows injecting additional containers. This is meant to allow adding an authentication proxy to an Alertmanager pod.
     ##
-    containers: []
+    containers: [] 
 
     # Additional volumes on the output StatefulSet definition.
     volumes: []
