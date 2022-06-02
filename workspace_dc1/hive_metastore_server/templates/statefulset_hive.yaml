@@ -16,6 +16,8 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+{{ toYaml .Values.hive_server.annotations | indent 8 }}
       labels:
         app.kubernetes.io/name: {{ include "hive.name" . }}
         app.kubernetes.io/component: hive

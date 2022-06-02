@@ -26,15 +26,6 @@ affinity:
           operator: In
           values:
           - Hadoop
-
-hive_metastore: 
-  resources: 
-    requests:
-      memory: "2Gi"
-      cpu: "1"
-    limits:
-      memory: "4Gi"
-      cpu: "2"
       
 hive_metastore: 
   resources: 
@@ -53,6 +44,10 @@ hive_server:
     limits:
       memory: "4Gi"
       cpu: "2"
+  annotations:
+    kubernetes.io/psp: privileged
+    prometheus.io/port: "17101"
+    prometheus.io/scrape: "true"
 
 hive_spark_master:
   resources: 

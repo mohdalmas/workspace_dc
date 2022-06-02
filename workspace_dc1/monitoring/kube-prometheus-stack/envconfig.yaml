@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kube-prometheus-stack.fullname" . }}-envconfig
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
+  labels:
+    app: {{ template "kube-prometheus-stack.name" . }}-envconfig
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
+data:
+{{ toYaml .Values.envConfigVars | indent 2 }}

@@ -147,6 +147,10 @@ spec:
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
+          # command:
+            # - "/bin/bash"
+            # - "ln -sf /dev/stdout postgresql.log"
+            # - "/opt/bitnami/postgresql/bin/postgres -D /bitnami/postgresql/data --config-file=/opt/bitnami/postgresql/conf/postgresql.conf"
           env:
             - name: BITNAMI_DEBUG
               value: {{ ternary "true" "false" .Values.image.debug | quote }}
