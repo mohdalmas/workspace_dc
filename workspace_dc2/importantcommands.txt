@@ -30,6 +30,7 @@ kubectl config get-contexts                          # display list of contexts
 kubectl config current-context 
 
 kubectl config set-context --current --namespace=et02-tkg-bigdata-prod
+kubectl config set-context --current --namespace=bigdata-monitoring
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
 
@@ -139,6 +140,10 @@ docker push et02-harbor.safaricomet.net/bigdata/kafka-ui:8d10eb69e8b91cf6b807cdb
 sed -i 's/cluster.id=Ml9qPxcCQ92HNMOt6qDk9g/cluster.id=9V4QUE4tQ02AmOYrBsU2hA/' /var/lib/kafka/data/kafka-log1/meta.properties
 sed -i 's/cluster.id=Ml9qPxcCQ92HNMOt6qDk9g/cluster.id=9V4QUE4tQ02AmOYrBsU2hA/' /var/lib/kafka/data/kafka-log2/meta.properties
 
+
+docker pull kenchir/postgres:11.10.0-v2
+docker tag kenchir/postgres:11.10.0-v2 et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
+docker push et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
 
 
 - install Java - 8 jdk-8
