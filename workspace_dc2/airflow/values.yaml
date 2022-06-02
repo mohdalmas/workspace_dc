@@ -56,7 +56,6 @@ diagnosticMode:
 
 ## @section Airflow common parameters
 
-
 pythonRequirements:
  - apache-airflow-providers-apache-spark
  - pyspark
@@ -153,6 +152,7 @@ extraEnvVars:
     value: "http://proxy1.safaricomet.net:3128"
   - name: "AIRFLOW__CORE__FERNET_KEY"
     value: "d9NQS-Z8vUv9MVMW9RzkrIHxoaYkTNIiiMn_Hb6-4_c="
+
   # - name: "AIRFLOW__CORE__LOGGING_LEVEL"
     # value: "DEBUG"  
     
@@ -239,7 +239,11 @@ web:
   args: []
   ## @param web.extraEnvVars Array with extra environment variables to add Airflow web pods
   ##
-  extraEnvVars: []
+  extraEnvVars:
+  - name: "AIRFLOW__CORE__EXPOSE_CONFIG"
+    value: "true"
+  - name: "AIRFLOW__LOGGING__LOGGING_LEVEL"
+    value: "DEBUG"
   ## @param web.extraEnvVarsCM ConfigMap containing extra environment variables for Airflow web pods
   ##
   extraEnvVarsCM: ""
@@ -1072,16 +1076,18 @@ git:
 ## @para
 ##
 ldap:
-  enabled: false
-  uri: 'ldap://ldap_server:389'
-  base: 'dc=example,dc=org'
-  uidField: 'cn'
-  binddn: 'cn=admin,dc=example,dc=org'
-  bindpw: ''
+  enabled: true
+  uri: 'ldap://10.3.108.11:389'
+  base: 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  uidField: "sAMAccountName"
+  searchAttribute: 'sAMAccountName'
+  binddn: 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  bindpw: 'lyOdmSBwCsZnD4dLnOAE'
+  superuser_filter: memberOf='CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
   userRegistration: 'True'
   userRegistrationRole: 'Public'
-  rolesMapping: '{ "cn=All,ou=Groups,dc=example,dc=org": ["User"], "cn=Admins,ou=Groups,dc=example,dc=org": ["Admin"], }'
-  rolesSyncAtLogin: 'True'
+  rolesMapping: '{ "OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net": ["mohd.almas"], "CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net": ["Admin"], }'
+  rolesSyncAtLogin: 'False'
 
   ## SSL/TLS parameters for LDAP
   ## @param ldap.tls.enabled Enabled TLS/SSL for LDAP, you must include the CA file.

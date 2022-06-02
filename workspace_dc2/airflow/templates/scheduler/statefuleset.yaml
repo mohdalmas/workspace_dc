@@ -205,11 +205,6 @@ spec:
         - name: custom-configuration-file
           configMap:
             name: {{ include "airflow.configMapName"  . }}
-        {{- if or .Values.configuration .Values.existingConfigmap $kube }}
-        - name: custom-configuration-file
-          configMap:
-            name: {{ include "airflow.configMapName"  . }}
-        {{- end }}
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}

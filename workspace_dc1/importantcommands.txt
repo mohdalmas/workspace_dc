@@ -33,6 +33,8 @@ kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
 kubectl config set-context --current --namespace=tanzu-system-monitoring
 kubectl config set-context --current --namespace=bigdata-monitoring
+kubectl config set-context --current --namespace=kube-system
+
 
 kubectl create secret docker-registry regcred --docker-server=et01-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
 
