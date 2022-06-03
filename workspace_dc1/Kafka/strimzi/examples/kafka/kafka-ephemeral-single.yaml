@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: my-cluster
+  name: kafka
 spec:
   kafka:
     version: 3.0.0
@@ -11,10 +11,22 @@ spec:
         port: 9092
         type: internal
         tls: false
-      - name: tls
-        port: 9093
-        type: internal
+      - name: external
+        port: 9094
+        type: loadbalancer
+        tls: false
+        authentication:
+          type: scram-sha-512
+      - name: externaltls
+        port: 9095
+        type: loadbalancer
         tls: true
+        authentication:
+          type: tls
+    authorization:
+      type: simple
+      superUsers:
+        - admin
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1

@@ -40,7 +40,7 @@ spec:
               mountPath: /opt/strimzi/custom-config/
           env:
             - name: STRIMZI_NAMESPACE
-              value: et01-tkg-bigdata-prod
+              value: et01-tkg-bigdata-prod,kafka-test
             - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
               value: "120000"
             - name: STRIMZI_OPERATION_TIMEOUT_MS
