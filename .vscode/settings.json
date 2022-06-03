@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/kafka.strimzi.io/v1beta2%40kafka": "file:///home/kapkiai/Safaricomet/deployments/workspace_dc/workspace_dc1/Kafka/kafka-persistent.yaml"
+    }
+}
