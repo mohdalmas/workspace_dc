@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: hadoop
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  podMetricsEndpoints:
+  - targetPort: 17106

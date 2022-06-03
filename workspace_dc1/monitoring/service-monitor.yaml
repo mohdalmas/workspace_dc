@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-service-monitor
+  labels:
+    release: bigdata-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      release: hadoop
+      prometheus: bigdata-prometheus
+      component: hdfs-nn
+  namespaceSelector:
+    any: true
+  endpoints:
+  - honorLabels: true
+    path: /metrics
+    port: jmx
+    # scheme: http
+    # scrapeTimeout: 30s

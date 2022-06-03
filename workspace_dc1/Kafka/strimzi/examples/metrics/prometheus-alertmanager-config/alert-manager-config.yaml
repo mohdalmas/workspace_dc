@@ -6,13 +6,13 @@ type: Opaque
 stringData:
   alertmanager.yaml: |
     global:
-      slack_api_url: https://hooks.slack.com/services/change/me/please
+      slack_api_url:  https://hooks.slack.com/services/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
     route:
       receiver: slack
     receivers:
     - name: slack
       slack_configs:
-      - channel: "#strimzi-alerts"
+      - channel: "#alerts"
         title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
         text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
         send_resolved: true

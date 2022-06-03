@@ -3,14 +3,14 @@ kind: PodMonitor
 metadata:
   name: cluster-operator-metrics
   labels:
-    app: strimzi
+    release: bigdata-prometheus
 spec:
   selector:
     matchLabels:
       strimzi.io/kind: cluster-operator
   namespaceSelector:
     matchNames:
-      - myproject
+      - et01-tkg-bigdata-prod
   podMetricsEndpoints:
   - path: /metrics
     port: http
@@ -20,14 +20,14 @@ kind: PodMonitor
 metadata:
   name: entity-operator-metrics
   labels:
-    app: strimzi
+    release: bigdata-prometheus
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: entity-operator
   namespaceSelector:
     matchNames:
-      - myproject
+      - et01-tkg-bigdata-prod
   podMetricsEndpoints:
   - path: /metrics
     port: healthcheck
@@ -37,14 +37,14 @@ kind: PodMonitor
 metadata:
   name: bridge-metrics
   labels:
-    app: strimzi
+    release: bigdata-prometheus
 spec:
   selector:
     matchLabels:
       strimzi.io/kind: KafkaBridge
   namespaceSelector:
     matchNames:
-      - myproject
+      - et01-tkg-bigdata-prod
   podMetricsEndpoints:
   - path: /metrics
     port: rest-api
@@ -54,7 +54,7 @@ kind: PodMonitor
 metadata:
   name: kafka-resources-metrics
   labels:
-    app: strimzi
+    release: bigdata-prometheus
 spec:
   selector:
     matchExpressions:
@@ -63,7 +63,7 @@ spec:
         values: ["Kafka", "KafkaConnect", "KafkaMirrorMaker", "KafkaMirrorMaker2"]
   namespaceSelector:
     matchNames:
-      - myproject
+      - et01-tkg-bigdata-prod
   podMetricsEndpoints:
   - path: /metrics
     port: tcp-prometheus

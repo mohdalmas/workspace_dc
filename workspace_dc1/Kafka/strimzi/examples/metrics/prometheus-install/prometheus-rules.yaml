@@ -4,6 +4,8 @@ metadata:
   labels:
     role: alert-rules
     app: strimzi
+    release: bigdata-prometheus
+
   name: prometheus-k8s-rules
 spec:
   groups:
