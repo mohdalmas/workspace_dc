@@ -19,6 +19,11 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
 {{- end }}
 {{- if .Values.ingress.tls }}
+  defaultBackend:
+    service:
+      name: {{ $fullName}}
+      port:
+        number: 80
   tls:
   {{- range .Values.ingress.tls }}
     - hosts:

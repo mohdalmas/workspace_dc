@@ -2,7 +2,7 @@
 #  - name: my-repository-secret
 image:
   repository: tchiotludo/akhq
-  tag: "" # uses Chart.AppVersion by default
+  tag: "latest" # uses Chart.AppVersion by default
 
 # custom annotations (example: for prometheus)
 annotations: {}
@@ -34,11 +34,258 @@ extraEnv: []
 
 ## Or you can also use configmap for the configuration...
 configuration:
+  logger:
+    levels:
+      io.micronaut.configuration.security.ldap: DEBUG
+      io.micronaut.configuration.security.basic.auth: DEBUG
+    # root: DEBUG
+
+  micronaut:
+    security:
+      enabled: true
+      token:
+        jwt:
+          signatures:
+            secret:
+              generator:
+                secret: 043a718774c572bd8a25adbeb1bfcd5c0256ae11cecf9f9c3f925d0e52beaf89
+
+      endpoints:
+        login:
+          enabled: true
+        logout:
+          enabled: true
+      # Ldap authenticaton configuration
+      # ldap:
+      #   default:
+      #     enabled: true
+      #     context:
+      #       server: 'ldap://10.3.108.11:389'
+      #       managerDn: 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+      #       managerPassword: 'lyOdmSBwCsZnD4dLnOAE'
+      #     search:
+      #       enabled: true
+      #       filter: 'sAMAccountName={0}'
+      #       base: "OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net"
+      #     groups:
+      #       enabled: true
+      #       subtree: true
+      #       base: "OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net" 
+      #       filter: 'sAMAccountName={0}'
   akhq:
+    security:
+      default-group: no-roles
+            
+      basic-auth:
+      - username: cvm
+        password: ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f
+        groups:
+        - topic-reader
+
+      - username: admin
+        password: 494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be
+        groups:
+        - admin
+      # ldap:
+      #   default-group: topic-reader
+      #   groups:
+      #     - name: group-ldap-1
+      #       groups: # Akhq groups list
+      #         - topic-reader
+      #     - name: group-ldap-2
+      #       groups:
+      #         - admin
+      #     - name: abcd
+      #       groups:
+      #         - adminv
+      #   users:
+      #     - username: Kenneth.Kipkogei
+      #       groups:
+      #         - abcd
+              # - topic-reader     
+      # default-group: admin # Default groups for all the user even unlogged user
+
     server:
-      access-log:
-        enabled: false
-        name: org.akhq.log.access
+      access-log: # Access log configuration (optional)
+        enabled: true # true by default
+        name: org.akhq.log.access # Logger name
+        format: "[Date: {}] [Duration: {} ms] [Url: {} {}] [Status: {}] [Ip: {}] [User: {}]" # Logger format
+        levels: DEBUG
+
+    # default kafka properties for each clients, available for admin / producer / consumer (optional)
+    clients-defaults:
+      consumer:
+        properties:
+          isolation.level: read_committed
+
+    # list of kafka cluster available for akhq
+    connections:
+      dc1-cluster: # url friendly name for the cluster (letter, number, _, -, ... dot are not allowed here)
+        properties: # standard kafka properties (optional)
+          bootstrap.servers: "10.3.41.32:9094"
+          sasl.jaas.config:  "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"admin\" password=\"cu5RAwn7tk18\";"
+          security.protocol: SASL_PLAINTEXT
+          sasl.mechanism: SCRAM-SHA-512
+       
+
+
+      dc2-cluster:
+        properties:
+          bootstrap.servers: "10.3.141.30:9094"
+          security.protocol: SASL_PLAINTEXT
+          sasl.mechanism: SCRAM-SHA-512
+          sasl.jaas.config:  "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"admin\" password=\"nv6t5s8EuPJd\";"
+      
+
+
+    # Topic list display options (optional)
+    topic:
+      retention: 172800000 # default retention period when creating topic
+      partition: 3 #  default number of partition when creating topic
+      replication: 3 # default number of replicas when creating topic
+      internal-regexps: # list of regexp to be considered as internal (internal topic can't be deleted or updated)
+        - "^_.*$"
+        - "^.*_schemas$"
+        - "^.*connect-config$"
+        - "^.*connect-offsets$1"
+        - "^.*connect-status$"
+      stream-regexps: # list of regexp to be considered as internal stream topic
+        - "^.*-changelog$"
+        - "^.*-repartition$"
+        - "^.*-rekey$"
+      skip-consumer-groups: false # Skip loading consumer group information when showing topics
+      skip-last-record: false # Skip loading last record date information when showing topics
+      show-all-consumer-groups: false # Expand list of consumer groups instead of showing one.
+      # Retry options for topic operations
+      retry:
+        topic-exists: # Delay between retries when checking for existence of newly created topics. This is needed as it might take the kafka broker a few seconds to create new topics.
+          delay: "3s"
+
+    # Topic display data options (optional)
+    topic-data:
+      size: 50 # max record per page (default: 50)
+      poll-timeout: 1000 # The time, in milliseconds, spent waiting in poll if data is not available in the buffer.
+      kafka-max-message-length: 1000000 # Max message length allowed to send to UI when retrieving a list of records in bytes.
+
+    # Ui Global Options (optional)
+    ui-options:
+      topic:
+        default-view: ALL  # default list view (ALL, HIDE_INTERNAL, HIDE_INTERNAL_STREAM, HIDE_STREAM). Overrides default
+        skip-consumer-groups: false # Skip loading consumer group information when showing topics. Overrides default
+        skip-last-record: true  # Skip loading last record date information when showing topics.  Overrides default
+        show-all-consumer-groups: true # Expand list of consumer groups instead of showing one. Overrides default.
+      topic-data:
+        sort: NEWEST # default sort order (OLDEST, NEWEST) (default: OLDEST).  Overrides default
+
+    # Auth & Roles (optional)
+
+      # Groups definition
+      groups:
+
+        admin: # unique key
+          name: admin # Group name
+          roles:  # roles for the group
+            - topic/read
+            - topic/insert
+            - topic/delete
+            - topic/config/update
+            - node/read
+            - node/config/update
+            - topic/data/read
+            - topic/data/insert
+            - topic/data/delete
+            - group/read
+            - group/delete
+            - group/offsets/update
+            - registry/read
+            - registry/insert
+            - registry/update
+            - registry/delete
+            - registry/version/delete
+            - acls/read
+            - connect/read
+            - connect/insert
+            - connect/update
+            - connect/delete
+            - connect/state/update
+          attributes:
+            # Regexp list to filter topic available for group
+            topics-filter-regexp:
+              - "test.*"
+            # Regexp list to filter connect configs visible for group
+            connects-filter-regexp:
+              - "^test.*$"
+            # Regexp list to filter consumer groups visible for group
+            consumer-groups-filter-regexp:
+              - "consumer.*"
+       
+        adm: # unique key
+          name: adm # Group name
+          roles:  # roles for the group
+            - topic/read   
+            - node/read
+            - node/config/update
+            - topic/data/read
+            - group/read      
+            - registry/read
+            - registry/insert
+            - registry/update
+            - registry/delete
+            - registry/version/delete
+            - acls/read
+            - connect/read
+            - connect/insert
+            - connect/update
+            - connect/delete
+            - connect/state/update
+          attributes:
+            # Regexp list to filter topic available for group
+            topics-filter-regexp:
+              - "cvm.*"
+            # Regexp list to filter connect configs visible for group
+            connects-filter-regexp:
+              - "^cvm.*$"
+            # Regexp list to filter consumer groups visible for group
+            consumer-groups-filter-regexp:
+              - "cvm.*"
+        
+        topic-reader:
+          name: topic-reader # Other group
+          roles:
+            - topic/read
+            - node/read
+            - topic/data/read
+            - group/read
+          attributes:
+            topics-filter-regexp:
+              - "test\\.reader.*"
+
+        # cvm: # unique key
+        #   name: cvm # Group name
+        #   roles:  # roles for the group
+        #     - topic/read
+        #     - node/read
+        #     - topic/data/read
+        #     - group/read
+         
+        #   attributes:
+        #     # Regexp list to filter topic available for group
+        #     topics-filter-regexp:
+        #       - "cvm.*"
+
+        #     # Regexp list to filter consumer groups visible for group
+        #     consumer-groups-filter-regexp:
+        #       - "cvm.*"
+
+              
+
+      
+    # Ldap Groups configuration (when using ldap)
+
+
+
+
+
 
 ##... and secret for connection information
 existingSecrets: ""
@@ -70,9 +317,9 @@ extraVolumes: []
 extraVolumeMounts: []
 
 # Specify ServiceAccount for pod
-serviceAccountName: null
+serviceAccountName: akhq
 serviceAccount:
-  create: false
+  create: true
   #annotations:
   #  eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
 
@@ -107,7 +354,7 @@ service:
   enabled: true
   type: ClusterIP
   port: 80
-  #httpNodePort: 32551
+  httpNodePort: 32551
   labels: {}
   annotations:
     # cloud.google.com/load-balancer-type: "Internal"
@@ -115,13 +362,13 @@ service:
 ingress:
   enabled: false
   ingressClassName: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  annotations: 
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   paths:
     - /
   hosts:
-    - akhq.demo.com
+    - akhq.bigdata-1.safaricomet.net
   tls: []
   #  - secretName: akhq-tls
   #    hosts:
@@ -130,13 +377,13 @@ ingress:
 readinessProbe:
   prefix: "" # set same as `micronaut.server.context-path`
 
-resources: {}
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+resources: 
+  limits:
+   cpu: 1000M
+   memory: 1G
+  requests:
+   cpu: 100m
+   memory: 128Mi
 
 nodeSelector: {}
 

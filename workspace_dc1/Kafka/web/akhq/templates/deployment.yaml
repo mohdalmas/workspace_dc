@@ -16,6 +16,7 @@ metadata:
      {{- end }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}
+  # strategy: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "akhq.name" . }}
@@ -90,13 +91,17 @@ spec:
             - name: management
               containerPort: 28081
               protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: management
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.readinessProbe.prefix | default "" }}/health
-              port: management
+          # livenessProbe:
+          #   tcpSocket:
+          #     port: management
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: {{ .Values.readinessProbe.prefix | default "" }}/health
+          #     port: management
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
