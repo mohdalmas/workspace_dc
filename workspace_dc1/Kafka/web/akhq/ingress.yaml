@@ -1,0 +1,28 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/session-cookie-name: nifi-registry-cookie
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    
+  labels:
+    name: akhq-ingress
+  name: akhq-ingress
+spec:
+  rules:
+  - host: kafka.big-data.safaricomet.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: akhq
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
