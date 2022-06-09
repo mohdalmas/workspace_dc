@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    role: alert-rules
+    app: nifi
+  name: prometheus-k8s-nifi-rules
+spec:
+  groups:
+  - name: nifi
+    rules:
+    - alert: FileNotStreaming
+      expr: max(changes(nifi_amount_items_output{component_name="ListSFTP", parent_id="208d9d70-0181-1000-0000-00005cf9e70a"}[15m])) == 0
+      for: 10s
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Files are not Streaming'
+        description: 'No Files streamming, please check AS$P!!!!'
