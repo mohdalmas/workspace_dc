@@ -16,7 +16,7 @@ data:
         </Console>
       </Appenders>
       <Loggers>
-        <Root level="INFO">
+        <Root level="DEBUG">
           <AppenderRef ref="Console"/>
         </Root>
     

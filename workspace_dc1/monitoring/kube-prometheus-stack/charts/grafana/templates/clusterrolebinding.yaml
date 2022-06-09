@@ -15,10 +15,6 @@ subjects:
     namespace: {{ template "grafana.namespace" . }}
 roleRef:
   kind: ClusterRole
-{{- if (not .Values.rbac.useExistingRole) }}
   name: {{ template "grafana.fullname" . }}-clusterrole
-{{- else }}
-  name: {{ .Values.rbac.useExistingRole }}
-{{- end }}
   apiGroup: rbac.authorization.k8s.io
 {{- end -}}

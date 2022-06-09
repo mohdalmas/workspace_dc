@@ -4,23 +4,23 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app.kubernetes.io/name: {{ include "hive.name" . }}
-    app.kubernetes.io/component: hive
+    app.kubernetes.io/component: hive-pod
     {{- include "hive.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "hive.name" . }}
-      app.kubernetes.io/component: hive
+      app.kubernetes.io/component: hive-pod
       app.kubernetes.io/instance: {{ .Release.Name | quote }}
   serviceName: {{ .Release.Name }}-service
   replicas: 1
   template:
     metadata:
       annotations:
-{{ toYaml .Values.hive_server.annotations | indent 8 }}
+{{ toYaml .Values.annotations | indent 8 }}
       labels:
         app.kubernetes.io/name: {{ include "hive.name" . }}
-        app.kubernetes.io/component: hive
+        app.kubernetes.io/component: hive-pod
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
     spec:
       serviceAccountName: {{.Values.serviceAccount }}
@@ -37,18 +37,14 @@ spec:
         # securityContext:
           # runAsUser: 997
           # allowPrivilegeEscalation: true
+        ports:
+          - containerPort: 17101
+            name: "hive-server"
         command:
           - /bin/bash
           - /opt/hive/conf/startup.sh
         env:
-        - name: HIVE_MODE
-          value: "metastore"
-        - name: HADOOP_USER_NAME
-          value: "hive"
-        - name: SPARK_MASTER_HOST
-          value: hive-0
-        - name: SPARK_MASTER_URL
-          value: spark://hive-0:7077
+{{ toYaml .Values.hive_metastore.extraEnvVars | indent 10 }}
         resources:
 {{ toYaml .Values.hive_metastore.resources | indent 10 }}
         volumeMounts:
@@ -72,18 +68,14 @@ spec:
         # securityContext:
           # runAsUser: 997
           # allowPrivilegeEscalation: true
+        ports:
+          - containerPort: 17102
+            name: "hive-metastore"
         command:
           - /bin/bash
           - /opt/hive/conf/startup.sh
         env:
-        - name: HIVE_MODE
-          value: "server"
-        - name: HADOOP_USER_NAME
-          value: "hive"
-        - name: SPARK_MASTER_HOST
-          value: hive-0
-        - name: SPARK_MASTER_URL
-          value: spark://hive-0:7077
+{{ toYaml .Values.hive_server.extraEnvVars | indent 10 }}
         resources:
 {{ toYaml .Values.hive_server.resources | indent 10 }}
         volumeMounts:
@@ -108,16 +100,7 @@ spec:
           - /bin/bash
           - /opt/hive/conf/startup.sh
         env:
-        - name: SPARK_MODE
-          value: "master"
-        - name: HADOOP_USER_NAME
-          value: "hive"
-        - name: SPARK_MASTER_HOST
-          value: hive-0
-        - name: SPARK_MASTER_URL
-          value: spark://hive-0:7077
-        # - name: SPARK_DIST_CLASSPATH
-          # value: $HADOOP_CLASSPATH
+{{ toYaml .Values.hive_spark_master.extraEnvVars | indent 10 }}
         resources:
 {{ toYaml .Values.hive_spark_master.resources | indent 10 }}
         volumeMounts: 

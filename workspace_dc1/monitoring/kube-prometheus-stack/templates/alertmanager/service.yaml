@@ -32,22 +32,16 @@ spec:
     - {{ $cidr }}
   {{- end }}
 {{- end }}
-{{- if ne .Values.alertmanager.service.type "ClusterIP" }}
-  externalTrafficPolicy: {{ .Values.alertmanager.service.externalTrafficPolicy }}
-{{- end }}
   ports:
-  - name: {{ .Values.alertmanager.alertmanagerSpec.portName }}
-  {{- if eq .Values.alertmanager.service.type "NodePort" }}
-    nodePort: {{ .Values.alertmanager.service.nodePort }}
-  {{- end }}
-    port: {{ .Values.alertmanager.service.port }}
-    targetPort: {{ .Values.alertmanager.service.targetPort }}
-    protocol: TCP
-{{- if .Values.alertmanager.service.additionalPorts }}
-{{ toYaml .Values.alertmanager.service.additionalPorts | indent 2 }}
-{{- end }}
+    - name: {{ .Values.alertmanager.alertmanagerSpec.portName }}
+    {{- if eq .Values.alertmanager.service.type "NodePort" }}
+      nodePort: {{ .Values.alertmanager.service.nodePort }}
+    {{- end }}
+      port: {{ .Values.alertmanager.service.port }}
+      targetPort: {{ .Values.alertmanager.service.targetPort }}
+      protocol: TCP
   selector:
-    app.kubernetes.io/name: alertmanager
+    app: alertmanager
     alertmanager: {{ template "kube-prometheus-stack.fullname" . }}-alertmanager
   type: "{{ .Values.alertmanager.service.type }}"
 {{- end }}

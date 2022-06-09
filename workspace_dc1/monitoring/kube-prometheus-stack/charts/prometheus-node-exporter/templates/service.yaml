@@ -9,6 +9,7 @@ metadata:
 {{- end }}
   labels: {{ include "prometheus-node-exporter.labels" . | indent 4 }}
 spec:
+  clusterIP: None
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
@@ -17,7 +18,7 @@ spec:
     {{- end }}
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
-      name: {{ .Values.service.portName }}
+      name: metrics
   selector:
     app: {{ template "prometheus-node-exporter.name" . }}
     release: {{ .Release.Name }}

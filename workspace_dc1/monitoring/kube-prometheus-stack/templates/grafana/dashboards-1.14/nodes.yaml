@@ -1,20 +1,20 @@
 {{- /*
-Generated from 'nodes' from https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/grafana-dashboardDefinitions.yaml
+Generated from 'nodes' from https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/master/manifests/grafana-dashboardDefinitions.yaml
 Do not change in-place! In order to change this file first read following link:
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/hack
 */ -}}
 {{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion .Values.kubeTargetVersionOverride }}
-{{- if and (or .Values.grafana.enabled .Values.grafana.forceDeployDashboards) (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) .Values.grafana.defaultDashboardsEnabled .Values.nodeExporter.enabled }}
+{{- if and (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) .Values.grafana.enabled .Values.grafana.defaultDashboardsEnabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ template "kube-prometheus-stack-grafana.namespace" . }}
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
   name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $) "nodes" | trunc 63 | trimSuffix "-" }}
   annotations:
 {{ toYaml .Values.grafana.sidecar.dashboards.annotations | indent 4 }}
   labels:
     {{- if $.Values.grafana.sidecar.dashboards.label }}
-    {{ $.Values.grafana.sidecar.dashboards.label }}: {{ ternary $.Values.grafana.sidecar.dashboards.labelValue "1" (not (empty $.Values.grafana.sidecar.dashboards.labelValue)) | quote }}
+    {{ $.Values.grafana.sidecar.dashboards.label }}: "1"
     {{- end }}
     app: {{ template "kube-prometheus-stack.name" $ }}-grafana
 {{ include "kube-prometheus-stack.labels" $ | indent 4 }}
@@ -34,13 +34,13 @@ data:
         },
         "editable": false,
         "gnetId": null,
-        "graphTooltip": 1,
+        "graphTooltip": 0,
         "hideControls": false,
         "id": null,
         "links": [
 
         ],
-        "refresh": "30s",
+        "refresh": "",
         "rows": [
             {
                 "collapse": false,
@@ -55,7 +55,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -92,8 +91,9 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "(\n  (1 - sum without (mode) (rate(node_cpu_seconds_total{job=\"node-exporter\", mode=~\"idle|iowait|steal\", instance=\"$instance\"}[$__rate_interval])))\n/ ignoring(cpu) group_left\n  count without (cpu, mode) (node_cpu_seconds_total{job=\"node-exporter\", mode=\"idle\", instance=\"$instance\"})\n)\n",
+                                "expr": "(\n  (1 - rate(node_cpu_seconds_total{job=\"node-exporter\", mode=\"idle\", instance=\"$instance\"}[$__interval]))\n/ ignoring(cpu) group_left\n  count without (cpu)( node_cpu_seconds_total{job=\"node-exporter\", mode=\"idle\", instance=\"$instance\"})\n)\n",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 5,
                                 "legendFormat": "{{`{{`}}cpu{{`}}`}}",
                                 "refId": "A"
@@ -106,7 +106,7 @@ data:
                         "timeShift": null,
                         "title": "CPU Usage",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -148,7 +148,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 0,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -220,7 +219,7 @@ data:
                         "timeShift": null,
                         "title": "Load Average",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -257,8 +256,8 @@ data:
                 "repeat": null,
                 "repeatIteration": null,
                 "repeatRowId": null,
-                "showTitle": true,
-                "title": "CPU",
+                "showTitle": false,
+                "title": "Dashboard Row",
                 "titleSize": "h6",
                 "type": "row"
             },
@@ -275,7 +274,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -347,7 +345,7 @@ data:
                         "timeShift": null,
                         "title": "Memory Usage",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -381,53 +379,95 @@ data:
                         ]
                     },
                     {
+                        "cacheTimeout": null,
+                        "colorBackground": false,
+                        "colorValue": false,
+                        "colors": [
+                            "rgba(50, 172, 45, 0.97)",
+                            "rgba(237, 129, 40, 0.89)",
+                            "rgba(245, 54, 54, 0.9)"
+                        ],
                         "datasource": "$datasource",
-                        "fieldConfig": {
-                            "defaults": {
-                                "max": 100,
-                                "min": 0,
-                                "thresholds": {
-                                    "mode": "absolute",
-                                    "steps": [
-                                        {
-                                            "color": "rgba(50, 172, 45, 0.97)"
-                                        },
-                                        {
-                                            "color": "rgba(237, 129, 40, 0.89)",
-                                            "value": 80
-                                        },
-                                        {
-                                            "color": "rgba(245, 54, 54, 0.9)",
-                                            "value": 90
-                                        }
-                                    ]
-                                },
-                                "unit": "percent"
-                            }
+                        "format": "percent",
+                        "gauge": {
+                            "maxValue": 100,
+                            "minValue": 0,
+                            "show": true,
+                            "thresholdLabels": false,
+                            "thresholdMarkers": true
                         },
                         "gridPos": {
 
                         },
                         "id": 5,
-                        "span": 3,
-                        "targets": [
+                        "interval": null,
+                        "links": [
+
+                        ],
+                        "mappingType": 1,
+                        "mappingTypes": [
                             {
-                                "expr": "100 -\n(\n  avg(node_memory_MemAvailable_bytes{job=\"node-exporter\", instance=\"$instance\"}) /\n  avg(node_memory_MemTotal_bytes{job=\"node-exporter\", instance=\"$instance\"})\n* 100\n)\n",
-                                "format": "time_series",
-                                "intervalFactor": 2,
-                                "legendFormat": ""
+                                "name": "value to text",
+                                "value": 1
+                            },
+                            {
+                                "name": "range to text",
+                                "value": 2
                             }
                         ],
+                        "maxDataPoints": 100,
+                        "nullPointMode": "connected",
+                        "nullText": null,
+                        "postfix": "",
+                        "postfixFontSize": "50%",
+                        "prefix": "",
+                        "prefixFontSize": "50%",
+                        "rangeMaps": [
+                            {
+                                "from": "null",
+                                "text": "N/A",
+                                "to": "null"
+                            }
+                        ],
+                        "span": 3,
+                        "sparkline": {
+                            "fillColor": "rgba(31, 118, 189, 0.18)",
+                            "full": false,
+                            "lineColor": "rgb(31, 120, 193)",
+                            "show": false
+                        },
+                        "tableColumn": "",
+                        "targets": [
+                            {
+                                "expr": "100 -\n(\n  node_memory_MemAvailable_bytes{job=\"node-exporter\", instance=\"$instance\"}\n/\n  node_memory_MemTotal_bytes{job=\"node-exporter\", instance=\"$instance\"}\n* 100\n)\n",
+                                "format": "time_series",
+                                "intervalFactor": 2,
+                                "legendFormat": "",
+                                "refId": "A"
+                            }
+                        ],
+                        "thresholds": "80, 90",
                         "title": "Memory Usage",
-                        "transparent": false,
-                        "type": "gauge"
+                        "tooltip": {
+                            "shared": false
+                        },
+                        "type": "singlestat",
+                        "valueFontSize": "80%",
+                        "valueMaps": [
+                            {
+                                "op": "=",
+                                "text": "N/A",
+                                "value": "null"
+                            }
+                        ],
+                        "valueName": "current"
                     }
                 ],
                 "repeat": null,
                 "repeatIteration": null,
                 "repeatRowId": null,
-                "showTitle": true,
-                "title": "Memory",
+                "showTitle": false,
+                "title": "Dashboard Row",
                 "titleSize": "h6",
                 "type": "row"
             },
@@ -444,7 +484,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 0,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -488,22 +527,25 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "rate(node_disk_read_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+                                "expr": "rate(node_disk_read_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__interval])",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}device{{`}}`}} read",
                                 "refId": "A"
                             },
                             {
-                                "expr": "rate(node_disk_written_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+                                "expr": "rate(node_disk_written_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__interval])",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}device{{`}}`}} written",
                                 "refId": "B"
                             },
                             {
-                                "expr": "rate(node_disk_io_time_seconds_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+                                "expr": "rate(node_disk_io_time_seconds_total{job=\"node-exporter\", instance=\"$instance\", device=~\"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__interval])",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}device{{`}}`}} io time",
                                 "refId": "C"
@@ -516,7 +558,7 @@ data:
                         "timeShift": null,
                         "title": "Disk I/O",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -558,7 +600,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -623,7 +664,7 @@ data:
                         "timeShift": null,
                         "title": "Disk Space Usage",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -660,8 +701,8 @@ data:
                 "repeat": null,
                 "repeatIteration": null,
                 "repeatRowId": null,
-                "showTitle": true,
-                "title": "Disk",
+                "showTitle": false,
+                "title": "Dashboard Row",
                 "titleSize": "h6",
                 "type": "row"
             },
@@ -678,7 +719,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 0,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -715,8 +755,9 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "rate(node_network_receive_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
+                                "expr": "rate(node_network_receive_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__interval])",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}device{{`}}`}}",
                                 "refId": "A"
@@ -729,7 +770,7 @@ data:
                         "timeShift": null,
                         "title": "Network Received",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -771,7 +812,6 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 0,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
@@ -808,8 +848,9 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "rate(node_network_transmit_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
+                                "expr": "rate(node_network_transmit_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__interval])",
                                 "format": "time_series",
+                                "interval": "1m",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}device{{`}}`}}",
                                 "refId": "A"
@@ -822,7 +863,7 @@ data:
                         "timeShift": null,
                         "title": "Network Transmitted",
                         "tooltip": {
-                            "shared": true,
+                            "shared": false,
                             "sort": 0,
                             "value_type": "individual"
                         },
@@ -859,8 +900,8 @@ data:
                 "repeat": null,
                 "repeatIteration": null,
                 "repeatRowId": null,
-                "showTitle": true,
-                "title": "Network",
+                "showTitle": false,
+                "title": "Dashboard Row",
                 "titleSize": "h6",
                 "type": "row"
             }
@@ -868,17 +909,17 @@ data:
         "schemaVersion": 14,
         "style": "dark",
         "tags": [
-            "node-exporter-mixin"
+
         ],
         "templating": {
             "list": [
                 {
                     "current": {
-                        "text": "default",
-                        "value": "default"
+                        "text": "Prometheus",
+                        "value": "Prometheus"
                     },
                     "hide": 0,
-                    "label": "Data Source",
+                    "label": null,
                     "name": "datasource",
                     "options": [
 
@@ -896,13 +937,13 @@ data:
                     "datasource": "$datasource",
                     "hide": 0,
                     "includeAll": false,
-                    "label": "Instance",
+                    "label": null,
                     "multi": false,
                     "name": "instance",
                     "options": [
 
                     ],
-                    "query": "label_values(node_uname_info{job=\"node-exporter\", sysname!=\"Darwin\"}, instance)",
+                    "query": "label_values(node_exporter_build_info{job=\"node-exporter\"}, instance)",
                     "refresh": 2,
                     "regex": "",
                     "sort": 0,
@@ -945,8 +986,9 @@ data:
                 "30d"
             ]
         },
-        "timezone": "{{ .Values.grafana.defaultDashboardsTimezone }}",
-        "title": "Node Exporter / Nodes",
+        "timezone": "UTC",
+        "title": "Nodes",
+        "uid": "fa49a4706d07a042595b664c87fb33ea",
         "version": 0
     }
 {{- end }}

@@ -739,7 +739,7 @@ metrics:
     enabled: true
     additionalLabels:
       release: bigdata-prometheus
-    # namespace: monitoring
+    # namespace: bigdata-monitoring
     # interval: 30s
     # scrapeTimeout: 10s
   ## Custom PrometheusRule to be defined

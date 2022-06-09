@@ -2,11 +2,11 @@
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
   
 image:
-  repository: et01-harbor.safaricomet.net/bigdata/hive-spark
+  repository:  mohdalmasansari/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
-imagePullSecrets:
+imagePullSecrets: 
 - name: regcred
 
 serviceAccount: bigdata
@@ -26,6 +26,12 @@ affinity:
           operator: In
           values:
           - Hadoop
+
+annotations:
+  kubernetes.io/psp: "privileged"
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "17101"
+  prometheus.io/port: "17102"
       
 hive_metastore: 
   resources: 
@@ -35,6 +41,17 @@ hive_metastore:
     limits:
       memory: "4Gi"
       cpu: "2"
+  extraEnvVars:
+  - name: HIVE_MODE
+    value: "metastore"
+  - name: HADOOP_USER_NAME
+    value: "hive"
+  - name: SPARK_MASTER_HOST
+    value: hive-0
+  - name: SPARK_MASTER_URL
+    value: spark://hive-0:7077
+  # - name: HADOOP_OPTS
+    # value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6464 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/jmx.yml -Dcom.sun.management.jmxremote.ssl=false  $HEAP_OPTS"
       
 hive_server:
   resources: 
@@ -44,10 +61,17 @@ hive_server:
     limits:
       memory: "4Gi"
       cpu: "2"
-  annotations:
-    kubernetes.io/psp: privileged
-    prometheus.io/port: "17101"
-    prometheus.io/scrape: "true"
+  extraEnvVars:
+  - name: HIVE_MODE
+    value: "server"
+  - name: HADOOP_USER_NAME
+    value: "hive"
+  - name: SPARK_MASTER_HOST
+    value: hive-0
+  - name: SPARK_MASTER_URL
+    value: spark://hive-0:7077
+  - name: HADOOP_CLIENT_OPTS
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6464 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
 
 hive_spark_master:
   resources: 
@@ -57,6 +81,11 @@ hive_spark_master:
     limits:
       memory: "2Gi"
       cpu: "1"
+  extraEnvVars:
+  - name: SPARK_MODE
+    value: "master"
+  - name: "SPARK_MASTER_HOST"
+    value: "hive-0.hive-service"
   
 hive_spark_worker:
   replicas: 1
@@ -140,7 +169,7 @@ conf:
     hive.metastore.event.db.notification.api.auth: false
     hive.metastore.schema.verification: false
     hive.metastore.schema.verification.record.version: false
-    hive.metastore.uris: thrift://hive-0.hive-service:9083
+    hive.metastore.uris: thrift://hive-0:9083
     hive.metastore.warehouse.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hive/warehouse
     hive.server2.enable.doAs: false
     hive.server2.zookeeper.namespace: hiveserver2
@@ -216,4 +245,15 @@ conf:
     spark.dynamicAllocation.executorIdleTimeout: 60s
     spark.dynamicAllocation.minExecutors: 0
     spark.worker.memory: 14g
-    
+
+## Configure metrics exporter
+##
+metrics:
+  enabled: enable
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: bigdata-prometheus
+    # interval: 30s
+    # scrapeTimeout: 10s
+    namespace: bigdata-monitoring

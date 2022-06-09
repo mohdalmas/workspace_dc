@@ -1,12 +1,9 @@
 {{- if and .Values.prometheus.enabled .Values.prometheus.thanosIngress.enabled }}
-{{- $pathType := .Values.prometheus.thanosIngress.pathType | default "" }}
 {{- $serviceName := printf "%s-%s" (include "kube-prometheus-stack.fullname" .) "prometheus" }}
 {{- $thanosPort := .Values.prometheus.thanosIngress.servicePort -}}
 {{- $routePrefix := list .Values.prometheus.prometheusSpec.routePrefix }}
 {{- $paths := .Values.prometheus.thanosIngress.paths | default $routePrefix -}}
-{{- $apiIsStable := eq (include "kube-prometheus-stack.ingress.isStable" .) "true" -}}
-{{- $ingressSupportsPathType := eq (include "kube-prometheus-stack.ingress.supportsPathType" .) "true" -}}
-apiVersion: {{ include "kube-prometheus-stack.ingress.apiVersion" . }}
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
 {{- if .Values.prometheus.thanosIngress.annotations }}
@@ -21,11 +18,6 @@ metadata:
 {{ toYaml .Values.prometheus.thanosIngress.labels | indent 4 }}
 {{- end }}
 spec:
-  {{- if $apiIsStable }}
-  {{- if .Values.prometheus.thanosIngress.ingressClassName }}
-  ingressClassName: {{ .Values.prometheus.thanosIngress.ingressClassName }}
-  {{- end }}
-  {{- end }}
   rules:
   {{- if .Values.prometheus.thanosIngress.hosts }}
   {{- range $host := .Values.prometheus.thanosIngress.hosts }}
@@ -34,43 +26,23 @@ spec:
         paths:
   {{- range $p := $paths }}
           - path: {{ tpl $p $ }}
-            {{- if and $pathType $ingressSupportsPathType }}
-            pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if $apiIsStable }}
-              service:
-                name: {{ $serviceName }}
-                port:
-                  number: {{ $thanosPort }}
-              {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $thanosPort }}
-    {{- end }}
-    {{- end -}}
+  {{- end -}}
   {{- end -}}
   {{- else }}
     - http:
         paths:
   {{- range $p := $paths }}
           - path: {{ tpl $p $ }}
-            {{- if and $pathType $ingressSupportsPathType }}
-            pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if $apiIsStable }}
-              service:
-                name: {{ $serviceName }}
-                port:
-                  number: {{ $thanosPort }}
-              {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $thanosPort }}
-  {{- end }}
   {{- end -}}
   {{- end -}}
   {{- if .Values.prometheus.thanosIngress.tls }}
   tls:
-{{ tpl (toYaml .Values.prometheus.thanosIngress.tls | indent 4) . }}
+{{ toYaml .Values.prometheus.thanosIngress.tls | indent 4 }}
   {{- end -}}
 {{- end -}}

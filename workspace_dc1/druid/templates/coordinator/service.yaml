@@ -35,6 +35,10 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    - port: 9091
+      targetPort: 9091
+      protocol: TCP
+      name: emitter
   selector:
     app: {{ include "druid.name" . }}
     release: {{ .Release.Name }}

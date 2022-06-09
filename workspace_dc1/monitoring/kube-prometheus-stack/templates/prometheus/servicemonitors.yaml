@@ -30,9 +30,5 @@ items:
       targetLabels:
 {{ toYaml .targetLabels | indent 8 }}
     {{- end }}
-    {{- if .podTargetLabels }}
-      podTargetLabels:
-{{ toYaml .podTargetLabels | indent 8 }}
-    {{- end }}
 {{- end }}
 {{- end }}
