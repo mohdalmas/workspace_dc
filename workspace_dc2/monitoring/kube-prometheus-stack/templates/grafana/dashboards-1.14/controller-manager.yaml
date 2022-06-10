@@ -1,20 +1,20 @@
 {{- /*
-Generated from 'controller-manager' from https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/grafana-dashboardDefinitions.yaml
+Generated from 'controller-manager' from https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/master/manifests/grafana-dashboardDefinitions.yaml
 Do not change in-place! In order to change this file first read following link:
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/hack
 */ -}}
 {{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion .Values.kubeTargetVersionOverride }}
-{{- if and (or .Values.grafana.enabled .Values.grafana.forceDeployDashboards) (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) .Values.grafana.defaultDashboardsEnabled .Values.kubeControllerManager.enabled }}
+{{- if and (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) .Values.grafana.enabled .Values.grafana.defaultDashboardsEnabled .Values.kubeControllerManager.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ template "kube-prometheus-stack-grafana.namespace" . }}
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
   name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $) "controller-manager" | trunc 63 | trimSuffix "-" }}
   annotations:
 {{ toYaml .Values.grafana.sidecar.dashboards.annotations | indent 4 }}
   labels:
     {{- if $.Values.grafana.sidecar.dashboards.label }}
-    {{ $.Values.grafana.sidecar.dashboards.label }}: {{ ternary $.Values.grafana.sidecar.dashboards.labelValue "1" (not (empty $.Values.grafana.sidecar.dashboards.labelValue)) | quote }}
+    {{ $.Values.grafana.sidecar.dashboards.label }}: "1"
     {{- end }}
     app: {{ template "kube-prometheus-stack.name" $ }}-grafana
 {{ include "kube-prometheus-stack.labels" $ | indent 4 }}
@@ -68,11 +68,7 @@ data:
 
                         },
                         "id": 2,
-                        "interval": "1m",
-                        "legend": {
-                            "alignAsTable": true,
-                            "rightSide": true
-                        },
+                        "interval": null,
                         "links": [
 
                         ],
@@ -111,7 +107,7 @@ data:
                         "tableColumn": "",
                         "targets": [
                             {
-                                "expr": "sum(up{cluster=\"$cluster\", job=\"kube-controller-manager\"})",
+                                "expr": "sum(up{job=\"kube-controller-manager\"})",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "",
@@ -143,12 +139,10 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 3,
-                        "interval": "1m",
                         "legend": {
                             "alignAsTable": true,
                             "avg": false,
@@ -181,10 +175,10 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(rate(workqueue_adds_total{cluster=\"$cluster\", job=\"kube-controller-manager\", instance=~\"$instance\"}[$__rate_interval])) by (cluster, instance, name)",
+                                "expr": "sum(rate(workqueue_adds_total{job=\"kube-controller-manager\", instance=~\"$instance\"}[5m])) by (instance, name)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
-                                "legendFormat": "{{`{{`}}cluster{{`}}`}} {{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
+                                "legendFormat": "{{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
                                 "refId": "A"
                             }
                         ],
@@ -250,12 +244,10 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 4,
-                        "interval": "1m",
                         "legend": {
                             "alignAsTable": true,
                             "avg": false,
@@ -288,10 +280,10 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(rate(workqueue_depth{cluster=\"$cluster\", job=\"kube-controller-manager\", instance=~\"$instance\"}[$__rate_interval])) by (cluster, instance, name)",
+                                "expr": "sum(rate(workqueue_depth{job=\"kube-controller-manager\", instance=~\"$instance\"}[5m])) by (instance, name)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
-                                "legendFormat": "{{`{{`}}cluster{{`}}`}} {{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
+                                "legendFormat": "{{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
                                 "refId": "A"
                             }
                         ],
@@ -357,12 +349,10 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 5,
-                        "interval": "1m",
                         "legend": {
                             "alignAsTable": true,
                             "avg": false,
@@ -395,10 +385,10 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster=\"$cluster\", job=\"kube-controller-manager\", instance=~\"$instance\"}[$__rate_interval])) by (cluster, instance, name, le))",
+                                "expr": "histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{job=\"kube-controller-manager\", instance=~\"$instance\"}[5m])) by (instance, name, le))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
-                                "legendFormat": "{{`{{`}}cluster{{`}}`}} {{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
+                                "legendFormat": "{{`{{`}}instance{{`}}`}} {{`{{`}}name{{`}}`}}",
                                 "refId": "A"
                             }
                         ],
@@ -464,19 +454,17 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 6,
-                        "interval": "1m",
                         "legend": {
-                            "alignAsTable": true,
+                            "alignAsTable": false,
                             "avg": false,
                             "current": false,
                             "max": false,
                             "min": false,
-                            "rightSide": true,
+                            "rightSide": false,
                             "show": true,
                             "sideWidth": null,
                             "total": false,
@@ -502,28 +490,28 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"2..\"}[$__rate_interval]))",
+                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"2..\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "2xx",
                                 "refId": "A"
                             },
                             {
-                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"3..\"}[$__rate_interval]))",
+                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"3..\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "3xx",
                                 "refId": "B"
                             },
                             {
-                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"4..\"}[$__rate_interval]))",
+                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"4..\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "4xx",
                                 "refId": "C"
                             },
                             {
-                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"5..\"}[$__rate_interval]))",
+                                "expr": "sum(rate(rest_client_requests_total{job=\"kube-controller-manager\", instance=~\"$instance\",code=~\"5..\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "5xx",
@@ -579,19 +567,17 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 7,
-                        "interval": "1m",
                         "legend": {
-                            "alignAsTable": true,
+                            "alignAsTable": false,
                             "avg": false,
                             "current": false,
                             "max": false,
                             "min": false,
-                            "rightSide": true,
+                            "rightSide": false,
                             "show": true,
                             "sideWidth": null,
                             "total": false,
@@ -617,7 +603,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=\"$cluster\", job=\"kube-controller-manager\", instance=~\"$instance\", verb=\"POST\"}[$__rate_interval])) by (verb, url, le))",
+                                "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{job=\"kube-controller-manager\", instance=~\"$instance\", verb=\"POST\"}[5m])) by (verb, url, le))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}verb{{`}}`}} {{`{{`}}url{{`}}`}}",
@@ -686,12 +672,10 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 8,
-                        "interval": "1m",
                         "legend": {
                             "alignAsTable": true,
                             "avg": false,
@@ -724,7 +708,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=\"$cluster\", job=\"kube-controller-manager\", instance=~\"$instance\", verb=\"GET\"}[$__rate_interval])) by (verb, url, le))",
+                                "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{job=\"kube-controller-manager\", instance=~\"$instance\", verb=\"GET\"}[5m])) by (verb, url, le))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}verb{{`}}`}} {{`{{`}}url{{`}}`}}",
@@ -793,19 +777,17 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 9,
-                        "interval": "1m",
                         "legend": {
-                            "alignAsTable": true,
+                            "alignAsTable": false,
                             "avg": false,
                             "current": false,
                             "max": false,
                             "min": false,
-                            "rightSide": true,
+                            "rightSide": false,
                             "show": true,
                             "sideWidth": null,
                             "total": false,
@@ -831,7 +813,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "process_resident_memory_bytes{cluster=\"$cluster\", job=\"kube-controller-manager\",instance=~\"$instance\"}",
+                                "expr": "process_resident_memory_bytes{job=\"kube-controller-manager\",instance=~\"$instance\"}",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}instance{{`}}`}}",
@@ -887,19 +869,17 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 10,
-                        "interval": "1m",
                         "legend": {
-                            "alignAsTable": true,
+                            "alignAsTable": false,
                             "avg": false,
                             "current": false,
                             "max": false,
                             "min": false,
-                            "rightSide": true,
+                            "rightSide": false,
                             "show": true,
                             "sideWidth": null,
                             "total": false,
@@ -925,7 +905,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "rate(process_cpu_seconds_total{cluster=\"$cluster\", job=\"kube-controller-manager\",instance=~\"$instance\"}[$__rate_interval])",
+                                "expr": "rate(process_cpu_seconds_total{job=\"kube-controller-manager\",instance=~\"$instance\"}[5m])",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}instance{{`}}`}}",
@@ -981,19 +961,17 @@ data:
                         "dashes": false,
                         "datasource": "$datasource",
                         "fill": 1,
-                        "fillGradient": 0,
                         "gridPos": {
 
                         },
                         "id": 11,
-                        "interval": "1m",
                         "legend": {
-                            "alignAsTable": true,
+                            "alignAsTable": false,
                             "avg": false,
                             "current": false,
                             "max": false,
                             "min": false,
-                            "rightSide": true,
+                            "rightSide": false,
                             "show": true,
                             "sideWidth": null,
                             "total": false,
@@ -1019,7 +997,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "go_goroutines{cluster=\"$cluster\", job=\"kube-controller-manager\",instance=~\"$instance\"}",
+                                "expr": "go_goroutines{job=\"kube-controller-manager\",instance=~\"$instance\"}",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}instance{{`}}`}}",
@@ -1089,7 +1067,7 @@ data:
                         "value": "default"
                     },
                     "hide": 0,
-                    "label": "Data Source",
+                    "label": null,
                     "name": "datasource",
                     "options": [
 
@@ -1105,32 +1083,6 @@ data:
 
                     },
                     "datasource": "$datasource",
-                    "hide": {{ if .Values.grafana.sidecar.dashboards.multicluster.global.enabled }}0{{ else }}2{{ end }},
-                    "includeAll": false,
-                    "label": "cluster",
-                    "multi": false,
-                    "name": "cluster",
-                    "options": [
-
-                    ],
-                    "query": "label_values(up{job=\"kube-controller-manager\"}, cluster)",
-                    "refresh": 2,
-                    "regex": "",
-                    "sort": 1,
-                    "tagValuesQuery": "",
-                    "tags": [
-
-                    ],
-                    "tagsQuery": "",
-                    "type": "query",
-                    "useTags": false
-                },
-                {
-                    "allValue": null,
-                    "current": {
-
-                    },
-                    "datasource": "$datasource",
                     "hide": 0,
                     "includeAll": true,
                     "label": null,
@@ -1139,7 +1091,7 @@ data:
                     "options": [
 
                     ],
-                    "query": "label_values(up{cluster=\"$cluster\", job=\"kube-controller-manager\"}, instance)",
+                    "query": "label_values(process_cpu_seconds_total{job=\"kube-controller-manager\"}, instance)",
                     "refresh": 2,
                     "regex": "",
                     "sort": 1,
@@ -1182,7 +1134,7 @@ data:
                 "30d"
             ]
         },
-        "timezone": "{{ .Values.grafana.defaultDashboardsTimezone }}",
+        "timezone": "UTC",
         "title": "Kubernetes / Controller Manager",
         "uid": "72e0e05bef5099e5f049b05fdc429ed4",
         "version": 0

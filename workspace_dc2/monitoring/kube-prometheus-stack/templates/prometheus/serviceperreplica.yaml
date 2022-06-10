@@ -30,9 +30,6 @@ items:
         - {{ $cidr }}
       {{- end }}
       {{- end }}
-      {{- if ne $serviceValues.type "ClusterIP" }}
-      externalTrafficPolicy: {{ $serviceValues.externalTrafficPolicy }}
-      {{- end }}
       ports:
         - name: {{ $.Values.prometheus.prometheusSpec.portName }}
           {{- if eq $serviceValues.type "NodePort" }}
@@ -41,7 +38,7 @@ items:
           port: {{ $serviceValues.port }}
           targetPort: {{ $serviceValues.targetPort }}
       selector:
-        app.kubernetes.io/name: prometheus
+        app: prometheus
         prometheus: {{ include "kube-prometheus-stack.fullname" $ }}-prometheus
         statefulset.kubernetes.io/pod-name: prometheus-{{ include "kube-prometheus-stack.fullname" $ }}-prometheus-{{ $i }}
       type: "{{ $serviceValues.type }}"

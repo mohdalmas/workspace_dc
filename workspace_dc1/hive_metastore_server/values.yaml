@@ -50,8 +50,8 @@ hive_metastore:
     value: hive-0
   - name: SPARK_MASTER_URL
     value: spark://hive-0:7077
-  # - name: HADOOP_OPTS
-    # value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6464 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/jmx.yml -Dcom.sun.management.jmxremote.ssl=false  $HEAP_OPTS"
+  - name: HADOOP_OPTS
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6444 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/hive_metastore_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
       
 hive_server:
   resources: 
@@ -71,7 +71,7 @@ hive_server:
   - name: SPARK_MASTER_URL
     value: spark://hive-0:7077
   - name: HADOOP_CLIENT_OPTS
-    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6464 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
 
 hive_spark_master:
   resources: 

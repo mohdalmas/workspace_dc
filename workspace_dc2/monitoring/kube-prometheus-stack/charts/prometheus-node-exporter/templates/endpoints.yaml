@@ -12,7 +12,7 @@ subsets:
       - ip: {{ . }}
       {{- end }}
     ports:
-      - name: {{ .Values.service.portName }}
+      - name: metrics
         port: 9100
         protocol: TCP
 {{- end }}
