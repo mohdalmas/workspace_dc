@@ -3,7 +3,7 @@ kind: PrometheusRule
 metadata:
   labels:
     role: alert-rules
-    app: nifi
+    release: bigdata-prometheus
   name: prometheus-k8s-nifi-rules
 spec:
   groups:
