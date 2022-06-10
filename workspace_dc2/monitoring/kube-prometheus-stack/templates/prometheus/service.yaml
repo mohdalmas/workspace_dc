@@ -32,9 +32,6 @@ spec:
     - {{ $cidr }}
   {{- end }}
 {{- end }}
-{{- if ne .Values.prometheus.service.type "ClusterIP" }}
-  externalTrafficPolicy: {{ .Values.prometheus.service.externalTrafficPolicy }}
-{{- end }}
   ports:
   - name: {{ .Values.prometheus.prometheusSpec.portName }}
     {{- if eq .Values.prometheus.service.type "NodePort" }}
@@ -42,20 +39,11 @@ spec:
     {{- end }}
     port: {{ .Values.prometheus.service.port }}
     targetPort: {{ .Values.prometheus.service.targetPort }}
-  {{- if .Values.prometheus.thanosIngress.enabled }}
-  - name: grpc
-    {{- if eq .Values.prometheus.service.type "NodePort" }}
-    nodePort: {{ .Values.prometheus.thanosIngress.nodePort }}
-    {{- end }}
-    port: {{ .Values.prometheus.thanosIngress.servicePort }}
-    targetPort: {{ .Values.prometheus.thanosIngress.servicePort }}
-  {{- end }}
 {{- if .Values.prometheus.service.additionalPorts }}
 {{ toYaml .Values.prometheus.service.additionalPorts | indent 2 }}
 {{- end }}
-  publishNotReadyAddresses: {{ .Values.prometheus.service.publishNotReadyAddresses }}
   selector:
-    app.kubernetes.io/name: prometheus
+    app: prometheus
     prometheus: {{ template "kube-prometheus-stack.fullname" . }}-prometheus
 {{- if .Values.prometheus.service.sessionAffinity }}
   sessionAffinity: {{ .Values.prometheus.service.sessionAffinity }}
