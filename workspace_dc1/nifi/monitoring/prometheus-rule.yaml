@@ -4,6 +4,7 @@ metadata:
   annotations:
     prometheus-operator-validated: "true"
   labels:
+    app: kube-prometheus-stack
     release: bigdata-prometheus
   name: prometheus-k8s-nifi-rules
 spec:
