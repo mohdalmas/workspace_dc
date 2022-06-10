@@ -2,7 +2,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    role: alert-rules
     release: bigdata-prometheus
   name: prometheus-k8s-nifi-rules
 spec:
