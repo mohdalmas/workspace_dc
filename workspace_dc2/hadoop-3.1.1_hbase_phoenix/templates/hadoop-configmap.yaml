@@ -7,7 +7,6 @@ metadata:
     chart: {{ include "hadoop.chart" . }}
     release: {{ .Release.Name }}
 data:
-
   ownhive.sh: |
     hdfs dfs -chown -R hive:hive /hive
   
@@ -26,6 +25,7 @@ data:
     : ${HADOOP_HOME:=/opt/hadoop}    
     . $HADOOP_HOME/etc/hadoop/hadoop-env.sh
     CONFIG_DIR="/tmp/hadoop-config"
+
     # Copy hadoop config files from volume mount
     for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml capacity-scheduler.xml datanode-monitor.sh ownhive.sh; do
       if [[ -e ${CONFIG_DIR}/$f ]]; then
@@ -35,6 +35,7 @@ data:
         exit 1
       fi
     done
+
     
     # installing libraries if any - (resource urls added comma separated to the ACP system variable)
     cd $HADOOP_HOME/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
@@ -57,7 +58,7 @@ data:
     useradd --comment "Oozie user" -u 514 --shell /bin/bash -M -r -g hdpusers oozie
     useradd --comment "Infra-Solr user" -u 515 --shell /bin/bash -M -r -g hdpusers infra-solr
     useradd --comment "Livy user" -u 516 --shell /bin/bash -M -r -g hdpusers livy
-    useradd --comment "Ambari QA user" -u 517 --shell /bin/bash -M -r -g hdpusers ambari-qa
+    useradd --comment "Druid user" -u 518 --shell /bin/bash -M -r -g hdpusers druid
     usermod -a -G hdpusers root
     usermod -a -G hdpusers hive
     usermod -a -G hdpusers hbase
@@ -76,7 +77,8 @@ data:
     usermod -a -G hdpusers oozie
     usermod -a -G hdpusers infra-solr
     usermod -a -G hdpusers livy
-    usermod -a -G hdpusers ambari-qa
+    #usermod -a -G hdpusers ambari-qa
+    usermod -a -G hdpusers druid
     
     chown -R hdfs:hdpusers /dfs
     chown -R hdfs:hdpusers /opt/hadoop   
@@ -99,7 +101,9 @@ data:
       $HADOOP_HOME/bin/hdfs --daemon start namenode
    
     fi
+
     if [[ "${HOSTNAME}" =~ "hdfs-dn" ]]; then
+
     
       # #  wait up to 30 seconds for namenode
       (while [[ $count -lt 30 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-hdfs-nn:9870` ]]; do ((count=count+1)) ; echo "Waiting for {{ include "hadoop.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 30 ]])
@@ -147,6 +151,8 @@ data:
          hdfs dfs -chmod g+w /hive
          hdfs dfs -chown -R hive:hive /hive
       fi    
+
+
       chmod 777 -R /opt/hadoop/etc/hadoop/datanode-monitor.sh
       chmod +x /opt/hadoop/etc/hadoop/datanode-monitor.sh  
       chmod 777 -R /opt/hadoop/etc/hadoop/ownhive.sh
@@ -154,6 +160,7 @@ data:
       
       #Monitor DataNodes
       while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done &
+
     fi
  
     if [[ "${HOSTNAME}" =~ "hdfs-dn-0" ]]; then
@@ -168,27 +175,8 @@ data:
       ./start-yarn-rm.sh
     fi
 
-    if [[ "${HOSTNAME}" =~ "yarn-rm" ]]; then
-      cp ${CONFIG_DIR}/start-yarn-rm.sh $HADOOP_HOME/sbin/
-      cd $HADOOP_HOME/sbin
-      chmod +x start-yarn-rm.sh
-      ./start-yarn-rm.sh
-    fi
-
     if [[ "${HOSTNAME}" =~ "yarn-nm" ]]; then
-      sed -i '/<\/configuration>/d' $HADOOP_HOME/etc/hadoop/yarn-site.xml
-      cat >> $HADOOP_HOME/etc/hadoop/yarn-site.xml <<- EOM
-      <property>
-        <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>${MY_MEM_LIMIT:-2048}</value>
-      </property>
 
-      <property>
-        <name>yarn.nodemanager.resource.cpu-vcores</name>
-        <value>${MY_CPU_LIMIT:-2}</value>
-      </property>
-    EOM
-      echo '</configuration>' >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
       cp ${CONFIG_DIR}/start-yarn-nm.sh $HADOOP_HOME/sbin/
       cd $HADOOP_HOME/sbin
       chmod +x start-yarn-nm.sh
@@ -332,10 +320,7 @@ data:
           /opt/hadoop/share/hadoop/yarn/hadoop-yarn-client-3.1.1.jar
         </value>
       </property> 
-      <property>
-        <name>yarn.app.mapreduce.am.env</name>
-        <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
-      </property> 
+      <property><name>yarn.app.mapreduce.am.env</name><value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value></property>       
       <property><name>yarn.app.mapreduce.am.resource.mb</name><value>2048</value></property> 
     </configuration>
 

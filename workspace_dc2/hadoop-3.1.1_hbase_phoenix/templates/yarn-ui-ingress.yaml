@@ -13,7 +13,7 @@ metadata:
      kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: yarn.big-data2.safaricomet.net
+  - host: {{ .Values.ingress.yarn.host }}
     http:
       paths:
       - path: /

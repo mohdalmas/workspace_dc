@@ -27,6 +27,12 @@ spec:
   - name: datanode-ui
     port: 9864
     protocol: TCP  
+  - name: dn-jmx-metrics
+    port: 17107
+    protocol: TCP     
+  - name: region-jmx
+    port: 17109
+    protocol: TCP 
   clusterIP: None
   publishNotReadyAddresses: true
   selector:
