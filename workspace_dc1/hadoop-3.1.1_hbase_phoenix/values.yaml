@@ -111,7 +111,8 @@ hbase:
     - name: HBASE_JMX_BASE
       value: "-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
     - name: HBASE_MASTER_OPTS
-      value: "-Dcom.sun.management.jmxremote.port=6424 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17108:/opt/jmx/hbase_master_jmx.yml"
+      value: "-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=6424 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17108:/opt/jmx/hbase_master_jmx.yml"
+
   regionServer:
     resources:
       requests:
