@@ -13,9 +13,9 @@ global:
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
 image:
-  registry: "et01-harbor.safaricomet.net"
-  repository: bigdata/postgresql
-  tag: 11.10.0-debian-10-r83
+  registry: "docker.io"
+  repository: kenchir/postgres
+  tag: 11.10.0-v2
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images

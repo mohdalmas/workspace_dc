@@ -10,6 +10,9 @@ kubectl config set-context --current --namespace=et02-tkg-bigdata-prod
 
 wFB&9N2pku!G
 
+
+kubectl vsphere logout
+
 Safaricomet\Mohd.Almas
 Safaricomet\svc-bigdata-admin
 lyOdmSBwCsZnD4dLnOAE

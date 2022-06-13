@@ -77,7 +77,7 @@ data:
     usermod -a -G hdpusers oozie
     usermod -a -G hdpusers infra-solr
     usermod -a -G hdpusers livy
-    usermod -a -G hdpusers ambari-qa
+    #usermod -a -G hdpusers ambari-qa
     usermod -a -G hdpusers druid
     
     chown -R hdfs:hdpusers /dfs

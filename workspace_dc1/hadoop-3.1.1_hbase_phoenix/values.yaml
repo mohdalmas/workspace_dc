@@ -1,9 +1,9 @@
 # The base hadoop image to use for all components.
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
 image:
-  repository: et01-harbor.safaricomet.net/bigdata/hadoop-redhat
-  tag: hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0
-  pullPolicy: IfNotPresent
+  repository: mohdalmasansari/hadoop-redhat
+  tag: hadoop-3.1.1-hbase-2.0.3-phoenix-5.0.0
+  pullPolicy: Always
 
 # The version of the hadoop libraries being used in the image.
 hadoopVersion: 3.1.1
@@ -58,6 +58,9 @@ hdfs:
       limits:
         memory: "4Gi"
         cpu: "2"
+  extraEnvVars:
+  - name: HDFS_NAMENODE_OPTS
+    value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6414  -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17106:/opt/jmx/hadoop_nn_jmx.yml"
 
   webhdfs:
     enabled: false
@@ -100,6 +103,15 @@ hbase:
       limits:
         memory: "8Gi"
         cpu: "2"
+    extraEnvVars:
+    - name: HADOOP_USER_NAME
+      value: root
+    - name: PHOENIX_HOME
+      value: "/opt/phoenix"
+    - name: HBASE_JMX_BASE
+      value: "-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+    - name: HBASE_MASTER_OPTS
+      value: "$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=6424 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17108:/opt/jmx/hbase_master_jmx.yml"
   regionServer:
     resources:
       requests:
@@ -108,6 +120,7 @@ hbase:
       limits:
         memory: "4Gi"
         cpu: "2"
+
         
 ingress:
   nameNode:
@@ -134,7 +147,7 @@ persistence:
     size: 2000Gi
     
 hbase_conf:
-  hadoopUserName: root
+  #hadoopUserName: root
   hbaseSite:
     hbase.rootdir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase 
     hbase.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
@@ -174,3 +187,15 @@ hbase_conf:
     zookeeper.znode.parent: /hbase
     phoenix.functions.allowUserDefinedFunctions: true
     hbase.dynamic.jars.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase/lib
+
+## Configure metrics exporter
+##
+metrics:
+  enabled: enable
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: bigdata-prometheus
+    # interval: 30s
+    # scrapeTimeout: 10s
+    namespace: bigdata-monitoring
