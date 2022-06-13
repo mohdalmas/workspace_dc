@@ -30,7 +30,7 @@ spec:
   - name: dn-jmx-metrics
     port: 17107
     protocol: TCP     
-  - name: region-jmx
+  - name: regionserver-jmx
     port: 17109
     protocol: TCP 
   clusterIP: None

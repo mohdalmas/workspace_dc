@@ -2,11 +2,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-servicemonitor
+  name: {{ .Release.Name }}-dn-servicemonitor
   labels:
-    app.kubernetes.io/name: {{ include "hive.name" . }}
-    app.kubernetes.io/component: hive
-    {{- include "hive.labels" . | nindent 4 }}
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
     {{- if .Values.metrics.serviceMonitor.additionalLabels }}
     {{- toYaml .Values.metrics.serviceMonitor.additionalLabels | nindent 4 }}
     {{- end }}
@@ -15,14 +14,14 @@ metadata:
   {{- end }}
 spec:
   endpoints:
-    - port: hive-server-exporter
+    - port: dn-jmx-metrics
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
       {{- if .Values.metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
       {{- end }}
-    - port: hive-metastore-exporter
+    - port: regionserver-jmx
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
@@ -34,7 +33,8 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "hive.name" . }}
-      app.kubernetes.io/component: hive-service
-      {{- include "hive.labels" . | nindent 6 }}
+      app: {{ include "hadoop.name" . }}
+      chart: {{ include "hadoop.chart" . }}
+      release: {{ .Release.Name }}
+      component: hdfs-dn
 {{- end }}

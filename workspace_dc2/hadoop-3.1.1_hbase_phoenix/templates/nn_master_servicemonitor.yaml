@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-servicemonitor
+  name: {{ .Release.Name }}-nn-servicemonitor
   labels:
     app: {{ include "hadoop.name" . }}
     chart: {{ include "hadoop.chart" . }}
