@@ -1,8 +1,8 @@
 {{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
-  name: {{ .Release.Name }}-servicemonitor
+  name: {{ .Release.Name }}-podmonitor
   labels:
     app.kubernetes.io/name: {{ include "hive.name" . }}
     app.kubernetes.io/component: hive
@@ -14,15 +14,17 @@ metadata:
   namespace: {{ .Values.metrics.serviceMonitor.namespace }}
   {{- end }}
 spec:
-  endpoints:
-    - port: hive-server-exporter
+  podMetricsEndpoints:
+    - port: hive-server
+      path: /metrics
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
       {{- if .Values.metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
       {{- end }}
-    - port: hive-metastore-exporter
+    - port: hive-metastore
+      path: /metrics
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
@@ -35,6 +37,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "hive.name" . }}
-      app.kubernetes.io/component: hive-service
-      {{- include "hive.labels" . | nindent 6 }}
+      app.kubernetes.io/component: hive-pod
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end }}

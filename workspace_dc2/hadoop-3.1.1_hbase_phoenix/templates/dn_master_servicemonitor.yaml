@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-nn-servicemonitor
+  name: {{ .Release.Name }}-dn-servicemonitor
   labels:
     app: {{ include "hadoop.name" . }}
     chart: {{ include "hadoop.chart" . }}
@@ -14,14 +14,14 @@ metadata:
   {{- end }}
 spec:
   endpoints:
-    - port: nn-jmx-metrics
+    - port: dn-jmx-metrics
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
       {{- if .Values.metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
       {{- end }}
-    - port: master-jmx
+    - port: regionserver-jmx
       {{- if .Values.metrics.serviceMonitor.interval }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       {{- end }}
@@ -36,5 +36,5 @@ spec:
       app: {{ include "hadoop.name" . }}
       chart: {{ include "hadoop.chart" . }}
       release: {{ .Release.Name }}
-      component: hdfs-nn
+      component: hdfs-dn
 {{- end }}

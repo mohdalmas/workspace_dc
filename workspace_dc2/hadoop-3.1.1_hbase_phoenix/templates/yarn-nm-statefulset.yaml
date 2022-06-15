@@ -27,8 +27,8 @@ spec:
         release: {{ .Release.Name }}
         component: yarn-nm
     spec:
-      imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      # imagePullSecrets:
+# {{ toYaml .Values.imagePullSecrets | indent 8 }}
       serviceAccountName: {{.Values.serviceAccount }} 
       affinity:
         podAntiAffinity:
