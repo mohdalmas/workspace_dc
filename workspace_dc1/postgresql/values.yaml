@@ -15,7 +15,7 @@ global:
 image:
   registry: "docker.io"
   repository: kenchir/postgres
-  tag: 11.10.0-v2
+  tag: 11.10.1
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -162,12 +162,12 @@ postgresqlDataDir: /bitnami/postgresql/data
 
 ## An array to add extra environment variables
 ## For example:
-## extraEnv:
-##   - name: FOO
-##     value: "bar"
+extraEnv:
+  - name: BASE_URL
+    value: http://10.3.41.29:8080
 ##
 # extraEnv:
-extraEnv: []
+# extraEnv: []
 
 ## Name of a ConfigMap containing extra env vars
 ##
