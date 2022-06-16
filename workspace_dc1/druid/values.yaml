@@ -16,8 +16,8 @@
 # Default values for druid.
 
 image:
-  repository: et01-harbor.safaricomet.net/bigdata/druid
-  tag: 0.22.1
+  repository: docker.io/apache/druid
+  tag: 0.23.0-rc2
   pullPolicy: IfNotPresent
   
 imagePullSecrets:
@@ -109,7 +109,7 @@ broker:
     druid_processing_buffer_sizeBytes: '50000000'
     druid_processing_numMergeBuffers: 2
     druid_processing_numThreads: 1
-    druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
 
   ingress:
     enabled: true
@@ -155,7 +155,7 @@ coordinator:
   config:
     DRUID_XMX: 256m
     DRUID_XMS: 256m
-    druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.client.cache.CacheMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.client.cache.CacheMonitor"]'
 
   ingress:
     enabled: true
@@ -239,7 +239,7 @@ historical:
     druid_processing_buffer_sizeBytes: '50000000'
     druid_processing_numMergeBuffers: 2
     druid_processing_numThreads: 1
-    druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
     # druid_segmentCache_locations: '[{"path":"/var/druid/segment-cache","maxSize":300000000000}]'
 
   ingress:

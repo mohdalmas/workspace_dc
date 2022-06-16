@@ -16,6 +16,8 @@ spec:
     name: web2
   - port: 8042
     name: api
+  - port: 17105
+    name: nm-yarn-jmx
   clusterIP: None
   selector:
     app: {{ include "hadoop.name" . }}

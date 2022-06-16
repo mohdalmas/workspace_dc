@@ -64,6 +64,8 @@ spec:
       - name: yarn-nm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+{{ toYaml .Values.yarn.nodeManager.extraEnvVars | indent 10 }}
         ports:
         - containerPort: 8088
           name: web
