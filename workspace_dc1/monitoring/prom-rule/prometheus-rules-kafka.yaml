@@ -273,3 +273,4 @@ spec:
         # summary: 'No message for 10 minutes'
         # description: 'There is no messages in topic {{ $labels.topic}}/partition {{ $labels.partition }} for 10 minutes'
    
+  #  sum by (component_id)  (changes(nifi_amount_items_output{component_name="ListSFTP",parent_id="208d9d70-0181-1000-0000-00005cf9e70a"}[10m])) == 0
