@@ -1,12 +1,12 @@
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_order_record_confirm
+  name: cps-out-order-record-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_order_record_confirm
   partitions: 6
   replicas: 2
   config:
@@ -14,14 +14,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_accountentry_confirm
+  name: cps-out-accountentry-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_accountentry_confirm
   partitions: 6
   replicas: 2
   config:
@@ -29,14 +29,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_accountbalance_confirm
+  name: cps-out-accountbalance-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_accountbalance_confirm
   partitions: 6
   replicas: 2
   config:
@@ -44,14 +44,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_customer_confirm
+  name: cps-out-customer-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_customer_confirm
   partitions: 6
   replicas: 2
   config:
@@ -59,14 +59,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_customer_kyc_confirm
+  name: cps-out-customer-kyc-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_customer_kyc_confirm
   partitions: 6
   replicas: 2
   config:
@@ -74,14 +74,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_organization_confirm
+  name: cps-out-organization-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_organization_confirm
   partitions: 6
   replicas: 2
   config:
@@ -89,14 +89,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_org_kyc_confirm
+  name: cps-out-org-kyc-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_org_kyc_confirm
   partitions: 6
   replicas: 2
   config:
@@ -104,14 +104,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_product_confirm
+  name: cps-out-product-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_product_confirm
   partitions: 6
   replicas: 2
   config:
@@ -119,14 +119,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_org_operator_kyc_confirm
+  name: cps-out-org-operator-kyc-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_org_operator_kyc_confirm
   partitions: 6
   replicas: 2
   config:
@@ -134,14 +134,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_operator_confirm
+  name: cps-out-operator-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_operator_confirm
   partitions: 6
   replicas: 2
   config:
@@ -149,14 +149,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_identifier_confirm
+  name: cps-out-identifier-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_identifier_confirm
   partitions: 6
   replicas: 2
   config:
@@ -164,14 +164,14 @@ spec:
 ---
 
 
-
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: cps_out_till_confirm
+  name: cps-out-till-confirm
   labels:
     strimzi.io/cluster: kafka
 spec:
+  topicName: cps_out_till_confirm
   partitions: 6
   replicas: 2
   config:
