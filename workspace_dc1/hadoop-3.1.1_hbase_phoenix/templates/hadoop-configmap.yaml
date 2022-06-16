@@ -350,12 +350,12 @@ data:
 
     echo "starting yarn daemons"
 
-    bin=`dirname "${BASH_SOURCE-$0}"`
-    bin=`cd "$bin"; pwd`
-
-    HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
-    HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
-    . $HADOOP_LIBEXEC_DIR/yarn-config.sh
+    #bin=`dirname "${BASH_SOURCE-$0}"`
+    #bin=`cd "$bin"; pwd`
+    #
+    #HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
+    #HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
+    #. $HADOOP_LIBEXEC_DIR/yarn-config.sh
 
     # start nodeManager
     $HADOOP_HOME/bin/yarn --daemon start nodemanager
@@ -383,12 +383,12 @@ data:
 
     echo "starting yarn daemons"
 
-    bin=`dirname "${BASH_SOURCE-$0}"`
-    bin=`cd "$bin"; pwd`
-
-    HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
-    HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
-    . $HADOOP_LIBEXEC_DIR/yarn-config.sh
+    #bin=`dirname "${BASH_SOURCE-$0}"`
+    #bin=`cd "$bin"; pwd`
+    #
+    #HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
+    #HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
+    #. $HADOOP_LIBEXEC_DIR/yarn-config.sh
 
     # start resourceManager
     $HADOOP_HOME/bin/yarn --daemon start resourcemanager

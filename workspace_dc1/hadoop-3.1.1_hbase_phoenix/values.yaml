@@ -79,6 +79,9 @@ yarn:
       limits:
         memory: "8Gi"
         cpu: "3"
+    extraEnvVars: 
+    - name: YARN_RESOURCEMANAGER_OPTS
+      value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6474 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17104:/opt/jmx/hadoop_rm_jmx.yml"
 
   nodeManager:
     #pdbMinAvailable: 0
@@ -98,6 +101,9 @@ yarn:
       limits:
         memory: "4Gi"
         cpu: "2"
+    extraEnvVars:
+    - name: YARN_NODEMANAGER_OPTS
+      value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6484 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17105:/opt/jmx/hadoop_nm_jmx.yml"
 hbase:
   master:
     resources:

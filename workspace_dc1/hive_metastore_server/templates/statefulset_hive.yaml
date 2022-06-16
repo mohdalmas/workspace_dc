@@ -38,8 +38,8 @@ spec:
           # runAsUser: 997
           # allowPrivilegeEscalation: true
         ports:
-          - containerPort: 17101
-            name: "hive-server"
+          - containerPort: 17102
+            name: "hive-metastore"
         command:
           - /bin/bash
           - /opt/hive/conf/startup.sh
@@ -69,8 +69,8 @@ spec:
           # runAsUser: 997
           # allowPrivilegeEscalation: true
         ports:
-          - containerPort: 17102
-            name: "hive-metastore"
+          - containerPort: 17101
+            name: "hive-server"
         command:
           - /bin/bash
           - /opt/hive/conf/startup.sh
