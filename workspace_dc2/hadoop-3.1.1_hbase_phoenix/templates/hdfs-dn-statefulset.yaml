@@ -24,8 +24,8 @@ spec:
         release: {{ .Release.Name }}
         component: hdfs-dn
     spec:
-      imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      # imagePullSecrets:
+# {{ toYaml .Values.imagePullSecrets | indent 8 }}
       serviceAccountName: {{.Values.serviceAccount }}
       affinity:
         podAntiAffinity:
@@ -63,6 +63,8 @@ spec:
       - name: hdfs-dn
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+{{ toYaml .Values.hdfs.dataNode.extraEnvVars | indent 10 }}
         command:
            - "/bin/bash"
            - "/tmp/hadoop-config/bootstrap.sh"
@@ -83,12 +85,7 @@ spec:
            - "-d"
            - "regionserver"
         env:
-        - name: HADOOP_USER_NAME
-          value: {{ .Values.hbase_conf.hadoopUserName }}
-        - name: PHOENIX_HOME
-          value: "/opt/phoenix"
-        - name: TZ
-          value: Europe/Amsterdam
+{{ toYaml .Values.hbase.regionServer.extraEnvVars | indent 10 }}
         resources:
 {{ toYaml .Values.hbase.regionServer.resources | indent 10 }}
         volumeMounts:

@@ -16,8 +16,8 @@
 # Default values for druid.
 
 image:
-  repository: et01-harbor.safaricomet.net/bigdata/druid
-  tag: 0.22.1
+  repository: docker.io/apache/druid
+  tag: 0.23.0-rc2
   pullPolicy: IfNotPresent
   
 imagePullSecrets:
@@ -54,10 +54,13 @@ configVars:
   druid_indexer_logs_directory: /druid/indexing-logs
 
   ## Druid Emitting Metrics. ref: https://druid.apache.org/docs/latest/configuration/index.html#emitting-metrics
-  druid_emitter: noop
-  druid_emitter_logging_logLevel: http
-  druid_emitter_http_recipientBaseUrl: http://druid-exporter-prometheus-druid-exporter:8080/druid
+  druid_emitter: parametrized
+  druid_emitter_logging_logLevel: debug
+  #druid_emitter_http_recipientBaseUrl: http://druid-exporter-prometheus-druid-exporter:8080/druid
   druid_emitter_logging_loggerClass: HttpPostEmitter
+  druid_emitter_parametrized_recipientBaseUrlPattern: http://druid-exporter-prometheus-druid-exporter:8080/druid
+  druid_emitter_composing_emitters: '["logging","http"]'
+  
   druid_auth_authenticatorChain: '["ldap"]'
   druid_auth_authenticator_ldap_type: basic
   druid_auth_authenticator_ldap_enableCacheNotifications: 'true'
@@ -78,6 +81,7 @@ configVars:
   druid_auth_authorizer_ldapauth_initialAdminUser: Mohd.Almas
   druid_auth_authorizer_ldapauth_initialAdminRole: admin
   druid_auth_authorizer_ldapauth_roleProvider_type: ldap
+  #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.java.util.metrics.SysMonitor","org.apache.druid.java.util.metrics.JvmMonitor","org.apache.druid.java.util.metrics.JvmCpuMonitor","org.apache.druid.java.util.metrics.CpuAcctDeltaMonitor","org.apache.druid.java.util.metrics.JvmThreadsMonitor","org.apache.druid.java.util.metrics.CgroupMemoryMonitor","org.apache.druid.server.metrics.EventReceiverFirehoseMonitor","org.apache.druid.server.metrics.QueryCountStatsMonitor","org.apache.druid.server.emitter.HttpEmittingMonitor","org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.server.metrics.TaskSlotCountStatsMonitor"]'
 
   
 gCloudStorage:
@@ -105,7 +109,7 @@ broker:
     druid_processing_buffer_sizeBytes: '50000000'
     druid_processing_numMergeBuffers: 2
     druid_processing_numThreads: 1
-    druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor","org.apache.druid.java.util.metrics.SysMonitor","org.apache.druid.java.util.metrics.JvmMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
 
   ingress:
     enabled: true
@@ -151,7 +155,7 @@ coordinator:
   config:
     DRUID_XMX: 256m
     DRUID_XMS: 256m
-    druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.client.cache.CacheMonitor"]'
 
   ingress:
     enabled: true
@@ -235,7 +239,7 @@ historical:
     druid_processing_buffer_sizeBytes: '50000000'
     druid_processing_numMergeBuffers: 2
     druid_processing_numThreads: 1
-    druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
     # druid_segmentCache_locations: '[{"path":"/var/druid/segment-cache","maxSize":300000000000}]'
 
   ingress:
@@ -303,7 +307,7 @@ middleManager:
     DRUID_XMS: 64m
     druid_indexer_runner_javaOptsArray: '["-server", "-Xms256m", "-Xmx256m", "-XX:MaxDirectMemorySize=300m", "-Duser.timezone=UTC+3", "-Dfile.encoding=UTF-8", "-XX:+ExitOnOutOfMemoryError", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]'
     druid_indexer_fork_property_druid_processing_buffer_sizeBytes: '25000000'
-
+    #druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor"]'
   autoscaling:
     enabled: false
     minReplicas: 2
@@ -387,7 +391,6 @@ router:
     DRUID_XMS: 128m
     DRUID_MAXDIRECTMEMORYSIZE: 128m
     druid_router_managementProxy_enabled: true
-
   ingress:
     enabled: true
     annotations:

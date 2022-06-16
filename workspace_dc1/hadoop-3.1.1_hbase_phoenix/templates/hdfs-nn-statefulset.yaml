@@ -60,6 +60,8 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
 {{- end }}
+      securityContext:
+        runAsUser: 0
       containers:
       - name: hdfs-nn
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -69,11 +71,10 @@ spec:
         - "/tmp/hadoop-config/bootstrap.sh"
         - "-d"
         env:
-        # - name: HDFS_NAMENODE_OPTS
-          # value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6444  -javaagent:/opt/jmx_prometheus_javaagent-0.14.0.jar=17106:/tmp/namenode.yaml $HADOOP_NAMENODE_OPTS"
+{{ toYaml .Values.hdfs.nameNode.extraEnvVars | indent 10 }}
         ports:
         - containerPort: 17106
-          name: tcp-jmx-metrics
+          name: nn-jmx-metrics
           protocol: TCP
         resources:
 {{ toYaml .Values.hdfs.nameNode.resources | indent 10 }}
@@ -103,12 +104,7 @@ spec:
         - "-d"
         - "master"
         env:
-        - name: HADOOP_USER_NAME
-          value: {{ .Values.hbase_conf.hadoopUserName }}
-        - name: PHOENIX_HOME
-          value: "/opt/phoenix"
-        - name: TZ
-          value: Europe/Amsterdam
+{{ toYaml .Values.hbase.master.extraEnvVars | indent 10 }}
         resources:
 {{ toYaml .Values.hbase.master.resources | indent 10 }}
         volumeMounts:

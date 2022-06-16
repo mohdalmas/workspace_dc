@@ -13,7 +13,7 @@ metadata:
      kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: hdfs.big-data2.safaricomet.net
+  - host: {{.Values.ingress.nameNode.host}}
     http:
       paths:
       - path: /

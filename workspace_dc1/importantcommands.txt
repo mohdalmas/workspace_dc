@@ -10,6 +10,9 @@ kubectl config set-context --current --namespace=et02-tkg-bigdata-prod
 
 wFB&9N2pku!G
 
+
+kubectl vsphere logout
+
 Safaricomet\Mohd.Almas
 Safaricomet\svc-bigdata-admin
 lyOdmSBwCsZnD4dLnOAE
@@ -40,30 +43,30 @@ kubectl create secret docker-registry regcred --docker-server=et01-harbor.safari
 
 
 
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697c94n6d   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cbpwh6   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cdmcx9   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cds429   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvr2g   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvrx5   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cn5lnd   Ready    <none>                 6d17h   v1.20.12+vmware.1
-et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cxqgqj   Ready    <none>                 6d17h   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c6p4d9   Ready                      <none>                 37m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c82kz6   Ready                      <none>                 40m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cbtqzq   Ready                      <none>                 46m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cd9cfk   Ready                      <none>                 26m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9chdtqk   Ready                      <none>                 35m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cl64x8   Ready                      <none>                 29m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cpzpnh   Ready                      <none>                 32m   v1.20.12+vmware.1
+et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9crfgh9   Ready                      <none>                 49m   v1.20.12+vmware.1
 
 
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697c94n6d  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697c94n6d  dedicated=Kafka-Nifi
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cbpwh6  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cbpwh6  dedicated=Kafka-Nifi
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cdmcx9  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cdmcx9  dedicated=Kafka-Nifi
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c6p4d9  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c6p4d9  dedicated=Kafka-Nifi
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c82kz6  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c82kz6  dedicated=Kafka-Nifi
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cbtqzq  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cbtqzq  dedicated=Kafka-Nifi
 
 
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cds429  dedicated=Hadoop:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697cds429  dedicated=Hadoop
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvr2g  dedicated=Hadoop:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvr2g  dedicated=Hadoop
-kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvrx5  dedicated=Hadoop:NoSchedule
-kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-6697clvrx5  dedicated=Hadoop
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cd9cfk  dedicated=Hadoop:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cd9cfk  dedicated=Hadoop
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9chdtqk  dedicated=Hadoop:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9chdtqk  dedicated=Hadoop
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cl64x8  dedicated=Hadoop:NoSchedule
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cl64x8  dedicated=Hadoop
 
 
 sed -i '/# %wheel/c\%wheel        ALL=(ALL)       NOPASSWD: ALL' /etc/sudoers

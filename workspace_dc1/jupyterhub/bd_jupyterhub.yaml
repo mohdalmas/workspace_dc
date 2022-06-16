@@ -64,10 +64,6 @@ spec:
         - mountPath: "/etc/jupyterhub/jupyterhub_config.py"
           name: jupyterhub-etc-config
           subPath: jupyterhub_config.py
-        - mountPath: "/usr/bin"
-          name: jupyterhub-soft
-        - mountPath: "/usr/lib/python3.6/site-packages"
-          name: jupyterhub-python
       volumes:
       - name: jupyterhub-home
         persistentVolumeClaim:

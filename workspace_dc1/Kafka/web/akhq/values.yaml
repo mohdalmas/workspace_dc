@@ -5,10 +5,10 @@ image:
   tag: "latest" # uses Chart.AppVersion by default
 
 # custom annotations (example: for prometheus)
-annotations: {}
-  #prometheus.io/scrape: 'true'
-  #prometheus.io/port: '8080'
-  #prometheus.io/path: '/prometheus'
+annotations: 
+  prometheus.io/scrape: 'true'    
+  prometheus.io/port: '28081'
+  prometheus.io/path: '/prometheus'
 
 podAnnotations: {}
 
@@ -70,7 +70,7 @@ configuration:
             base: "OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net"
           groups:
             enabled: true
-            subtree: true
+            subtree: true 
             base: "OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net" 
             filter: 'sAMAccountName={0}'
   akhq:
@@ -161,6 +161,9 @@ configuration:
             groups:
               - admin
           - username: Alphonce.Oniala
+            groups:
+              - reader
+          - username: Mohd.Almas
             groups:
               - admin
                 
@@ -339,9 +342,9 @@ extraVolumes: []
 extraVolumeMounts: []
 
 # Specify ServiceAccount for pod
-serviceAccountName: akhq
+serviceAccountName: bigdata
 serviceAccount:
-  create: true
+  create: false
   #annotations:
   #  eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
 
@@ -377,12 +380,14 @@ service:
   type: ClusterIP
   port: 80
   httpNodePort: 32551
+  metricsport: 28081
+  metricsNodePort: 28081
   labels: {}
   annotations:
     # cloud.google.com/load-balancer-type: "Internal"
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: ""
   annotations: 
     kubernetes.io/ingress.class: nginx
@@ -390,13 +395,13 @@ ingress:
     nginx.ingress.kubernetes.io/affinity: cookie
     nginx.ingress.kubernetes.io/affinity-mode: persistent
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookiea
+    nginx.ingress.kubernetes.io/session-cookie-name: kafka-gui-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   paths:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka.bigdata-1.safaricomet.net
+    - kafka.big-data.safaricomet.net
   tls: []
   #  - secretName: akhq
   #    hosts:

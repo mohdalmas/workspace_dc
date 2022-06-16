@@ -30,7 +30,13 @@ spec:
     port: 9000
     protocol: TCP
   - name: webhdfs
-    port: 9870
+    port: 9870  
+  - name: nn-jmx-metrics
+    port: 17106
+    protocol: TCP 
+  - name: master-jmx
+    port: 17108
+    protocol: TCP 
   clusterIP: None
   selector:
     app: {{ include "hadoop.name" . }}
