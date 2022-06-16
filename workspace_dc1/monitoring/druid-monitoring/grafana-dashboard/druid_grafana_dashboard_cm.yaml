@@ -667,7 +667,23 @@ data:
           "datasource": "Prometheus",
           "fieldConfig": {
             "defaults": {
-              "custom": {}
+              "custom": {
+                "align": null
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
             },
             "overrides": []
           },
@@ -750,7 +766,6 @@ data:
             "align": false,
             "alignLevel": null
           }
-        },
         },
         {
           "aliasColors": {},
@@ -1033,7 +1048,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "(druid_segment_size / 1e+12) * 100",
+              "expr": "sum(druid_segment_size / 1e+12) * 100",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1051,7 +1066,7 @@ data:
             "sort": 0,
             "value_type": "individual"
           },
-          "type": "graph",
+          "type": "gauge",
           "xaxis": {
             "buckets": null,
             "mode": "time",
@@ -1691,7 +1706,7 @@ data:
         ]
       },
       "timezone": "",
-      "title": "Druid / Druid Overview",
+      "title": "Druid System Monitoring",
       "uid": "VreFQZVGk",
-      "version": 5
+      "version": 6
     }

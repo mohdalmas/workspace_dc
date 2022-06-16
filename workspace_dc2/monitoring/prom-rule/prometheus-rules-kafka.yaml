@@ -160,8 +160,8 @@ spec:
       annotations:
         summary: 'Container tls-sidecar Entity Operator pod down or in CrashLookBackOff status'
         description: 'Container tls-sidecar in Entity Operator pod have been down or in CrashLookBackOff status for 3 minutes'
-  - name: connect
-    rules:
+  # - name: connect
+    # rules:
     # - alert: ConnectContainersDown
       # expr: absent(container_last_seen{container=~".+-connect",pod=~".+-connect-.+"})
       # for: 3m
@@ -170,7 +170,7 @@ spec:
       # annotations:
         # summary: 'All Kafka Connect containers down or in CrashLookBackOff status'
         # description: 'All Kafka Connect containers have been down or in CrashLookBackOff status for 3 minutes'
-  - name: bridge
+  # - name: bridge
     # rules:
     # - alert: BridgeContainersDown
       # expr: absent(container_last_seen{container=~".+-bridge",pod=~".+-bridge-.+"})
@@ -220,8 +220,8 @@ spec:
       # annotations:
         # summary: 'Kafka Bridge returns code 5xx too often'
         # description: 'Kafka Bridge returns code 5xx too much ({{ $value }}) for the path {{ $labels.path }}'
-  - name: mirrorMaker
-    rules:
+  # - name: mirrorMaker
+    # rules:
     # - alert: MirrorMakerContainerDown
       # expr: absent(container_last_seen{container=~".+-mirror-maker",pod=~".+-mirror-maker-.+"})
       # for: 3m
@@ -273,3 +273,4 @@ spec:
         # summary: 'No message for 10 minutes'
         # description: 'There is no messages in topic {{ $labels.topic}}/partition {{ $labels.partition }} for 10 minutes'
    
+  #  sum by (component_id)  (changes(nifi_amount_items_output{component_name="ListSFTP",parent_id="208d9d70-0181-1000-0000-00005cf9e70a"}[10m])) == 0
