@@ -137,6 +137,8 @@ hbase:
 
         
 ingress:
+  user: hadoop
+  password: Vk8sBRGZ4N9Remxb
   nameNode:
     host: hdfs.big-data2.safaricomet.net
     enabled: true

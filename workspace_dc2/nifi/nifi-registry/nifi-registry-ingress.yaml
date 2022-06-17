@@ -9,6 +9,13 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-registry-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-XSS-protection: 1";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Access-Control-Allow-Origin: accept, content-type, authorization";
+
     
   labels:
     name: nifi-registry-ngress
