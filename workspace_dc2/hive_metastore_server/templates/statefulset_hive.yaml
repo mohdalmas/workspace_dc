@@ -39,7 +39,7 @@ spec:
           # allowPrivilegeEscalation: true
         ports:
           - containerPort: 17102
-            name: "hive-metastore
+            name: "hive-metastore"
         command:
           - /bin/bash
           - /opt/hive/conf/startup.sh
