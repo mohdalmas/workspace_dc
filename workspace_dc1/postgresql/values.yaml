@@ -488,7 +488,9 @@ primary:
   labels: {}
   annotations: {}
   podLabels: {}
-  podAnnotations: {}
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9187"
   priorityClassName: ''
   ## Extra init containers
   ## Example

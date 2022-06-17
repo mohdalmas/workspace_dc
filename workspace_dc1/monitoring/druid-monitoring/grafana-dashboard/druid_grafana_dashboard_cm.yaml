@@ -381,7 +381,7 @@ data:
           "pluginVersion": "7.1.5",
           "targets": [
             {
-              "expr": "count(druid_tasks_duration{task_status=\"RUNNING\"}) by (task_status)",
+              "expr": "round(count(druid_tasks_duration{task_status=\"RUNNING\"}) by (task_status), 0.1)",
               "interval": "",
               "legendFormat": "{{task_status}}",
               "refId": "A"
@@ -720,9 +720,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg(increase(druid_emitted_metrics{metric_name=\"jvm-mem-used\"}[$__range])) by (exported_service)",
+              "expr": "avg(increase(druid_emitted_metrics{metric_name=\"jvm-mem-used\"}[$__range])) by (service)",
               "interval": "",
-              "legendFormat": "{{exported_service}}",
+              "legendFormat": "{{service}}",
               "refId": "A"
             }
           ],
@@ -812,9 +812,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg(increase(druid_emitted_metrics{metric_name=\"jvm-pool-used\"}[$__range])) by (exported_service)",
+              "expr": "avg(increase(druid_emitted_metrics{metric_name=\"jvm-pool-used\"}[$__range])) by (service)",
               "interval": "",
-              "legendFormat": "{{exported_service}}",
+              "legendFormat": "{{service}}",
               "refId": "A"
             }
           ],
@@ -1450,7 +1450,7 @@ data:
             "sort": 0,
             "value_type": "individual"
           },
-          "type": "graph",
+          "type": "stat",
           "xaxis": {
             "buckets": null,
             "mode": "time",
