@@ -92,6 +92,9 @@ service:
 ## ref: https://kubernetes.io/docs/user-guide/ingress/
 ##
 ingress:
+
+  user: spark
+  password: nNgmCcY4zmD3LJxE
   ## @param ingress.enabled Enable ingress controller resource
   ##
   enabled: true
