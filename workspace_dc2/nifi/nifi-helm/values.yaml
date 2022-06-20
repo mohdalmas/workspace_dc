@@ -130,7 +130,7 @@ ingress:
 jvmMemory: 24g
 
 sidecar:
-  image: et02-harbor.safaricomet.net/bigdata/busybox
+  image: busybox
   tag: "latest"
   imagePullPolicy: "IfNotPresent"
 
@@ -319,12 +319,12 @@ zookeeper:
 metrics:
   prometheus:
     # Enable Prometheus metrics
-    enabled: false
+    enabled: true
     # Port used to expose Prometheus metrics
     port: 9092
     serviceMonitor:
       # Enable deployment of Prometheus Operator ServiceMonitor resource
-      enabled: false
+      enabled: true
       # namespace: monitoring
       # Additional labels for the ServiceMonitor
       labels: {}
