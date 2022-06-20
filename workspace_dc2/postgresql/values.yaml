@@ -489,7 +489,9 @@ primary:
   labels: {}
   annotations: {}
   podLabels: {}
-  podAnnotations: {}
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9187"
   priorityClassName: ''
   ## Extra init containers
   ## Example
@@ -730,17 +732,16 @@ tls:
 ## Configure metrics exporter
 ##
 metrics:
-  enabled: false
+  enabled: true
   # resources: {}
   service:
     type: ClusterIP
-    annotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/port: '9187'
+    annotations: {}
     loadBalancerIP:
   serviceMonitor:
-    enabled: false
-    additionalLabels: {}
+    enabled: true
+    additionalLabels:
+      release: bigdata-prometheus
     # namespace: monitoring
     # interval: 30s
     # scrapeTimeout: 10s
