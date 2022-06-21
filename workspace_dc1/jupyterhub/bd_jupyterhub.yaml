@@ -41,7 +41,7 @@ spec:
           # subPath: startup.sh
       containers:
       - name: jupyterhub-container 
-        image: et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
+        image: mohdalmasansari/jupyterhub:v2.3.1-beta-ubi8.5
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ

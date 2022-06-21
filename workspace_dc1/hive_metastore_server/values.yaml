@@ -114,6 +114,8 @@ hive_spark_worker:
           averageUtilization: 80
 
 ingress:
+  user: hive
+  password: Xj9jzb4xtWzF3Pe6
   enabled: true
   hostPaths:
   - host: hive.big-data.safaricomet.net

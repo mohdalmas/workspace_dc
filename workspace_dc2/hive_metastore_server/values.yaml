@@ -30,8 +30,6 @@ affinity:
 annotations:
   kubernetes.io/psp: "privileged"
   prometheus.io/scrape: "true"
-  prometheus.io/port: "17101"
-  prometheus.io/port: "17102"
       
 hive_metastore: 
   resources: 
