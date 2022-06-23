@@ -89,7 +89,7 @@ spec:
           claimName: jupyterhub-pvc-python
       - name: jupyterhub-cert-config
         secret:
-          secretName: dc1-tls-secret
+          secretName: dc2-tls-secret
 ---
 #Jupyterhub-service
 apiVersion: v1 
