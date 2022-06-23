@@ -268,7 +268,7 @@ spec:
       # expr: changes(kafka_topic_partition_current_offset{topic!="__consumer_offsets"}[10m]) == 0
       # for: 10s
       # labels:
-        # severity: warning
+        # severity: test
       # annotations:
         # summary: 'No message for 10 minutes'
         # description: 'There is no messages in topic {{ $labels.topic}}/partition {{ $labels.partition }} for 10 minutes'
