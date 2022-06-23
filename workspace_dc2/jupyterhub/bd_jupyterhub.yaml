@@ -38,6 +38,9 @@ spec:
         ports:
         - containerPort: 8000
         volumeMounts:
+        - mountPath: "/etc/jupyterhub/startup.sh"
+          name: jupyterhub-etc-config
+          subPath: startup.sh
         - mountPath: "/home"
           name: jupyterhub-home
         - mountPath: "/srv/jupyterhub/"
