@@ -30,6 +30,7 @@ kubectl config get-contexts                          # display list of contexts
 kubectl config current-context 
 
 kubectl config set-context --current --namespace=et02-tkg-bigdata-prod
+kubectl config set-context --current --namespace=tanzu-system-monitoring
 kubectl config set-context --current --namespace=bigdata-monitoring
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
