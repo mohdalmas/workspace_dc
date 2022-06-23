@@ -41,7 +41,7 @@ spec:
           # subPath: startup.sh
       containers:
       - name: jupyterhub-container 
-        image: et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
+        image: mohdalmasansari/jupyterhub:v2.3.1-beta-ubi8.5
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
@@ -64,6 +64,8 @@ spec:
         - mountPath: "/etc/jupyterhub/jupyterhub_config.py"
           name: jupyterhub-etc-config
           subPath: jupyterhub_config.py
+        - mountPath: "/etc/jupyterhub/certs/"
+          name: jupyterhub-cert-config
       volumes:
       - name: jupyterhub-home
         persistentVolumeClaim:
@@ -85,6 +87,9 @@ spec:
       - name: jupyterhub-python
         persistentVolumeClaim:
           claimName: jupyterhub-pvc-python
+      - name: jupyterhub-cert-config
+        secret:
+          secretName: dc1-tls-secret
 ---
 #Jupyterhub-service
 apiVersion: v1 

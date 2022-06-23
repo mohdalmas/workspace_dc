@@ -12,6 +12,11 @@ metadata:
     nginx.ingress.kubernetes.io/auth-secret: schemareg-basic-auth
     # message to display with an appropriate context why the authentication is required
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - schemareg'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-XSS-protection: 1";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Access-Control-Allow-Origin: accept, content-type, authorization";
     
   labels:
     name: schema-registry-ingress

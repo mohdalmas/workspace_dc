@@ -15,6 +15,7 @@ spec:
       labels:
         app: schema-registry
     spec:
+      serviceAccountName: bigdata
       containers:
       - image: kapkiai/schema-registry:1.0.2
         name: schema-registry

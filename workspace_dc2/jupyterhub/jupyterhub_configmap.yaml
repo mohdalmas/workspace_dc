@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: jupyterhub-config
 data:
+  startup.sh: |
+    yum -y update
+    yum install -y nano
   jupyterhub_config.py: |
     # Configuration file for jupyterhub.
 
@@ -11,7 +14,6 @@ data:
     
     c.Application.log_level = 'DEBUG'
     ##LDAP Authentication Section##
-    c.Authenticator.username_pattern = ''
     c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
     c.LDAPAuthenticator.server_address =  'safaricomet.net'
     c.LDAPAuthenticator.lookup_dn = True
@@ -27,7 +29,8 @@ data:
     c.LDAPAuthenticator.use_lookup_dn_username = False
     c.Authenticator.admin_users = {'Mohd.Almas','Umesha.Gowda','Alphonce.Oniala'}
     #c.Authenticator.allowed_users = {'Mohd.Almas'}
-    
+    c.JupyterHub.ssl_key = '/etc/jupyterhub/certs/tls.key'
+    c.JupyterHub.ssl_cert = '/etc/jupyterhub/certs/tls.crt'
 
     def pre_spawn_hook(spawner):
         username = spawner.user.name

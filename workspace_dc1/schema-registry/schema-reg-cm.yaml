@@ -455,8 +455,8 @@ data:
        db.properties:
          dataSourceClassName: "org.postgresql.ds.PGSimpleDataSource"
          dataSource.url: "jdbc:postgresql://bigdata-psql-postgresql/schemareg"
-         dataSource.user: "schemareg"
-         dataSource.password: "Sch3mAreg"
+         dataSource.user: "svc-bigdata-admin"
+         dataSource.password: "lyOdmSBwCsZnD4dLnOAE"
 
     #swagger configuration
     swagger:
@@ -718,5 +718,4 @@ data:
 
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: schemareg-config

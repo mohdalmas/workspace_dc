@@ -68,8 +68,8 @@ storageProviderConfiguration:
    db.properties:
      dataSourceClassName: "org.postgresql.ds.PGSimpleDataSource"
      dataSource.url: "jdbc:postgresql://hive-postgresql/schemareg"
-     dataSource.user: "hive"
-     dataSource.password: "hive"
+     dataSource.user: "svc-bigdata-admin"
+     dataSource.password: "lyOdmSBwCsZnD4dLnOAE"
 
 #swagger configuration
 swagger:
