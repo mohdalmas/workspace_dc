@@ -5,7 +5,10 @@ metadata:
 data:
   startup.sh: |
     yum -y update
+    pip uninstall -y urllib3
+    pip install urllib3
     yum install -y nano
+    /usr/local/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
   jupyterhub_config.py: |
     # Configuration file for jupyterhub.
 

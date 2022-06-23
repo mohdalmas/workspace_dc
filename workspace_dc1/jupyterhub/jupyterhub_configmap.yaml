@@ -3,9 +3,13 @@ kind: ConfigMap
 metadata:
   name: jupyterhub-config
 data:
+  requirements.txt: |
+  
   startup.sh: |
     yum -y update
     yum install -y nano
+    pip uninstall -y urllib3
+    pip install urllib3
     /usr/local/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
   jupyterhub_config.py: |
     # Configuration file for jupyterhub.
