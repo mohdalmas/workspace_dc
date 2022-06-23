@@ -42,7 +42,10 @@ spec:
       containers:
       - name: jupyterhub-container 
         image: mohdalmasansari/jupyterhub:v2.3.1-beta-ubi8.5
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        command:  
+           - "/bin/bash"
+           - "/etc/jupyterhub/startup.sh"
         env:
         - name: TZ
           value: Africa/Nairobi
@@ -57,6 +60,9 @@ spec:
         volumeMounts:
         # - mountPath: "/usr/lib/python3.6/site-packages"
           # name: emp-dir
+        - mountPath: "/etc/jupyterhub/startup.sh"
+          name: jupyterhub-etc-config
+          subPath: startup.sh
         - mountPath: "/home"
           name: jupyterhub-home
         - mountPath: "/srv/jupyterhub/"

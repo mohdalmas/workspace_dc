@@ -1,0 +1,48 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    prometheus-operator-validated: "true"
+  labels:
+    app: kube-prometheus-stack
+    release: bigdata-prometheus
+  namespace: bigdata-monitoring
+  name: prometheus-rules-common
+spec:
+  groups:
+  - name: hadoop
+    rules:
+    - alert: NameNode_Service_DOWN_EMERGENCY
+      expr: count(Hadoop_NameNode_op_listStatus_TotalCount) != 1
+      for: 5m
+      labels:
+        severity: emergency
+      annotations:
+        summary: 'NameNode Service Status'
+        description: 'NameNode Service is Down'
+    - alert: DataNode_Service_DOWN_CRITICAL
+      expr: sum(Hadoop_NameNode_NumDeadDataNodes{name="FSNamesystem"}) > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: 'Datanode Service Status'
+        description: 'One or More Datanode services are Down'
+    - alert: Hbase_Master_DOWN_EMERGENCY
+      expr: count(Hadoop_HBase_masterActiveTime) != 1
+      for: 5m
+      labels:
+        severity: emergency
+      annotations:
+        summary: 'Hbase Master service Status'
+        description: 'Hbase Master service is Down'
+        
+    - alert: Hbase_RegionServer_DOWN_CRITICAL
+      expr: sum(Hadoop_HBase_numDeadRegionServers) > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: 'Hbase Regionserver service Status'
+        description: 'Hbase Regionserver service is down'
+   

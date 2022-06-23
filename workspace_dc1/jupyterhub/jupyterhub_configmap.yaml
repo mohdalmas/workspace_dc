@@ -6,6 +6,7 @@ data:
   startup.sh: |
     yum -y update
     yum install -y nano
+    /usr/local/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
   jupyterhub_config.py: |
     # Configuration file for jupyterhub.
 
