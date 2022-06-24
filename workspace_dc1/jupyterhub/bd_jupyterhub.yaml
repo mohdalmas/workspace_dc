@@ -19,30 +19,13 @@ spec:
       imagePullSecrets:
       - name: regcred
       serviceAccountName: bigdata
-      # initContainers:
-      # - name: install-prestart
-        # image: et02-harbor.safaricomet.net/bigdata/jupyterhub:v2.1.0-beta-ubi8.5
-        # imagePullPolicy: IfNotPresent
-        # env:
-        # - name: TZ
-          # value: Africa/Nairobi
-        # - name: http_proxy
-          # value: "http://proxy1.safaricomet.net:3128"
-        # - name: https_proxy
-          # value: "http://proxy1.safaricomet.net:3128" 
-        # command:  
-           # - "/bin/bash"
-           # - "/etc/jupyterhub/startup.sh"
-        # volumeMounts:
-        # - mountPath: "/usr/lib/python3.6/site-packages"
-          # name: emp-dir
-        # - mountPath: "/etc/jupyterhub/startup.sh"
-          # name: jupyterhub-etc-config
-          # subPath: startup.sh
       containers:
       - name: jupyterhub-container 
         image: mohdalmasansari/jupyterhub:v2.3.1-beta-ubi8.5
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        command:  
+           - "/bin/bash"
+           - "/etc/jupyterhub/startup.sh"
         env:
         - name: TZ
           value: Africa/Nairobi
@@ -55,8 +38,9 @@ spec:
         ports:
         - containerPort: 8000
         volumeMounts:
-        # - mountPath: "/usr/lib/python3.6/site-packages"
-          # name: emp-dir
+        - mountPath: "/etc/jupyterhub/startup.sh"
+          name: jupyterhub-etc-config
+          subPath: startup.sh
         - mountPath: "/home"
           name: jupyterhub-home
         - mountPath: "/srv/jupyterhub/"
@@ -81,12 +65,6 @@ spec:
             path: jupyterhub_config.py
           - key: startup.sh
             path: startup.sh
-      - name: jupyterhub-soft
-        persistentVolumeClaim:
-          claimName: jupyterhub-pvc-soft
-      - name: jupyterhub-python
-        persistentVolumeClaim:
-          claimName: jupyterhub-pvc-python
       - name: jupyterhub-cert-config
         secret:
           secretName: dc1-tls-secret

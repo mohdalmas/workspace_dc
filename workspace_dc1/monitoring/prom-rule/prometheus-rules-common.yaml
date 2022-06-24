@@ -12,7 +12,7 @@ spec:
   groups:
   - name: container_cpu
     rules:
-    - alert: Container_CPU_Utilization_EMERGENCY
+    - alert: Container CPU Utilization - EMERGENCY
       expr: (sum(rate(container_cpu_usage_seconds_total{namespace="et01-tkg-bigdata-prod",container!=""}[10m])) by (pod, container) / sum(container_spec_cpu_quota{namespace="et01-tkg-bigdata-prod",container!=""}/container_spec_cpu_period{namespace="et01-tkg-bigdata-prod",container!=""}) by (pod, container)) * 100 > 90
       for: 10m
       labels:
@@ -20,7 +20,7 @@ spec:
       annotations:
         summary: 'Container CPU usage for {{ $labels.pod }}'
         description: 'Container CPU usage is above 90% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_CPU_Utilization_CRITICAL
+    - alert: Container CPU Utilization - CRITICAL
       expr: (sum(rate(container_cpu_usage_seconds_total{namespace="et01-tkg-bigdata-prod",container!=""}[10m])) by (pod, container) / sum(container_spec_cpu_quota{namespace="et01-tkg-bigdata-prod",container!=""}/container_spec_cpu_period{namespace="et01-tkg-bigdata-prod",container!=""}) by (pod, container)) * 100 > 80
       for: 15m
       labels:
@@ -28,7 +28,7 @@ spec:
       annotations:
         summary: 'Container CPU usage for {{ $labels.pod }}'
         description: 'Container CPU usage is above 80% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_CPU_Utilization_HIGH
+    - alert: Container CPU Utilization - HIGH
       expr: (sum(rate(container_cpu_usage_seconds_total{namespace="et01-tkg-bigdata-prod",container!=""}[10m])) by (pod, container) / sum(container_spec_cpu_quota{namespace="et01-tkg-bigdata-prod",container!=""}/container_spec_cpu_period{namespace="et01-tkg-bigdata-prod",container!=""}) by (pod, container)) * 100 > 70
       for: 30m
       labels:
@@ -36,7 +36,7 @@ spec:
       annotations:
         summary: 'Container CPU usage for {{ $labels.pod }}'
         description: 'Container CPU usage is above 70% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_CPU_Utilization_MEDIUM
+    - alert: Container CPU Utilization - MEDIUM
       expr: (sum(rate(container_cpu_usage_seconds_total{namespace="et01-tkg-bigdata-prod",container!=""}[10m])) by (pod, container) / sum(container_spec_cpu_quota{namespace="et01-tkg-bigdata-prod",container!=""}/container_spec_cpu_period{namespace="et01-tkg-bigdata-prod",container!=""}) by (pod, container)) * 100 > 60
       for: 1h
       labels:
@@ -44,7 +44,7 @@ spec:
       annotations:
         summary: 'Container CPU usage for {{ $labels.pod }}'
         description: 'Container CPU usage is above 60% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_CPU_Utilization_LOW
+    - alert: Container CPU Utilization - LOW
       expr: (sum(rate(container_cpu_usage_seconds_total{namespace="et01-tkg-bigdata-prod",container!=""}[10m])) by (pod, container) / sum(container_spec_cpu_quota{namespace="et01-tkg-bigdata-prod",container!=""}/container_spec_cpu_period{namespace="et01-tkg-bigdata-prod",container!=""}) by (pod, container)) * 100 > 50
       for: 2h
       labels:
@@ -55,7 +55,7 @@ spec:
 #-------------------------------------------------#   
   - name: container_memory
     rules:     
-    - alert: Container_Memory_Usage_EMERGENCY
+    - alert: Container Memory Usage - EMERGENCY
       expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 90
       for: 10m
       labels:
@@ -63,7 +63,7 @@ spec:
       annotations:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 90% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_Memory_Usage_CRITICAL
+    - alert: Container Memory Usage - CRITICAL
       expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 80
       for: 15m
       labels:
@@ -71,7 +71,7 @@ spec:
       annotations:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 80% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_Memory_Usage_HIGH
+    - alert: Container Memory Usage - HIGH
       expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 70
       for: 30m
       labels:
@@ -79,7 +79,7 @@ spec:
       annotations:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 70% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_Memory_Usage_MEDIUM
+    - alert: Container Memory Usage - MEDIUM
       expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 60
       for: 1h
       labels:
@@ -87,7 +87,7 @@ spec:
       annotations:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 60% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
-    - alert: Container_Memory_Usage_LOW
+    - alert: Container Memory Usage - LOW
       expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 50
       for: 2h
       labels:
@@ -99,7 +99,7 @@ spec:
 #If any Pod goes down for 10minutes then this alert will be fired.
   - name: pod_instance_status
     rules:
-    - alert: Pod_InstanceDown_EMERGENCY
+    - alert: Pod Instance Down - EMERGENCY
       # Condition for alerting
       expr: up{namespace="et01-tkg-bigdata-prod"} == 0
       for: 10m
@@ -110,7 +110,7 @@ spec:
       # Labels - additional labels to be attached to the alert
       labels:
           severity: 'emergency'        
-    - alert: Pod_InstanceDown_CRITICAL
+    - alert: Pod Instance Down - CRITICAL
       # Condition for alerting
       expr: up{namespace="et01-tkg-bigdata-prod"} == 0
       for: 8m
@@ -121,7 +121,7 @@ spec:
       # Labels - additional labels to be attached to the alert
       labels:
           severity: 'critical'    
-    - alert: Pod_InstanceDown_HIGH
+    - alert: Pod Instance Down - HIGH
       # Condition for alerting
       expr: up{namespace="et01-tkg-bigdata-prod"} == 0
       for: 6m
@@ -132,7 +132,7 @@ spec:
       # Labels - additional labels to be attached to the alert
       labels:
           severity: 'critical'    
-    - alert: Pod_InstanceDown__MEDIUM
+    - alert: Pod Instance Down - MEDIUM
       # Condition for alerting
       expr: up{namespace="et01-tkg-bigdata-prod"} == 0
       for: 4m
@@ -143,7 +143,7 @@ spec:
       # Labels - additional labels to be attached to the alert
       labels:
           severity: 'critical'    
-    - alert: Pod_InstanceDown_LOW
+    - alert: Pod Instance Down - LOW
       # Condition for alerting
       expr: up{namespace="et01-tkg-bigdata-prod"} == 0
       for: 2m
@@ -158,7 +158,7 @@ spec:
   - name: pvc_status
     rules:          
     # Storage Rules      
-    - alert: PVC_RunningOutOfSpace_EMERYGENCY
+    - alert: PVC Running OutOfSpace - EMERYGENCY
       expr:  kubelet_volume_stats_available_bytes{namespace="et01-tkg-bigdata-prod"} * 100 / kubelet_volume_stats_capacity_bytes{namespace="et01-tkg-bigdata-prod"} < 10
       for: 10m
       labels:
@@ -167,7 +167,7 @@ spec:
         summary: PVC is running out of space for (pod {{ $labels.pod }})
         description: "{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up very soon. Currently {{ $value | humanize }}% is available.  VALUE = {{ $value }} and  LABELS = {{ $labels }}"
  
-    - alert: PVC_RunningOutOfSpace_CRITICAL
+    - alert: PVC Running OutOfSpace - CRITICAL
       expr:  kubelet_volume_stats_available_bytes{namespace="et01-tkg-bigdata-prod"} * 100 / kubelet_volume_stats_capacity_bytes{namespace="et01-tkg-bigdata-prod"} < 20
       for: 15m
       labels:
@@ -176,7 +176,7 @@ spec:
         summary: PVC is running out of space for (pod {{ $labels.pod }})
         description: "{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up very soon. Currently {{ $value | humanize }}% is available.  VALUE = {{ $value }} and  LABELS = {{ $labels }}"
  
-    - alert: PVC_RunningOutOfSpace_HIGH
+    - alert: PVC Running OutOfSpace - HIGH
       expr:  kubelet_volume_stats_available_bytes{namespace="et01-tkg-bigdata-prod"} * 100 / kubelet_volume_stats_capacity_bytes{namespace="et01-tkg-bigdata-prod"} < 30
       for: 30m
       labels:
@@ -185,7 +185,7 @@ spec:
         summary: PVC is running out of space for (pod {{ $labels.pod }})
         description: "{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up very soon. Currently {{ $value | humanize }}% is available.  VALUE = {{ $value }} and  LABELS = {{ $labels }}"
  
-    - alert: PVC_RunningOutOfSpace_MEDIUM
+    - alert: PVC Running OutOfSpace - MEDIUM
       expr:  kubelet_volume_stats_available_bytes{namespace="et01-tkg-bigdata-prod"} * 100 / kubelet_volume_stats_capacity_bytes{namespace="et01-tkg-bigdata-prod"} < 40
       for: 1h
       labels:
@@ -194,7 +194,7 @@ spec:
         summary: PVC is running out of space for (pod {{ $labels.pod }})
         description: "{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up very soon. Currently {{ $value | humanize }}% is available.  VALUE = {{ $value }} and  LABELS = {{ $labels }}"
  
-    - alert: PVC_RunningOutOfSpace_LOW
+    - alert: PVC Running OutOfSpace - LOW
       expr:  kubelet_volume_stats_available_bytes{namespace="et01-tkg-bigdata-prod"} * 100 / kubelet_volume_stats_capacity_bytes{namespace="et01-tkg-bigdata-prod"} < 50
       for: 2h
       labels:
