@@ -574,7 +574,7 @@ ingress:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka.big-data.safaricomet.net
+    - kafka.big-data2.safaricomet.net
   tls: []
   #  - secretName: akhq
   #    hosts:
