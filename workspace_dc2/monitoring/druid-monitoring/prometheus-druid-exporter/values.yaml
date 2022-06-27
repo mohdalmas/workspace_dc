@@ -2,13 +2,16 @@
 name: druid-exporter
 
 image:
-  name: quay.io/opstree/druid-exporter
-  tag: v0.8
+  name: docker.io/opstree/druid-exporter
+  tag: v0.10
   pullPolicy: IfNotPresent
 
 annotations: {}
 
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+
 
 druidURL: http://druid-router:8888
 logLevel: debug

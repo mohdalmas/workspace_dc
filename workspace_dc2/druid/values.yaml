@@ -1,0 +1,470 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Default values for druid.
+
+image:
+  repository: docker.io/apache/druid
+  tag: 0.23.0-rc2
+  pullPolicy: IfNotPresent
+  
+imagePullSecrets:
+- name: regcred
+
+serviceAccount: bigdata
+
+configMap:
+  ## If false, configMap will not be applied
+  ##
+  enabled: true
+
+common:
+  file: /tmp/common.runtime.properties
+
+## Define the key value pairs in the configmap
+configVars:
+  ## DRUID env vars. ref: https://github.com/apache/druid/blob/master/distribution/docker/druid.sh#L29
+  # DRUID_LOG_LEVEL: "debug"
+  # DRUID_LOG4J: <?xml version="1.0" encoding="UTF-8" ?><Configuration status="WARN"><Appenders><Console name="Console" target="SYSTEM_OUT"><PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/></Console></Appenders><Loggers><Root level="info"><AppenderRef ref="Console"/></Root><Logger name="org.apache.druid.jetty.RequestLog" additivity="false" level="DEBUG"><AppenderRef ref="Console"/></Logger></Loggers></Configuration>
+  DRUID_USE_CONTAINER_IP: "true"
+
+  ## Druid Common Configurations. ref: https://druid.aache.org/docs/latest/configuration/index.html#common-configurations
+  druid_extensions_loadList: '["druid-datasketches","druid-basic-security","druid-histogram", "druid-datasketches", "druid-lookups-cached-global", "postgresql-metadata-storage", "druid-hdfs-storage","druid-kafka-indexing-service"]'
+  druid_metadata_storage_type: postgresql
+  druid_metadata_storage_connector_connectURI: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/druid
+  druid_metadata_storage_connector_user: svc-bigdata-admin
+  druid_metadata_storage_connector_password: lyOdmSBwCsZnD4dLnOAE
+  druid_storage_type: hdfs
+  druid_storage_storageDirectory: /druid/segments
+  # \\druid_indexer_logs_type: file
+  # druid_indexer_logs_directory: /opt/data/indexing-logs
+  druid_indexer_logs_type: hdfs
+  druid_indexer_logs_directory: /druid/indexing-logs
+
+  ## Druid Emitting Metrics. ref: https://druid.apache.org/docs/latest/configuration/index.html#emitting-metrics
+  druid_emitter: parametrized
+  druid_emitter_logging_logLevel: debug
+  #druid_emitter_http_recipientBaseUrl: http://druid-exporter-prometheus-druid-exporter:8080/druid
+  druid_emitter_logging_loggerClass: HttpPostEmitter
+  druid_emitter_parametrized_recipientBaseUrlPattern: http://druid-exporter-prometheus-druid-exporter:8080/druid
+  druid_emitter_composing_emitters: '["logging","http"]'
+  
+  druid_auth_authenticatorChain: '["ldap"]'
+  druid_auth_authenticator_ldap_type: basic
+  druid_auth_authenticator_ldap_enableCacheNotifications: 'true'
+  druid_auth_authenticator_ldap_credentialsValidator_type: ldap
+  druid_auth_authenticator_ldap_credentialsValidator_url: ldap://10.3.108.11:389
+  druid_auth_authenticator_ldap_credentialsValidator_bindUser: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+  druid_auth_authenticator_ldap_credentialsValidator_bindPassword: lyOdmSBwCsZnD4dLnOAE
+  druid_auth_authenticator_ldap_credentialsValidator_baseDn: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+  druid_auth_authenticator_ldap_credentialsValidator_userSearch: (sAMAccountName=%s)
+  druid_auth_authenticator_ldap_credentialsValidator_userAttribute: sAMAccountName
+  druid_auth_authenticator_ldap_authorizerName: ldapauth  
+  druid_escalator_type: basic
+  druid_escalator_internalClientUsername: svc-bigdata-admin
+  druid_escalator_internalClientPassword: lyOdmSBwCsZnD4dLnOAE
+  druid_escalator_authorizerName: ldapauth
+  druid_auth_authorizers: '["ldapauth"]'
+  druid_auth_authorizer_ldapauth_type: basic
+  druid_auth_authorizer_ldapauth_initialAdminUser: Mohd.Almas
+  druid_auth_authorizer_ldapauth_initialAdminRole: admin
+  druid_auth_authorizer_ldapauth_roleProvider_type: ldap
+  #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.java.util.metrics.SysMonitor","org.apache.druid.java.util.metrics.JvmMonitor","org.apache.druid.java.util.metrics.JvmCpuMonitor","org.apache.druid.java.util.metrics.CpuAcctDeltaMonitor","org.apache.druid.java.util.metrics.JvmThreadsMonitor","org.apache.druid.java.util.metrics.CgroupMemoryMonitor","org.apache.druid.server.metrics.EventReceiverFirehoseMonitor","org.apache.druid.server.metrics.QueryCountStatsMonitor","org.apache.druid.server.emitter.HttpEmittingMonitor","org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.server.metrics.TaskSlotCountStatsMonitor"]'
+
+  
+gCloudStorage:
+  enabled: false
+  secretName: google-cloud-key
+
+broker:
+  ## If false, broker will not be installed
+  ##
+  enabled: true
+  name: broker
+  replicaCount: 2
+  port: 8082
+  serviceType: LoadBalancer
+  loadBalancerIP: {}
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+    
+  config:
+    DRUID_XMX: 512m
+    DRUID_XMS: 512m
+    DRUID_MAXDIRECTMEMORYSIZE: 400m
+    druid_processing_buffer_sizeBytes: '50000000'
+    druid_processing_numMergeBuffers: 2
+    druid_processing_numThreads: 1
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - druid-broker.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # limits:
+    #   cpu: 1
+    #   memory: 1Gi
+    # requests:
+    #   cpu: 250m
+    #   memory: 512Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  podAnnotations: {}
+
+coordinator:
+  ## If false, coordinator will not be installed
+  ##
+  enabled: true
+  name: coordinator
+  replicaCount: 2
+  port: 8081
+  serviceType: ClusterIP
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+  config:
+    DRUID_XMX: 256m
+    DRUID_XMS: 256m
+    #druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.client.cache.CacheMonitor"]'
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - druid-coordinator.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 1Gi
+    # requests:
+    #   cpu: 250m
+    #   memory: 512Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  podAnnotations: {}
+
+overlord:
+  ## If true, the separate overlord will be installed
+  ##
+  enabled: false
+  name: overlord
+  replicaCount: 1
+  port: 8081
+  serviceType: ClusterIP
+
+  javaOpts: "-Xms1G -Xmx1G"
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+  ingress:
+    enabled: false
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - druid-overload.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  podAnnotations: {}
+
+historical:
+  ## If false, historical will not be installed
+  ##
+  enabled: true
+  name: historical
+  replicaCount: 1
+  port: 8083
+  serviceType: ClusterIP
+
+  config:
+    DRUID_XMX: 512m
+    DRUID_XMS: 512m
+    DRUID_MAXDIRECTMEMORYSIZE: 400m
+    druid_processing_buffer_sizeBytes: '50000000'
+    druid_processing_numMergeBuffers: 2
+    druid_processing_numThreads: 1
+    #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor"]'
+    # druid_segmentCache_locations: '[{"path":"/var/druid/segment-cache","maxSize":300000000000}]'
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - druid-historical.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: "4Gi"
+    storageClass: "topology-aware-standard"
+
+  antiAffinity: "soft"
+
+  nodeAffinity: {}
+
+  nodeSelector: {}
+
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+
+  tolerations: []
+
+  resources: {}
+    # limits:
+    #   cpu: 2
+    #   memory: 2Gi
+    # requests:
+    #   cpu: 500m
+    #   memory: 512Mi
+
+  ## (dict) If specified, apply these annotations to each master Pod
+  podAnnotations: {}
+
+  podDisruptionBudget:
+    enabled: false
+    # minAvailable: 2
+    maxUnavailable: 1
+
+  updateStrategy:
+    type: RollingUpdate
+
+middleManager:
+  ## If false, middleManager will not be installed
+  ##
+  enabled: true
+  name: middle-manager
+  replicaCount: 1
+  port: 8091
+  serviceType: ClusterIP
+
+  config:
+    DRUID_XMX: 64m
+    DRUID_XMS: 64m
+    druid_indexer_runner_javaOptsArray: '["-server", "-Xms256m", "-Xmx256m", "-XX:MaxDirectMemorySize=300m", "-Duser.timezone=UTC+3", "-Dfile.encoding=UTF-8", "-XX:+ExitOnOutOfMemoryError", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]'
+    druid_indexer_fork_property_druid_processing_buffer_sizeBytes: '25000000'
+    #druid_monitoring_monitors: '["org.apache.druid.server.metrics.TaskCountStatsMonitor"]'
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 60
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - druid-middlemanager.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: "4Gi"
+    storageClass: "topology-aware-standard"
+
+  antiAffinity: "soft"
+
+  nodeAffinity: {}
+
+  nodeSelector: {}
+
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+
+  tolerations: []
+
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 1Gi
+    # requests:
+    #   cpu: 250m
+    #   memory: 256Mi
+
+  ## (dict) If specified, apply these annotations to each master Pod
+  podAnnotations: {}
+
+  podDisruptionBudget:
+    enabled: false
+    # minAvailable: 2
+    maxUnavailable: 1
+
+  updateStrategy:
+    type: RollingUpdate
+
+router:
+  ## If false, router will not be installed
+  ##
+  enabled: true
+  name: router
+  replicaCount: 1
+  port: 8888
+  serviceType: ClusterIP
+
+  config:
+    DRUID_XMX: 128m
+    DRUID_XMS: 128m
+    DRUID_MAXDIRECTMEMORYSIZE: 128m
+    druid_router_managementProxy_enabled: true
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+      kubernetes.io/ingress.class: nginx
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    path: /
+    hosts:
+      - druid-router.big-data2.safaricomet.net
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # limits:
+    #   cpu: 250m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  podAnnotations: {}
+
+# ------------------------------------------------------------------------------
+# Zookeeper:
+# ------------------------------------------------------------------------------
+
+#  : druid-zookeeper-headless:2181
+zkHosts: bigdata-zk-zookeeper-headless:2181
+zookeeper:
+  enabled: false
+  ## Environmental variables to set in Zookeeper
+  ##
+  env:
+    ## The JVM heap size to allocate to Zookeeper
+    ZK_HEAP_SIZE: "512M"
+  ## Configure Zookeeper headless
+  headless:
+    publishNotReadyAddresses: true
+
+
+# ------------------------------------------------------------------------------
+# MySQL:
+# ------------------------------------------------------------------------------
+mysql:
+  enabled: false
+  mysqlRootPassword: druidroot
+  mysqlUser: svc-bigdata-admin
+  mysqlPassword: lyOdmSBwCsZnD4dLnOAE
+  mysqlDatabase: druid
+  configurationFiles:
+    mysql_collate.cnf: |-
+      [mysqld]
+      character-set-server=utf8
+      collation-server=utf8_unicode_ci
+
+# ------------------------------------------------------------------------------
+# postgres:
+# ------------------------------------------------------------------------------
+postgresql:
+  enabled: false
+  postgresqlUrl: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/druid
+  postgresqlUsername: svc-bigdata-admin
+  postgresqlPassword: lyOdmSBwCsZnD4dLnOAE
+  postgresqlDatabase: druid
+  service:
+    port: 5432
+
+# Secrets
