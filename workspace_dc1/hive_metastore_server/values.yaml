@@ -51,7 +51,7 @@ hive_metastore:
   - name: HADOOP_OPTS
     value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6444 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/hive_metastore_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
       
-hive_server:
+hive_server:  
   resources: 
     requests:
       memory: "2Gi"
@@ -68,7 +68,7 @@ hive_server:
     value: hive-0
   - name: SPARK_MASTER_URL
     value: spark://hive-0:7077
-  - name: HADOOP_CLIENT_OPTS
+  - name: HADOOP_CLIENT_OPTS  
     value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
 
 hive_spark_master:
@@ -192,7 +192,7 @@ conf:
     hive.spark.client.server.connect.timeout: 1000000ms
     hive.spark.job.monitor.timeout: 360s
     hive.stats.jdbc.timeout: 30
-    spark.eventLog.dir: /var/log/spark
+    spark.eventLog.dir: /var/log/spark    
     spark.eventLog.enabled: false
     spark.master: spark://hive-0.hive-service:7077
     spark.serializer: org.apache.spark.serializer.KryoSerializer
@@ -223,6 +223,8 @@ conf:
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
     hive.server2.thrift.http.path:  cliservice
+    hive.kms.api.url: http://10.3.41.29:8080/api/v1/token
+    hive.kms.api.auth.token: hive
     
   spark-Defaults:
     spark.master.rest.enabled: false
@@ -236,10 +238,7 @@ conf:
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
     spark.driver.memory: 1024m
-    spark.executor.memory: 3072m
-    spark.cores.max: 2
-    spark.driver.cores: 1
-    spark.executor.cores: 2
+    spark.executor.memory: 3072my
     spark.default.parallelism: 7  
     spark.dynamicAllocation.enabled: true 
     spark.dynamicAllocation.executorIdleTimeout: 60s
