@@ -1,6 +1,13 @@
 kubectl vsphere login --server 10.3.141.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name et02-tkg-bigdata-prod-workload-cluster --tanzu-kubernetes-cluster-namespace et02-tkg-bigdata-prod --vsphere-username=Safaricomet\Mohd.Almas
 wFB&9N2pku!G
 
+
+Username/Password for Ingress UIs:
+
+hadoop Vk8sBRGZ4N9Remxb
+hive Xj9jzb4xtWzF3Pe6
+spark nNgmCcY4zmD3LJxE
+
 svc-bigdata-admin@safaricomet.net 
 lyOdmSBwCsZnD4dLnOAE
 
@@ -25,6 +32,7 @@ docker login et02-harbor.safaricomet.net
 
 Sunil.Kumar
 Y4T&zcX9d(ns
+
 
 kubectl config get-contexts                          # display list of contexts 
 kubectl config current-context 

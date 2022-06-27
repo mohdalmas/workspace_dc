@@ -30,7 +30,9 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.broker.serviceType }}
+{{- if .Values.broker.loadBalancerIP }}
   loadBalancerIP: {{ .Values.broker.loadBalancerIP }}
+{{- end }}
   ports:
     - port: {{ .Values.broker.port }}
       targetPort: http

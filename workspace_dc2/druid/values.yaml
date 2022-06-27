@@ -96,7 +96,7 @@ broker:
   replicaCount: 2
   port: 8082
   serviceType: LoadBalancer
-  loadBalancerIP: {}
+  loadBalancerIP: 10.3.141.36
   securityContext:
     runAsUser: 0
     runAsGroup: 0
