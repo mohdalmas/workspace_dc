@@ -53,7 +53,7 @@ spec:
         args:
           - -batch
           - -auto
-          - -repeat="2"
+          - -repeat=watch
           - -group
           - -owner
           - /dfs
