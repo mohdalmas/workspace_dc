@@ -58,7 +58,7 @@ spec:
         args:
           - -batch
           - -auto
-          - -repeat=watch
+          - -watch
           - -group
           - -owner
           - /dfs
