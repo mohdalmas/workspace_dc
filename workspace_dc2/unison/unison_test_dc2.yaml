@@ -48,6 +48,11 @@ spec:
       containers:
       - name:  unison-app
         image:  et02-harbor.safaricomet.net/library/unison:2.52.1
+        env:                 
+        - name: http_proxy
+          value: "http://proxy1.safaricomet.net:3128"
+        - name: https_proxy
+          value: "http://proxy1.safaricomet.net:3128"     
         command:
           - unison
         args:
