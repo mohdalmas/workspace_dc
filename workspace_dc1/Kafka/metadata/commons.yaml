@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  password: a2hGZ3B0Ukt6MTVO
+  sasl.jaas.config: b3JnLmFwYWNoZS5rYWZrYS5jb21tb24uc2VjdXJpdHkuc2NyYW0uU2NyYW1Mb2dpbk1vZHVsZSByZXF1aXJlZCB1c2VybmFtZT0iY29tbW9uIiBwYXNzd29yZD0ia2hGZ3B0Ukt6MTVOIjs=
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: common
+    app.kubernetes.io/managed-by: strimzi-user-operator
+    app.kubernetes.io/name: strimzi-user-operator
+    strimzi.io/cluster: kafka
+    strimzi.io/kind: KafkaUser
+  managedFields:
+  name: common
+
+type: Opaque
+
+
+# sasl.username=ncc -X sasl.password='khFgptRKz15N' 
+#b3JnLmFwYWNoZS5rYWZrYS5jb21tb24uc2VjdXJpdHkuc2NyYW0uU2NyYW1Mb2dpbk1vZHVsZSBy
+# ZXF1aXJlZCB1c2VybmFtZT1jb21tb24gcGFzc3dvcmQ9a2hGZ3B0Ukt6MTVOOwo=
+
+# org.apache.kafka.common.security.scram.ScramLoginModule required username="ncc" password="khFgptRKz15N";
