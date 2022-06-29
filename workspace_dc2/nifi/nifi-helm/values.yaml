@@ -161,7 +161,12 @@ persistence:
   # Storage capacity for nifi logs
   logStorage:
     size: 10Gi
-
+  
+  extjarsStorage:
+    size: 10Gi
+  
+  extensionsStorage:
+    size: 10Gi
 
 resources: 
   limits:
