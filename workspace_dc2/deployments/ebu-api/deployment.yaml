@@ -19,8 +19,6 @@ spec:
       containers:
         - name: ebu-business-api
           image: et02-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.0
-          imagePullSecrets:
-            - name: regcred
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
@@ -31,6 +29,8 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "2"
+      imagePullSecrets:
+        - name: regcred
 
           
 ---
