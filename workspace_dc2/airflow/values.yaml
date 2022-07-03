@@ -985,7 +985,7 @@ git:
       - repository: "https://mohdalmas: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@github.com/mohdalmas/airflow-dags"
         ## Branch from repository to checkout
         ##
-        branch: "main"
+        branch: "dc2"
         ## An unique identifier for repository, must be unique for each repository
         ##
         name: "airflow-dags"

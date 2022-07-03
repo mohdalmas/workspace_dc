@@ -223,6 +223,9 @@ conf:
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
     hive.server2.thrift.http.path:  cliservice
+    hive.kms.api.url: https://kms.big-data2.safaricomet.net/api/v1/token
+    hive.kms.api.auth.token: hive
+
     
   spark-Defaults:
     spark.master.rest.enabled: false

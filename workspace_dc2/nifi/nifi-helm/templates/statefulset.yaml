@@ -172,10 +172,11 @@ spec:
             mountPath: /opt/nifi/data
           - name: "auth-conf"
             mountPath: /opt/nifi/auth-conf/
-          # - name: "config-data"
-            # mountPath: /opt/nifi/nifi-current/config-data
-          # - name: "flowfile-repository"
-            # mountPath: /opt/nifi/flowfile_repository
+
+          - name: "external-jars"
+            mountPath: /opt/nifi/nifi-current/jars
+          - name: "extensions"
+            mountPath: /opt/nifi/nifi-current/extensions
           # - name: "content-repository"
             # mountPath: /opt/nifi/content_repository
           # - name: "provenance-repository"
@@ -325,6 +326,10 @@ spec:
         emptyDir: {}
       - name: provenance-repository
         emptyDir: {}
+      - name: extensions
+        emptyDir: {}
+      - name: external-jars
+        emptyDir: {}
  {{- end }}
       - name: logs
         emptyDir: {}
@@ -381,28 +386,28 @@ spec:
         # resources:
           # requests:
             # storage: {{ .Values.persistence.flowfileRepoStorage.size }}
-    # - metadata:
-        # name: content-repository
-      # spec:
-        # accessModes:
-        # {{- range .Values.persistence.accessModes }}
-          # - {{ . | quote }}
-        # {{- end }}
-        # storageClassName: {{ .Values.persistence.storageClass | quote }}
-        # resources:
-          # requests:
-            # storage: {{ .Values.persistence.contentRepoStorage.size }}
-    # - metadata:
-        # name: provenance-repository
-      # spec:
-        # accessModes:
-        # {{- range .Values.persistence.accessModes }}
-          # - {{ . | quote }}
-        # {{- end }}
-        # storageClassName: {{ .Values.persistence.storageClass | quote }}
-        # resources:
-          # requests:
-            # storage: {{ .Values.persistence.provenanceRepoStorage.size }}
+    - metadata:
+        name: extensions
+      spec:
+        accessModes:
+        {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.extensionsStorage.size }}
+    - metadata:
+        name: external-jars
+      spec:
+        accessModes:
+        {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.extjarsStorage.size }}
     - metadata:
         name: auth-conf
       spec:
