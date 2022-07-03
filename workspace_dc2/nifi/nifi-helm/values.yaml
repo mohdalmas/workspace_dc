@@ -130,7 +130,7 @@ ingress:
 jvmMemory: 24g
 
 sidecar:
-  image:  et01-harbor.safaricomet.net/bigdata/busybox
+  image:  et02-harbor.safaricomet.net/bigdata/busybox
   tag: "latest"
   imagePullPolicy: "IfNotPresent"
 
