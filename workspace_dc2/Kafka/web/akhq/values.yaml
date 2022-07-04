@@ -1,7 +1,10 @@
-# imagePullSecrets:
-#  - name: my-repository-secret
+imagePullSecrets:
+ - name: regcred
+
+serviceAccount: bigdata
+
 image:
-  repository: tchiotludo/akhq
+  repository: et02-harbor.safaricomet.net/bigdata/kafka-gui
   tag: "latest" # uses Chart.AppVersion by default
 
 # custom annotations (example: for prometheus)
