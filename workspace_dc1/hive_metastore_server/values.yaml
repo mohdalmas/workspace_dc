@@ -2,7 +2,7 @@
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
   
 image:
-  repository:  mohdalmasansari/hive-spark
+  repository:  et01-harbor.safaricomet.net/bigdata/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
   pullPolicy: Always
 
