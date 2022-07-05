@@ -520,7 +520,41 @@ primary:
   ##       - name: portname
   ##         containerPort: 1234
   ##
-  sidecars: []
+  sidecars:
+  - name:  postgresql-datareplicator
+    image:  et02-harbor.safaricomet.net/library/unison:2.52.1
+    env:                 
+    - name: http_proxy
+      value: "http://proxy1.safaricomet.net:3128"
+    - name: https_proxy
+      value: "http://proxy1.safaricomet.net:3128"          
+    command:
+      - unison
+    args:
+    - -batch
+    - -auto
+    - -watch
+    - -group
+    - -owner
+    - /bitnami
+    - socket://10.3.41.27:5000//bitnami
+    - -path=postgresql
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 3000m
+        memory: 4000Mi
+    ports:
+    - containerPort: 5000
+      name: unison
+      protocol: TCP
+    volumeMounts:
+    - name: localtime
+      mountPath: /etc/localtime
+    - name: data
+      mountPath: /bitnami/postgresql
 
   ## Override the service configuration for primary
   ##
