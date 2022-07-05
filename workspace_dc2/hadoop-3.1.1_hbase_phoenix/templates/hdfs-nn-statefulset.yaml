@@ -27,8 +27,10 @@ spec:
         release: {{ .Release.Name }}
         component: hdfs-nn
     spec:
-      # imagePullSecrets:
-# {{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+{{- end }}
       serviceAccountName: {{.Values.serviceAccount }}
       affinity:
         podAntiAffinity:
