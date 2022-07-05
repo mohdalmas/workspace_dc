@@ -519,7 +519,7 @@ primary:
   ##       - name: portname
   ##         containerPort: 1234
   ##
-  sidecars: {}
+  sidecars: []
   # - name:  postgresql-datareplicator
     # image:  et01-harbor.safaricomet.net/library/unison:2.52.1
     # env:                 
