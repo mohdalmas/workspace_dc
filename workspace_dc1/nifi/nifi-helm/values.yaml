@@ -3,15 +3,16 @@
 replicaCount: 3
 
 image:
-  repository: kapkiai/nifi
+  repository: et01-harbor.safaricomet.net/bigdata/nifi
   tag: "1.16.1"
   pullPolicy: "Always"
 
 securityContext:
   runAsUser: 0
   fsGroup: 0
-# imagePullSecrets:
-# - name: regcred
+  
+imagePullSecrets:
+- name: regcred
 
 serviceAccount: bigdata
 
@@ -65,7 +66,7 @@ auth:
   ldap:
     enabled: true
     host: ldap://10.3.108.11:389
-    searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+    searchBase: OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     username: Mathew.Kiprop
     pass: lyOdmSBwCsZnD4dLnOAE

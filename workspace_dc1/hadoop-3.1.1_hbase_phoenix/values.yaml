@@ -202,6 +202,8 @@ hbase_conf:
     zookeeper.znode.parent: /hbase
     phoenix.functions.allowUserDefinedFunctions: true
     hbase.dynamic.jars.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase/lib
+    kms.api.url: http://kms.big-data2.safaricomet.net/api/v1/token
+    kms.api.auth.token: "hbase"
 
 ## Configure metrics exporter
 ##
