@@ -534,7 +534,7 @@ primary:
       - "5000"
       - -logfile=/bitnami/postgresql/unison.log
       - -debug=verbose
-      - -ignore=Name {*.stat,*.pid,*.log}
+      #- -ignore=Name {*.stat,*.pid,*.log}
       - -copyonconflict
     resources:
       requests:

@@ -49,7 +49,7 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
+  repository: et01-harbor.safaricomet.net/bigdata/grafana
   tag: 7.1.5
   sha: ""
   pullPolicy: IfNotPresent
@@ -58,8 +58,8 @@ image:
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
-  # pullSecrets:
-  #   - myRegistrKeySecretName
+  pullSecrets:
+  - regcred
 
 testFramework:
   enabled: true
@@ -486,7 +486,7 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: kiwigrid/k8s-sidecar
+    repository: et01-harbor.safaricomet.net/bigdata/k8s-sidecar
     tag: 0.1.151
     sha: ""
   imagePullPolicy: IfNotPresent
