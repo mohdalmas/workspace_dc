@@ -15,7 +15,7 @@ global:
 image:
   registry: "et02-harbor.safaricomet.net"
   repository: bigdata/postgresql
-  tag: 11.10.0-debian-10-r83
+  tag: 11.16.0-debian-11-r12
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -521,6 +521,40 @@ primary:
   ##         containerPort: 1234
   ##
   sidecars: []
+  # - name:  postgresql-datareplicator
+    # image:  et02-harbor.safaricomet.net/library/unison:2.52.1
+    # env:                 
+    # - name: http_proxy
+      # value: "http://proxy1.safaricomet.net:3128"
+    # - name: https_proxy
+      # value: "http://proxy1.safaricomet.net:3128"          
+    # command:
+      # - unison
+    # args:
+    # - -batch
+    # - -auto
+    # - -watch
+    # - -group
+    # - -owner
+    # - /bitnami
+    # - socket://10.3.41.27:5000//bitnami
+    # - -path=postgresql
+    # resources:
+      # requests:
+        # cpu: 100m
+        # memory: 100Mi
+      # limits:
+        # cpu: 3000m
+        # memory: 4000Mi
+    # ports:
+    # - containerPort: 5000
+      # name: unison
+      # protocol: TCP
+    # volumeMounts:
+    # - name: localtime
+      # mountPath: /etc/localtime
+    # - name: data
+      # mountPath: /bitnami/postgresql
 
   ## Override the service configuration for primary
   ##
@@ -768,9 +802,9 @@ metrics:
     rules: []
 
   image:
-    registry: docker.io
-    repository: bitnami/postgres-exporter
-    tag: 0.8.0-debian-10-r351
+    registry: et02-harbor.safaricomet.net
+    repository: bigdata/postgres-exporter
+    tag:  0.10.1
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.

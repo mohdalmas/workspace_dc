@@ -21,7 +21,7 @@ spec:
       serviceAccountName: bigdata
       containers:
       - name: jupyterhub-container 
-        image: mohdalmasansari/jupyterhub:v2.3.1-beta-ubi8.5
+        image: et02-harbor.safaricomet.net/bigdata/jupyterhub:v2.3.1-beta-ubi8.5
         imagePullPolicy: IfNotPresent
         command:  
            - "/bin/bash"

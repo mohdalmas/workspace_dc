@@ -21,6 +21,10 @@ spec:
       {{- toYaml .Values.podAnnotations | nindent 8 }}
       {{- end }}
     spec:
+{{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+{{- end }}
 {{- if and .Values.rbac.create .Values.serviceAccount.create }}
       serviceAccountName: {{ template "prometheus-node-exporter.serviceAccountName" . }}
 {{- end }}

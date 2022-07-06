@@ -2,10 +2,11 @@
 name: druid-exporter
 
 image:
-  name: docker.io/opstree/druid-exporter
+  name: et01-harbor.safaricomet.net/bigdata/druid-exporter
   tag: v0.10
   pullPolicy: IfNotPresent
 
+ImagePullSecret: regcred
 annotations: {}
 
 podAnnotations:

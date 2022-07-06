@@ -36,6 +36,9 @@ spec:
       {{- if $serviceNodePort }}
       nodePort: {{ $serviceNodePort }}
       {{- end }}
+    # - name: unison
+      # port: 5000
+      # targetPort: unison
   selector:
   {{- include "common.labels.matchLabels" . | nindent 4 }}
     role: primary

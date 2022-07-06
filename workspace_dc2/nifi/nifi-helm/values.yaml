@@ -3,7 +3,7 @@
 replicaCount: 3
 
 image:
-  repository: et02-harbor.safaricomet.net/bigdata/nifi
+  repository: "et02-harbor.safaricomet.net/bigdata/nifi"
   tag: "1.15.10"
   pullPolicy: "IfNotPresent"
 
@@ -61,7 +61,7 @@ auth:
   ldap:
     enabled: true
     host: ldap://10.3.108.11:389
-    searchBase: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+    searchBase: OU=Domain Users,DC=safaricomet,DC=net
     admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
     username: Mathew.Kiprop
     pass: lyOdmSBwCsZnD4dLnOAE

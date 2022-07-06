@@ -45,6 +45,10 @@ spec:
 {{- end }}
       securityContext:
 {{ toYaml .Values.securityContext | indent 8 }}
+{{- if .Values.ImagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.ImagePullSecret }}
+{{- end }}
 {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
 {{- end }}
@@ -117,7 +121,7 @@ spec:
             - name: config
               mountPath: /config-scripts
         - name: clean-logs
-          image: busybox:latest
+          image: et01-harbor.safaricomet.net/bigdata/busybox:latest
           imagePullPolicy: IfNotPresent
           command: ["sh","-c","while true; do cd /logs/version-2/ && ls -t | tail -n +1 | xargs -I {} rm {}; sleep 10; done"]
         #command: ["sh","-c","tail -f  /opt/nifi/nifi-current/logs/nifi-app.log"]

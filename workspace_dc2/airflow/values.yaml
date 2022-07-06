@@ -13,7 +13,8 @@ global:
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
   ##
-  imagePullSecrets: []
+  imagePullSecrets:
+  - regcred
   storageClass: ""
 
 ## @section Common parameters
@@ -206,9 +207,9 @@ web:
   ## @param web.image.pullSecrets Airflow image pull secrets
   ## @param web.image.debug Enable image debug mode
   image:
-    registry: docker.io
-    repository: mohdalmasansari/airflow-web
-    tag: test
+    registry: et02-harbor.safaricomet.net
+    repository: bigdata/airflow-web
+    tag: 2.3.0
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -466,9 +467,9 @@ scheduler:
   ## @param scheduler.image.debug Enable image debug mode
   ##
   image:
-    registry: docker.io
-    repository: mohdalmasansari/airflow-scheduler
-    tag: test
+    registry: et02-harbor.safaricomet.net
+    repository: bigdata/airflow-scheduler
+    tag: 2.3.0
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -668,9 +669,9 @@ worker:
   ## @param worker.image.debug Enable image debug mode
   ##
   image:
-    registry: docker.io
-    repository: mohdalmasansari/airflow-worker
-    tag: test
+    registry: et02-harbor.safaricomet.net
+    repository: bigdata/airflow-worker
+    tag: 2.3.0
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -950,8 +951,8 @@ git:
     runAsNonRoot: false
   
   image:
-    registry: docker.io
-    repository: bitnami/git
+    registry: et02-harbor.safaricomet.net
+    repository: bigdata/git
     tag: 2.36.1-debian-10-r13
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'

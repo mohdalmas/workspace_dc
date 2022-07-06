@@ -16,7 +16,7 @@
 # Default values for druid.
 
 image:
-  repository: docker.io/apache/druid
+  repository: et01-harbor.safaricomet.net/bigdata/druid
   tag: 0.23.0-rc2
   pullPolicy: IfNotPresent
   

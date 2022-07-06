@@ -41,6 +41,7 @@ kubectl config set-context --current --namespace=bigdata-unison
 
 
 kubectl create secret docker-registry regcred --docker-server=et01-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
+kubectl create secret docker-registry regcred --docker-server=et02-harbor.safaricomet.net --docker-username=svc-bigdata-admin@safaricomet.net --docker-password="lyOdmSBwCsZnD4dLnOAE"
 
 
 
@@ -98,6 +99,7 @@ usermod --append -G wheel mohd.almas
 
 
 docker login et01-harbor.safaricomet.net --username Mohd.Almas@safaricomet.net --password 'wFB&9N2pku!G'
+docker login et02-harbor.safaricomet.net --username Mohd.Almas@safaricomet.net --password 'wFB&9N2pku!G'
 docker logout
 
 docker pull mohdalmasansari/hadoop-redhat:hadoop-3.1.1-hbase-2.0.2-phoenix-5.0.0

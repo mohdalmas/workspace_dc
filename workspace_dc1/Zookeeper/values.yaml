@@ -12,6 +12,8 @@ terminationGracePeriodSeconds: 1800  # Duration in seconds a Zokeeper pod needs 
 updateStrategy:
   type: RollingUpdate
 
+ImagePullSecret: regcred
+
 ## refs:
 ## - https://github.com/kubernetes/contrib/tree/master/statefulsets/zookeeper
 ## - https://github.com/kubernetes/contrib/blob/master/statefulsets/zookeeper/Makefile#L1
@@ -19,7 +21,7 @@ image:
   #repository: 192.168.21.2/it-w01-bigdata-ns01/zookeeper    # Container image repository for zookeeper container.
   #tag: "1.0"                # Container image tag for zookeeper container.
   #pullPolicy: IfNotPresent  # Image pull criteria for zookeeper container.
-  repository: zookeeper    # Container image repository for zookeeper container.
+  repository: et01-harbor.safaricomet.net/bigdata/zookeeper    # Container image repository for zookeeper container.
   tag: 3.5.5                # Container image tag for zookeeper container.
   pullPolicy: IfNotPresent  # Image pull criteria for zookeeper container.
 
@@ -138,7 +140,7 @@ exporters:
   jmx:
     enabled: true
     image:
-      repository: sscaling/jmx-prometheus-exporter
+      repository: et01-harbor.safaricomet.net/bigdata/jmx-prometheus-exporter
       tag: 0.3.0
       pullPolicy: IfNotPresent
     config:
@@ -199,7 +201,7 @@ exporters:
   ## - https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/#zookeeper-metrics
     enabled: true
     image:
-      repository: josdotso/zookeeper-exporter
+      repository: et01-harbor.safaricomet.net/bigdata/zookeeper-exporter
       tag: v1.1.2
       pullPolicy: IfNotPresent
     config:

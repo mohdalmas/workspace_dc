@@ -101,7 +101,7 @@ spec:
     rules:
     - alert: Pod Instance Down - EMERGENCY
       # Condition for alerting
-      expr: up{namespace="et01-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 10m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -112,7 +112,7 @@ spec:
           severity: 'emergency'        
     - alert: Pod Instance Down - CRITICAL
       # Condition for alerting
-      expr: up{namespace="et01-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 8m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -123,7 +123,7 @@ spec:
           severity: 'critical'    
     - alert: Pod Instance Down - HIGH
       # Condition for alerting
-      expr: up{namespace="et01-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 6m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -131,10 +131,10 @@ spec:
         description: '{{ $labels.pod }} of job {{ $labels.job }} has been down for more than 6 minute.'
       # Labels - additional labels to be attached to the alert
       labels:
-          severity: 'critical'    
+          severity: 'high'    
     - alert: Pod Instance Down - MEDIUM
       # Condition for alerting
-      expr: up{namespace="et01-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 4m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -142,10 +142,10 @@ spec:
         description: '{{ $labels.pod }} of job {{ $labels.job }} has been down for more than 4 minute.'
       # Labels - additional labels to be attached to the alert
       labels:
-          severity: 'critical'    
+          severity: 'medium'    
     - alert: Pod Instance Down - LOW
       # Condition for alerting
-      expr: up{namespace="et01-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 2m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -153,7 +153,7 @@ spec:
         description: '{{ $labels.pod }} of job {{ $labels.job }} has been down for more than 2 minute.'
       # Labels - additional labels to be attached to the alert
       labels:
-          severity: 'critical'    
+          severity: 'low'    
 #-------------------------------------------------#
   - name: pvc_status
     rules:          

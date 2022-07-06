@@ -76,8 +76,8 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/redis
+  registry: et02-harbor.safaricomet.net
+  repository: bigdata/redis
   tag: 6.2.7-debian-10-r21
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
