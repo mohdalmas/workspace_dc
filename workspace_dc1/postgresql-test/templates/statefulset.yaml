@@ -415,7 +415,7 @@ spec:
             {{- if .Values.tls.enabled }}
             - name: postgresql-certificates
               mountPath: /opt/bitnami/postgresql/certs
-              readOnly: true
+              readOnly: false
             {{- end }}
             {{- if .Values.shmVolume.enabled }}
             - name: dshm
@@ -498,7 +498,7 @@ spec:
             {{- if .Values.tls.enabled }}
             - name: postgresql-certificates
               mountPath: /opt/bitnami/postgresql/certs
-              readOnly: true
+              readOnly: false
             {{- end }}
             {{- if .Values.metrics.customMetrics }}
             - name: custom-metrics

@@ -208,7 +208,7 @@ hbase_conf:
 ## Configure metrics exporter
 ##
 metrics:
-  enabled: enable
+  enabled: true
   serviceMonitor:
     enabled: true
     additionalLabels:
