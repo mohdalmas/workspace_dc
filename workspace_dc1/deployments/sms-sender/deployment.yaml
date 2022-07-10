@@ -32,7 +32,7 @@ spec:
               cpu: "2"
           env:
             - name: smppHost
-              value: "10.33.14.33"
+              value: "10.32.9.97"
             - name: smppPort
               value: "5016"
             - name: smppSystemId
