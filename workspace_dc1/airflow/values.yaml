@@ -366,7 +366,7 @@ data:
 
 # Fernet key settings
 # Note: fernetKey can only be set during install, not upgrade
-fernetKey: ~
+fernetKey: T0E5U1FVVFBzRVN6M1B3WmluVzlrUzVQWkpPTGdOODQ=
 fernetKeySecretName: ~
 
 # Flask secret key for Airflow Webserver: `[webserver] secret_key` in airflow.cfg
@@ -496,7 +496,7 @@ workers:
     # Volume size for worker StatefulSet
     size: 100Gi
     # If using a custom storageClass, pass name ref to all statefulSets here
-    storageClassName: topology-aware-standard
+    storageClassName: nfs-bigdata
     # Execute init container to chown log directory.
     # This is currently only needed in kind, due to usage
     # of local-path provisioner.
@@ -1368,7 +1368,7 @@ redis:
     # Volume size for worker StatefulSet
     size: 1Gi
     # If using a custom storageClass, pass name ref to all statefulSets here
-    storageClassName: topology-aware-standard
+    storageClassName: nfs-bigdata
     # Annotations to add to redis volumes
     annotations: {}
 
@@ -1602,9 +1602,9 @@ dags:
     # Volume size for dags
     size: 1Gi
     # If using a custom storageClass, pass name here
-    storageClassName: topology-aware-standard
+    storageClassName: nfs-bigdata
     # access mode of the persistent volume
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
     ## the name of an existing PVC to use
     existingClaim:
     ## optional subpath for dag volume mount
