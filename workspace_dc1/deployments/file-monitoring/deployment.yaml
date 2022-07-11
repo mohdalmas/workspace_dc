@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  labels:
+    app: file-monitoring
+  name: file-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: file-monitoring
+  replicas: 1 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: file-monitoring
+    spec:
+      containers:
+        - name: file-monitoring 
+          image:  et01-harbor.safaricomet.net/bigdata/file-monitoring:1.0.1 # Image that will be used to containers in the cluster
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080 # The port that the container is running on in the cluster
+          resources:
+           limits:
+            cpu: 100m
+            memory: 2G
+           requests:
+            cpu: 10m
+            memory: 500M
+
+          env:
+            - name: spring.datasource.url
+              value : "jdbc:postgresql://10.3.141.24:5432/file_management"
+            
+            - name: spring.datasource.username
+              value: svc-bigdata-admin
+
+            - name: spring.datasource.password
+              value: lyOdmSBwCsZnD4dLnOAE
+          
+          command: ["java","-jar","/app.jar"]
+
+      serviceAccountName: bigdata
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: file-monitoring-service
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 8080 
+      targetPort: 8080 
+  selector:
+    app: file-monitoring
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+  labels:
+    name: file-monitoring-api-ingress
+  name: file-monitoring-api-ingress
+spec:
+  rules:
+    - host: file-monitoring.big-data.safaricomet.net
+      http:
+        paths:
+          - backend:
+              service:
+                name:  file-monitoring-service
+                port:
+                  number: 8080
+            path: /
+            pathType: ImplementationSpecific
