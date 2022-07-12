@@ -1082,7 +1082,7 @@ git:
 ldap:
   enabled: true
   uri: 'ldap://10.3.108.11:389'
-  base: 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  base: 'OU=Domain Users,DC=safaricomet,DC=net'
   uidField: "sAMAccountName"
   searchAttribute: 'sAMAccountName'
   binddn: 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'

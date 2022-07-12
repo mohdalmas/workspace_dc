@@ -19,6 +19,7 @@ spec:
       imagePullSecrets:
       - name: regcred
       serviceAccountName: bigdata
+      nodeName: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
       containers:
       - name: jupyterhub-container 
         image: et02-harbor.safaricomet.net/bigdata/jupyterhub:v2.3.1-beta-ubi8.5

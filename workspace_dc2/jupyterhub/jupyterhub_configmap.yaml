@@ -23,7 +23,7 @@ data:
     c.LDAPAuthenticator.lookup_dn_search_filter = '({login_attr}={login})'
     c.LDAPAuthenticator.lookup_dn_search_user = 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
     c.LDAPAuthenticator.lookup_dn_search_password = 'lyOdmSBwCsZnD4dLnOAE'
-    c.LDAPAuthenticator.user_search_base = 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+    c.LDAPAuthenticator.user_search_base = 'OU=Domain Users,DC=safaricomet,DC=net'
     c.LDAPAuthenticator.username_pattern = '[a-zA-Z0-9_.][a-zA-Z0-9_.-]{0,252}[a-zA-Z0-9_.$-]?'
     c.LDAPAuthenticator.valid_username_regex = '^[a-zA-Z][.a-zA-Z0-9_-]*$'
     c.LDAPAuthenticator.user_attribute = 'sAMAccountName'
