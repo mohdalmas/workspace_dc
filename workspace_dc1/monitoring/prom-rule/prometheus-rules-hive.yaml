@@ -13,7 +13,7 @@ spec:
   - name: hive
     rules:
     - alert: Hive Server DOWN - EMERGENCY
-      expr: count(java_lang_Memory_HeapMemoryUsage_max{app_kubernetes_io_instance="hive"}) != 0
+      expr: count(java_lang_Memory_HeapMemoryUsage_max{pod="hive-0"}) == 0
       for: 5m
       labels:
         severity: emergency

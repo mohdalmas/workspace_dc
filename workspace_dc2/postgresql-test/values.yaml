@@ -32,7 +32,7 @@ image:
   ## It turns BASH and NAMI debugging in minideb
   ## ref:  https://github.com/bitnami/minideb-extras/#turn-on-bash-debugging
   ##
-  debug: false
+  debug: true
   
 imagePullSecrets:
 - name: regcred
@@ -49,7 +49,7 @@ imagePullSecrets:
 ## volumePermissions: Change the owner of the persist volume mountpoint to RunAsUser:fsGroup
 ##
 volumePermissions:
-  enabled: false
+  enabled: true
   image:
     registry: docker.io
     repository: bitnami/minideb
@@ -87,14 +87,14 @@ volumePermissions:
 ##
 securityContext:
   enabled: true
-  fsGroup: 0
+  fsGroup: 1000
 
 ## Container Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 containerSecurityContext:
   enabled: true
-  runAsUser: 0
+  runAsUser: 1000
 
 ## Pod Service Account
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -160,7 +160,7 @@ postgresqlDatabase: metastore
 ## PostgreSQL data dir
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md
 ##
-postgresqlDataDir: /bitnami/postgresql/data
+postgresqlDataDir: /bitnami/postgresql/sb_data
 
 ## An array to add extra environment variables
 ## For example:
@@ -217,6 +217,16 @@ primaryAsStandBy:
 #   local all all trust
 #   host all all localhost trust
 #   host mydatabase mysuser 192.168.0.0/24 md5
+pgHbaConfiguration: |-
+  local  all           all                       md5
+  host   all           all   10.3.41.70/24       md5
+  host   all           all   ::1/128             md5
+  local  replication   all                       md5
+  local  replication   all   10.3.41.35/32       md5
+  host   replication   all   10.3.141.62/32      md5
+  host   all           postgres   0.0.0.0/0      md5
+  host   all           postgres        ::/0      md5
+  host   all           all     127.0.0.1/32      md5
 
 ## ConfigMap with PostgreSQL configuration
 ## NOTE: This will override postgresqlConfiguration and pgHbaConfiguration
@@ -520,47 +530,46 @@ primary:
   ##       - name: portname
   ##         containerPort: 1234
   ##
-  sidecars:
-  - name:  postgresql-datareplicator
-    image:  et02-harbor.safaricomet.net/library/unison:2.52.1
-    env:                 
-    - name: http_proxy
-      value: "http://proxy1.safaricomet.net:3128"
-    - name: https_proxy
-      value: "http://proxy1.safaricomet.net:3128"          
-    command:
-      - unison
-    args:
-    - -batch
-    - -auto
-    - -watch
-    - -group
-    - -owner
-    - -logfile=/bitnami/postgresql/unison.log
-    - -debug=verbose
-    - -ignore=Name {*.stat,*.pid,*.log}
-    - -copyonconflict
-    - -ignorearchives
-    - /bitnami
-    - socket://10.3.41.70:5000//bitnami
-    - -path=postgresql/data/
-    resources:
-      requests:
-        cpu: 100m
-        memory: 100Mi
-      limits:
-        cpu: 3000m
-        memory: 4000Mi
-    ports:
-    - containerPort: 5000
-      name: unison
-      protocol: TCP
-    volumeMounts:
-    - name: localtime
-      mountPath: /etc/localtime
-    - name: data
-      mountPath: /bitnami/postgresql
-
+  sidecars: []
+  # - name:  postgresql-datareplicator
+    # image:  et02-harbor.safaricomet.net/library/unison:2.52.1
+    # env:                 
+    # - name: http_proxy
+      # value: "http://proxy1.safaricomet.net:3128"
+    # - name: https_proxy
+      # value: "http://proxy1.safaricomet.net:3128"          
+    # command:
+      # - unison
+    # args:
+    # - -batch
+    # - -auto
+    # - -watch
+    # - -group
+    # - -owner
+    # - -logfile=/bitnami/postgresql/unison.log
+    # - -debug=verbose
+    # - -ignore=Name {*.stat,*.pid,*.log,*.init}
+    # - -copyonconflict
+    # - -ignorearchives
+    # - /bitnami
+    # - socket://10.3.41.70:5000//bitnami
+    # - -path=postgresql/data/
+    # resources:
+      # requests:
+        # cpu: 100m
+        # memory: 100Mi
+      # limits:
+        # cpu: 3000m
+        # memory: 4000Mi
+    # ports:
+    # - containerPort: 5000
+      # name: unison
+      # protocol: TCP
+    # volumeMounts:
+    # - name: localtime
+      # mountPath: /etc/localtime
+    # - name: data
+      # mountPath: /bitnami/postgresql
   ## Override the service configuration for primary
   ##
   service: {}
@@ -746,19 +755,19 @@ customReadinessProbe: {}
 ##
 tls:
   # Enable TLS traffic
-  enabled: false
+  enabled: true
   #
   # Whether to use the server's TLS cipher preferences rather than the client's.
   preferServerCiphers: true
   #
   # Name of the Secret that contains the certificates
-  certificatesSecret: ''
+  certificatesSecret: 'dc2-tls-secret'
   #
   # Certificate filename
-  certFilename: ''
+  certFilename: 'tls.crt'
   #
   # Certificate Key filename
-  certKeyFilename: ''
+  certKeyFilename: 'tls.key'
   #
   # CA Certificate filename
   # If provided, PostgreSQL will authenticate TLS/SSL clients by requesting them a certificate
@@ -842,7 +851,7 @@ metrics:
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ##
   securityContext:
-    enabled: false
+    enabled: true
     runAsUser: 0
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## Configure extra options for liveness and readiness probes

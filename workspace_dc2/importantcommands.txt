@@ -42,6 +42,7 @@ kubectl config set-context --current --namespace=tanzu-system-monitoring
 kubectl config set-context --current --namespace=bigdata-monitoring
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
+kubectl config set-context --current --namespace=bigdata-unison
 
 
 et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb5jc86   Ready                      <none>                 9h      v1.20.12+vmware.1
