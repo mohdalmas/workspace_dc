@@ -86,21 +86,21 @@ volumePermissions:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 securityContext:
-  enabled: true
+  enabled: false
   fsGroup: 0
 
 ## Container Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 containerSecurityContext:
-  enabled: true
+  enabled: false
   runAsUser: 0
 
 ## Pod Service Account
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
 ##
 serviceAccount:
-  enabled: true
+  enabled: false
   ## Name of an already existing service account. Setting this value disables the automatic service account creation.
   name: bigdata
 
@@ -326,7 +326,7 @@ ldap:
   port: '389'
   prefix: ''
   suffix: ''
-  baseDN: 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+  baseDN: 'OU=Domain Users,DC=safaricomet,DC=net'
   bindDN: 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
   bind_password: lyOdmSBwCsZnD4dLnOAE
   search_attr: 'sAMAccountName'
@@ -475,7 +475,8 @@ primary:
   ## Node labels for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
 
   ## Tolerations for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
@@ -609,7 +610,8 @@ readReplicas:
   ## Node labels for PostgreSQL read only  pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
 
   ## Tolerations for PostgreSQL read only  pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
