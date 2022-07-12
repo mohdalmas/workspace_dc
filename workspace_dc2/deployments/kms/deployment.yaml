@@ -34,10 +34,10 @@ spec:
               value : "jdbc:postgresql://10.3.141.24:5432/admin"
             
             - name: spring.datasource.username
-              value: postgres
+              value: svc-bigdata-admin
 
             - name: spring.datasource.password
-              value: postgres
+              value: lyOdmSBwCsZnD4dLnOAE
           
           command: ["java","-jar","/app.jar"]
 
