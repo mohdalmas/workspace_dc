@@ -37,7 +37,10 @@ spec:
               value: postgres
 
             - name: spring.datasource.password
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: bigdata-psql-postgresql
+                  key: postgresql-ldap-password
           
           command: ["java","-jar","/app.jar"]
 
