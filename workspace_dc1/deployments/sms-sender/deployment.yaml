@@ -36,9 +36,9 @@ spec:
             - name: smppPort
               value: "5016"
             - name: smppSystemId
-              value: "nifi"
+              value: "bigdata"
             - name: smppPassword
-              value: "N1F1"
+              value: "B1gD@7a"
       imagePullSecrets:
         - name: regcred
 ---
