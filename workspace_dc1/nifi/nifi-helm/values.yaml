@@ -36,7 +36,7 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443 
-  webProxyHost: "nifi.big-data.safaricomet.net,10.3.41.39:8443"
+  webProxyHost: "nifi16.big-data.safaricomet.net,10.3.41.39:8443"
   clusterPort: 6007
   provenanceStorage: "4 GB"
   siteToSite:
@@ -126,7 +126,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   tls: []
   hosts: 
-    - nifi.big-data.safaricomet.net
+    - nifi16.big-data.safaricomet.net
   path: /
   pathType: ImplementationSpecific
   
