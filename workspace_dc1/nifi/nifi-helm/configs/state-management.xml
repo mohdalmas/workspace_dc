@@ -15,7 +15,7 @@
         <id>zk-provider</id>
         <class>org.apache.nifi.controller.state.providers.zookeeper.ZooKeeperStateProvider</class>
         <property name="Connect String">{{ template "zookeeper.url" . }}</property>
-        <property name="Root Node">/nifi</property>
+        <property name="Root Node">/nifihelm16</property>
         <property name="Session Timeout">10 seconds</property>
         <property name="Access Control">Open</property>
     </cluster-provider>
