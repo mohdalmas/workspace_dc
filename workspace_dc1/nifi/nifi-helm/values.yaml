@@ -320,6 +320,7 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: "bigdata-zk-zookeeper-headless"
   port: 2181
+  path: /nifi16
 
 
 # Configure metrics
