@@ -1,10 +1,10 @@
 ---
 # Number of nifi nodes
-replicaCount: 3
+replicaCount: 2
 
 image:
   repository: "et02-harbor.safaricomet.net/bigdata/nifi"
-  tag: "1.15.10"
+  tag: "1.16.3"
   pullPolicy: "IfNotPresent"
 
 # securityContext:
@@ -43,6 +43,10 @@ properties:
   safetyValve:
     nifi.web.http.network.interface.default: eth0
     nifi.web.http.network.interface.lo: lo
+  nifiRegUrl: https://nifi-registry-0.nifi-registry.et02-tkg-bigdata-prod.svc.cluster.local:18443
+  hdfsConfig: /opt/nifi/nifi-current/ext-config/core-site.xml,/opt/nifi/nifi-current/ext-config/hdfs-site.xml
+  hdfsUrl: hdfs://hadoop-hadoop-hdfs-nn:9000
+  hdfsPath: /nifi/nars
 
   # customLibPath: "/opt/nifi/external-nar"
 
