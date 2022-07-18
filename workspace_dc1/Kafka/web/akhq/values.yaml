@@ -1,7 +1,10 @@
-# imagePullSecrets:
-#  - name: my-repository-secret
+
+serviceAccountName: bigdata
+serviceAccount:
+  create: false
+
 image:
-  repository: tchiotludo/akhq
+  repository: et01-harbor.safaricomet.net/bigdata/akhq
   tag: "latest" # uses Chart.AppVersion by default
 
 # custom annotations (example: for prometheus)
@@ -118,6 +121,7 @@ configuration:
 
             consumer-groups-filter-regexp:
               - "cvm.*"
+       
         ncc:
           name: ncc # Group name
           roles: # roles for the group
@@ -152,6 +156,10 @@ configuration:
           - name: 6d
             groups:
               - 6d
+          
+          - name: ncc
+            groups:
+              - ncc
 
           - name: reader
             groups:
@@ -426,6 +434,9 @@ configuration:
           - username: chandra.shekar
             groups:
               - 6d
+          - username: Rahul.Gupta
+            groups:
+              - ncc
 
     server:
       access-log: # Access log configuration (optional)
@@ -512,10 +523,7 @@ extraVolumes: []
 # Any extra volume mounts to define for the akhq container
 extraVolumeMounts: []
 
-# Specify ServiceAccount for pod
-serviceAccountName: bigdata
-serviceAccount:
-  create: false
+
   #annotations:
   #  eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
 
