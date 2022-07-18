@@ -118,6 +118,7 @@ configuration:
           attributes:
             topics-filter-regexp:
               - "cvm.*" # Individual topic
+              - "ncc-recharge"
 
             consumer-groups-filter-regexp:
               - "cvm.*"
