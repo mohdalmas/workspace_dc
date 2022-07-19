@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-   name: ncc        
+   name: cvm        
    labels:
     strimzi.io/cluster: kafka
 spec:
@@ -12,23 +12,37 @@ spec:
     - host: '*'
       operation: Write
       resource:
-        name: ncc-
+        name: cvm-
         patternType: prefix
         type: topic
 
     - host: '*'
       operation: Read
       resource:
-        name: ncc-
+        name: cvm-
         patternType: prefix
+        type: topic
+  
+    - host: '*'
+      operation: Read
+      resource:
+        name: cvm-test-cg
+        patternType: literal
+        type: group
+    
+    - host: '*'
+      operation: Read
+      resource:
+        name: ncc-recharge
+        patternType: literal
         type: topic
     
     - host: '*'
       operation: Read
       resource:
-        name: ncc-recharge-cg
+        name: cvm-recharge-cg
         patternType: literal
-        type: group
-        
+        type: topic
 
     type: simple
+    
