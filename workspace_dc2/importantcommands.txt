@@ -1,6 +1,7 @@
 kubectl vsphere login --server 10.3.141.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name et02-tkg-bigdata-prod-workload-cluster --tanzu-kubernetes-cluster-namespace et02-tkg-bigdata-prod --vsphere-username=Safaricomet\Mohd.Almas
 wFB&9N2pku!G
 
+https://mohdalmas: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@github.com/workspace_dc.git
 
 Username/Password for Ingress UIs:
 
@@ -14,6 +15,9 @@ lyOdmSBwCsZnD4dLnOAE
 Safaricomet\Mohd.Almas
 
 Proxy: http://proxy1.safaricomet.net:3128 
+
+export http_proxy=http://proxy1.safaricomet.net:3128 
+export https_proxy=http://proxy1.safaricomet.net:3128 
 
 Harbor: https://et02-harbor.safaricomet.net/bigdata
 
@@ -43,7 +47,17 @@ kubectl config set-context --current --namespace=bigdata-monitoring
 kubectl config set-context --current --namespace=ingress-nginx
 kubectl config set-context --current --namespace=kafka
 kubectl config set-context --current --namespace=bigdata-unison
+kubectl config set-context --current --namespace=it-w01-bigdata
 
+
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln N
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr N
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz N
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7vmh H
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84 H
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbsv7cz -
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7 H
+et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2 -
 
 et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb5jc86   Ready                      <none>                 9h      v1.20.12+vmware.1
 et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb6rrtz   Ready                      <none>                 9h      v1.20.12+vmware.1
