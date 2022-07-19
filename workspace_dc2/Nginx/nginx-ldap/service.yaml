@@ -2,11 +2,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: another-ldap
+  name: nginx-ldap
 spec:
   type: ClusterIP
   selector:
-    app: another-ldap
+    app: nginx-ldap
   ports:
     - name: https
       port: 443

@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: another-ldap
+  name: nginx-ldap
   labels:
-    app: another-ldap
+    app: nginx-ldap
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: another-ldap
+      app: nginx-ldap
   template:
     metadata:
       labels:
-        app: another-ldap
+        app: nginx-ldap
     spec:
       automountServiceAccountToken: false
       containers:
-        - name: another-ldap
-          image: ghcr.io/dignajar/another-ldap:latest
+        - name: nginx-ldap
+          image: mohdalmasansari/nginx-ldap:python-3.9.10-alpine3.14
           imagePullPolicy: Always
           ports:
             - name: https
@@ -30,9 +30,9 @@ spec:
             value: "YWNkYyByb2NrIQ=="
           envFrom:
             - configMapRef:
-                name: another-ldap
+                name: nginx-ldap
             # - secretRef:
-                # name: another-ldap
+                # name: nginx-ldap
           resources:
             requests:
               cpu: 100m
