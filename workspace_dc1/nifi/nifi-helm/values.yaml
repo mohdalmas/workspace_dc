@@ -1,6 +1,6 @@
 ---
 # Number of nifi nodes
-replicaCount: 2
+replicaCount: 3
 
 image:
   repository: docker.io/kapkiai/nifi
@@ -36,7 +36,7 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443 
-  webProxyHost: "nifi16.big-data.safaricomet.net,10.3.41.39:8443"
+  webProxyHost: "nifi.big-data.safaricomet.net,10.3.41.39:8443"
   clusterPort: 6007
   provenanceStorage: "4 GB"
   siteToSite:
@@ -126,7 +126,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   tls: []
   hosts: 
-    - nifi16.big-data.safaricomet.net
+    - nifi.big-data.safaricomet.net
   path: /
   pathType: ImplementationSpecific
   
@@ -320,7 +320,7 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: "bigdata-zk-zookeeper-headless"
   port: 2181
-  path: /nifi16
+  path: /nifihelm
 
 
 # Configure metrics
