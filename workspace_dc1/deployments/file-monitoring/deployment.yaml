@@ -50,6 +50,8 @@ kind: Service
 metadata: 
   name: file-monitoring-service
 spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.3.41.49
   ports:
     - protocol: "TCP"
       port: 8080 
@@ -57,27 +59,27 @@ spec:
   selector:
     app: file-monitoring
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.class: nginx
-    # nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   annotations:
+#     ingress.kubernetes.io/rewrite-target: /
+#     kubernetes.io/ingress.class: nginx
+#     # nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
-  labels:
-    name: file-monitoring-api-ingress
-  name: file-monitoring-api-ingress
-spec:
-  rules:
-    - host: file-monitoring.big-data.safaricomet.net
-      http:
-        paths:
-          - backend:
-              service:
-                name:  file-monitoring-service
-                port:
-                  number: 8080
-            path: /
-            pathType: ImplementationSpecific
+#   labels:
+#     name: file-monitoring-api-ingress
+#   name: file-monitoring-api-ingress
+# spec:
+#   rules:
+#     - host: file-monitoring.big-data.safaricomet.net
+#       http:
+#         paths:
+#           - backend:
+#               service:
+#                 name:  file-monitoring-service
+#                 port:
+#                   number: 8080
+#             path: /
+#             pathType: ImplementationSpecific

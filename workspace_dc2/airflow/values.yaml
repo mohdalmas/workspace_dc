@@ -839,8 +839,7 @@ worker:
   ## @param worker.nodeSelector Node labels for Airflow worker pods assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
+  nodeSelector: {}
   ## @param worker.podAffinityPreset Pod affinity preset. Ignored if `worker.affinity` is set. Allowed values: `soft` or `hard`.
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
@@ -1430,8 +1429,7 @@ metrics:
   ## @param metrics.nodeSelector Node labels for pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
+  nodeSelector: {}
   ## @param metrics.tolerations Tolerations for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##

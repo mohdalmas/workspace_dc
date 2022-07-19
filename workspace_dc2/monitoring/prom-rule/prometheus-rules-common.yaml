@@ -101,7 +101,7 @@ spec:
     rules:
     - alert: Pod Instance Down - EMERGENCY
       # Condition for alerting
-      expr: up{namespace="et02-tkg-bigdata-prod"} == 0
+      expr: kube_pod_container_status_ready{namespace="et02-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 10m
       # Annotation - additional informational labels to store more information
       annotations:
