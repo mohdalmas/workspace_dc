@@ -24,6 +24,7 @@ spec:
         release: {{ .Release.Name }}
         component: yarn-rm
     spec:
+      prometheus.io/scrape: "true"
 {{- if .Values.imagePullSecret }}
       imagePullSecrets:
       - name: {{ .Values.imagePullSecret }}
@@ -50,15 +51,15 @@ spec:
                   release: {{ .Release.Name | quote }}
                   component: yarn-rm
         {{- end }}
-{{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
-      affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-{{- end }}
+# {{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
+      # affinity:
+# {{ toYaml .Values.affinity | indent 8 }}
+# {{- end }}
       terminationGracePeriodSeconds: 0
-{{- if .Values.tolerations }}
-      tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
-{{- end }}
+# {{- if .Values.tolerations }}
+      # tolerations:
+# {{ toYaml .Values.tolerations | indent 8 }}
+# {{- end }}
       containers:
       - name: yarn-rm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -66,6 +67,11 @@ spec:
         ports:
         - containerPort: 8088
           name: web
+        - containerPort: 17104
+          name: rm-jmx-metrics
+          protocol: TCP
+        env:
+{{ toYaml .Values.yarn.resourceManager.extraEnvVars | indent 10 }}
         command:
            - "/bin/bash"
            - "/tmp/hadoop-config/bootstrap.sh"

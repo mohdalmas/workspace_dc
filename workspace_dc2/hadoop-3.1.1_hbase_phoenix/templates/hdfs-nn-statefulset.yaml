@@ -53,15 +53,15 @@ spec:
                   release: {{ .Release.Name | quote }}
                   component: hdfs-nn
         {{- end }}
-{{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
-      affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-{{- end }}
+# {{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
+      # affinity:
+# {{ toYaml .Values.affinity | indent 8 }}
+# {{- end }}
       terminationGracePeriodSeconds: 0
-{{- if .Values.tolerations }}
-      tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
-{{- end }}
+# {{- if .Values.tolerations }}
+      # tolerations:
+# {{ toYaml .Values.tolerations | indent 8 }}
+# {{- end }}
       securityContext:
         runAsUser: 0
       containers:

@@ -159,7 +159,7 @@ data:
       chmod +x /opt/hadoop/etc/hadoop/ownhive.sh
       
       #Monitor DataNodes
-      while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done &
+      #while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done &
 
     fi
  

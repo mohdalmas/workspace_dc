@@ -12,6 +12,8 @@ spec:
   ports:
   - port: 8088
     name: web
+  - port: 17104
+    name: rm-jmx-metrics
   # - port: 8032
     # name: rm-address
   # - port: 8030

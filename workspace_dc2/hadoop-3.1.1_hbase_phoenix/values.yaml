@@ -11,27 +11,27 @@ hadoopVersion: 3.1.1
 hbaseVersion: 2.0.2
 
 # Select antiAffinity as either hard or soft, default is soft
-antiAffinity: ""
+antiAffinity: "soft"
 
 imagePullSecret: regcred
 
 serviceAccount: bigdata
 
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "Hadoop"
-  effect: "NoSchedule"
+# tolerations:
+# - key: "dedicated"
+  # operator: "Equal"
+  # value: "Hadoop"
+  # effect: "NoSchedule"
   
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: dedicated
-          operator: In
-          values:
-          - Hadoop
+# affinity:
+  # nodeAffinity:
+    # requiredDuringSchedulingIgnoredDuringExecution:
+      # nodeSelectorTerms:
+      # - matchExpressions:
+        # - key: dedicated
+          # operator: In
+          # values:
+          # - Hadoop
   
 serviceAccountName: bigdata
 
@@ -70,6 +70,10 @@ hdfs:
 
 yarn:
   resourceManager:
+    extraEnvVars:
+    - name: YARN_RESOURCEMANAGER_OPTS
+      value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6474 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17104:/opt/jmx/hadoop_rm_jmx.yml"
+      
     #pdbMinAvailable: 0
     resources:
       requests:
@@ -80,6 +84,10 @@ yarn:
         cpu: "3"
 
   nodeManager:
+    extraEnvVars:
+    - name: YARN_NODEMANAGER_OPTS
+      value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6484 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17105:/opt/jmx/hadoop_nm_jmx.yml"
+
     #pdbMinAvailable: 0
 
     # The number of YARN NodeManager instances.
