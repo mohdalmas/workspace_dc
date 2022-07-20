@@ -187,23 +187,23 @@ logresources:
     memory: 300Mi
 
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: dedicated
-          operator: In
-          values:
-          - Kafka-Nifi
+affinity: {}
+  # nodeAffinity:
+    # requiredDuringSchedulingIgnoredDuringExecution:
+      # nodeSelectorTerms:
+      # - matchExpressions:
+        # - key: dedicated
+          # operator: In
+          # values:
+          # - Kafka-Nifi
 
 nodeSelector: {}
 
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "Kafka-Nifi"
-  effect: "NoSchedule"
+tolerations: []
+# - key: "dedicated"
+  # operator: "Equal"
+  # value: "Kafka-Nifi"
+  # effect: "NoSchedule"
 
 initContainers: {}
   # nifi-dependencies:
