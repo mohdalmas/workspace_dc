@@ -3,7 +3,7 @@
 replicaCount: 3
 
 image:
-  repository: docker.io/kapkiai/nifi
+  repository: et01-harbor.safaricomet.net/bigdata/nifi
   tag: "1.16.4"
   pullPolicy: "Always"
 
