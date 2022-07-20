@@ -1,6 +1,6 @@
 ---
 # Number of nifi nodes
-replicaCount: 2
+replicaCount: 3
 
 image:
   repository: "et02-harbor.safaricomet.net/bigdata/nifi"
