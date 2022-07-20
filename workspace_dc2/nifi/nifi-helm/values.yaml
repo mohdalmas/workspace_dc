@@ -7,9 +7,9 @@ image:
   tag: "1.16.3"
   pullPolicy: "IfNotPresent"
 
-# securityContext:
-  # runAsUser: 1000
-  # fsGroup: 1000
+securityContext:
+  runAsUser: 0
+  fsGroup: 0
 imagePullSecrets:
 - name: regcred
 
@@ -191,23 +191,23 @@ logresources:
     memory: 300Mi
 
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: dedicated
-          operator: In
-          values:
-          - Kafka-Nifi
+affinity: {}
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #     - matchExpressions:
+  #       - key: dedicated
+  #         operator: In
+  #         values:
+  #         - Kafka-Nifi
 
 nodeSelector: {}
 
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "Kafka-Nifi"
-  effect: "NoSchedule"
+tolerations: []
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "Kafka-Nifi"
+#   effect: "NoSchedule"
 
 initContainers: {}
   # nifi-dependencies:
