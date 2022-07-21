@@ -26,6 +26,7 @@ kubectl create secret docker-registry regcred --docker-server=et02-harbor.safari
 kubectl create secret docker-registry regcredalmas --docker-server=et02-harbor.safaricomet.net --docker-username=Mohd.Almas@safaricomet.net --docker-password=wFB&9N2pku!G
 
 docker login et02-harbor.safaricomet.net --username Mohd.Almas@safaricomet.net --password 'wFB&9N2pku!G'
+docker login et01-harbor.safaricomet.net --username Mohd.Almas@safaricomet.net --password 'wFB&9N2pku!G'
 docker logout
 
 Wait for Consumer: topology-aware-standard
@@ -68,19 +69,52 @@ et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbq6n9d   Ready         
 et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbthp8h   Ready                      <none>                 9h      v1.20.12+vmware.1
 et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbx9m4w   Ready                      <none>                 9h      v1.20.12+vmware.1
 
-kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbx9m4w  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbx9m4w  dedicated=Kafka-Nifi
-kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbthp8h  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbthp8h  dedicated=Kafka-Nifi
-kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbq6n9d  dedicated=Kafka-Nifi:NoSchedule
-kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbq6n9d  dedicated=Kafka-Nifi
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated=Kafka-Nifi
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated=Kafka-Nifi
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated=Kafka-Nifi:NoSchedule
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated=Kafka-Nifi
 
 kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated=Hadoop:NoSchedule
 kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated=Hadoop
-kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln dedicated=Hadoop:NoSchedule
-kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated=Hadoop
-kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb7qgjp dedicated=Hadoop:NoSchedule
-kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb7qgjp  dedicated=Hadoop
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7vmh dedicated=Hadoop:NoSchedule
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7vmh  dedicated=Hadoop
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7 dedicated=Hadoop:NoSchedule
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7  dedicated=Hadoop
+
+#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
+#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
+#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
+#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
+#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
+#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
+
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated-
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7vmh dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7vmh  dedicated-
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7 dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7  dedicated-
+
+--------------------------------
+
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
+
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
+
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5jsm5c  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5lwcml  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5psmcq  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5jsm5c  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5lwcml  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5psmcq  dedicated-
+
+
 
 sed -i '/# %wheel/c\%wheel        ALL=(ALL)       NOPASSWD: ALL' /etc/sudoers
 usermod --append -G wheel mohd.almas

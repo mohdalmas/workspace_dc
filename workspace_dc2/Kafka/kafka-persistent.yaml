@@ -6,20 +6,20 @@ spec:
   kafka:
     template:
       pod:
-        tolerations:
-        - key: "dedicated"
-          operator: "Equal"
-          value: "Kafka-Nifi"
-          effect: "NoSchedule"
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: dedicated
-                  operator: In
-                  values:
-                  - Kafka-Nifi
+        # tolerations:
+        # - key: "dedicated"
+          # operator: "Equal"
+          # value: "Kafka-Nifi"
+          # effect: "NoSchedule"
+        # affinity:
+          # nodeAffinity:
+            # requiredDuringSchedulingIgnoredDuringExecution:
+              # nodeSelectorTerms:
+              # - matchExpressions:
+                # - key: dedicated
+                  # operator: In
+                  # values:
+                  # - Kafka-Nifi
         metadata:
           annotations:
             prometheus.io/scrape: "true"

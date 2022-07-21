@@ -45,6 +45,7 @@ kubectl create secret docker-registry regcred --docker-server=et02-harbor.safari
 
 
 
+
 et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c6p4d9   Ready                      <none>                 37m   v1.20.12+vmware.1
 et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9c82kz6   Ready                      <none>                 40m   v1.20.12+vmware.1
 et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cbtqzq   Ready                      <none>                 46m   v1.20.12+vmware.1
@@ -69,6 +70,8 @@ kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9chd
 kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9chdtqk  dedicated=Hadoop
 kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cl64x8  dedicated=Hadoop:NoSchedule
 kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-98d9cl64x8  dedicated=Hadoop
+
+
 
 
 sed -i '/# %wheel/c\%wheel        ALL=(ALL)       NOPASSWD: ALL' /etc/sudoers

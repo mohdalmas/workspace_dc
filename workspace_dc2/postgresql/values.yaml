@@ -475,9 +475,7 @@ primary:
   ## Node labels for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
-
+  nodeSelector: {}
   ## Tolerations for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -610,9 +608,7 @@ readReplicas:
   ## Node labels for PostgreSQL read only  pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    kubernetes.io/hostname: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
-
+  nodeSelector: {}
   ## Tolerations for PostgreSQL read only  pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##

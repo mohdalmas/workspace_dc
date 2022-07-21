@@ -37,7 +37,7 @@ data:
       chmod +x $HBASE_PREFIX/conf/master-monitor.sh
       chmod 777 -R $HBASE_PREFIX/conf/master-monitor.sh
       #crontab $HBASE_PREFIX/conf/custom-crontab-master
-      while true; do $HBASE_PREFIX/conf/master-monitor.sh; sleep 600; done
+      #while true; do $HBASE_PREFIX/conf/master-monitor.sh; sleep 600; done
     fi
     
     if [[ $2 == "regionserver" ]]; then
@@ -48,7 +48,7 @@ data:
       chmod +x $HBASE_PREFIX/conf/regionserver-monitor.sh
       chmod 777 -R $HBASE_PREFIX/conf/regionserver-monitor.sh
       #crontab $HBASE_PREFIX/conf/custom-crontab-regionserver
-      while true; do $HBASE_PREFIX/conf/regionserver-monitor.sh; sleep 600; done
+      #while true; do $HBASE_PREFIX/conf/regionserver-monitor.sh; sleep 600; done
     
     fi
     

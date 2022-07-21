@@ -43,13 +43,13 @@ securityContext: {}
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overrides all the specific images below
-defaultAirflowRepository: et01-harbor.safaricomet.net/bigdata/apache
+defaultAirflowRepository: et02-harbor.safaricomet.net/bigdata/apache
 
 # Default airflow tag to deploy
 defaultAirflowTag: "airflow-2.3.2-spark-2.3.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "2.3.0"
+airflowVersion: "2.3.2"
 
 # Images
 images:
@@ -73,23 +73,23 @@ images:
     tag: ~
     pullPolicy: IfNotPresent
   statsd:
-    repository: apache/airflow
+    repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-statsd-exporter-2021.04.28-v0.17.0
     pullPolicy: IfNotPresent
   redis:
-    repository: et01-harbor.safaricomet.net/bigdata/redis
-    tag: 6-bullseye
+    repository: et02-harbor.safaricomet.net/bigdata/redis
+    tag: 7.0.4-bullseye
     pullPolicy: IfNotPresent
   pgbouncer:
-    repository: et01-harbor.safaricomet.net/bigdata/airflow
+    repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-pgbouncer-2021.04.28-1.14.0
     pullPolicy: IfNotPresent
   pgbouncerExporter:
-    repository: et01-harbor.safaricomet.net/bigdata/airflow
+    repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-pgbouncer-exporter-2021.09.22-0.12.0
     pullPolicy: IfNotPresent
   gitSync:
-    repository: et01-harbor.safaricomet.net/bigdata/git-sync
+    repository: et02-harbor.safaricomet.net/bigdata/git-sync
     tag: v3.4.0
     pullPolicy: IfNotPresent
 
@@ -124,7 +124,7 @@ ingress:
     pathType: "ImplementationSpecific"
 
     # The hostname for the web Ingress (Deprecated - renamed to `ingress.web.hosts`)
-    host: "airflow.big-data.safaricomet.net"
+    host: "airflow.big-data2.safaricomet.net"
 
     # The hostnames or hosts configuration for the web Ingress
     hosts: []
@@ -169,7 +169,7 @@ ingress:
     pathType: "ImplementationSpecific"
 
     # The hostname for the flower Ingress (Deprecated - renamed to `ingress.flower.hosts`)
-    host: "flower.big-data.safaricomet.net"
+    host: "flower.big-data2.safaricomet.net"
 
     # The hostnames or hosts configuration for the flower Ingress
     hosts: []
@@ -366,7 +366,7 @@ data:
 
 # Fernet key settings
 # Note: fernetKey can only be set during install, not upgrade
-fernetKey: T0E5U1FVVFBzRVN6M1B3WmluVzlrUzVQWkpPTGdOODQ=
+fernetKey: d9NQS-Z8vUv9MVMW9RzkrIHxoaYkTNIiiMn_Hb6-4_c=
 fernetKeySecretName: ~
 
 # Flask secret key for Airflow Webserver: `[webserver] secret_key` in airflow.cfg
@@ -926,7 +926,7 @@ webserver:
     AUTH_LDAP_SERVER = 'ldap://10.3.108.11:389'
     AUTH_LDAP_USE_TLS = False
 
-    AUTH_LDAP_SEARCH = 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+    AUTH_LDAP_SEARCH = 'OU=Domain Users,DC=safaricomet,DC=net'
     AUTH_LDAP_UID_FIELD = 'sAMAccountName'
     AUTH_LDAP_BIND_USER = 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
     AUTH_LDAP_BIND_PASSWORD = 'lyOdmSBwCsZnD4dLnOAE'
@@ -1616,8 +1616,8 @@ dags:
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
-    branch: dc1
+    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
+    branch: dc2
     rev: HEAD
     depth: 1
     # the number of consecutive failures allowed before aborting
