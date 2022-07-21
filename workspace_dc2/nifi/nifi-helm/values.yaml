@@ -5,11 +5,12 @@ replicaCount: 3
 image:
   repository: "et02-harbor.safaricomet.net/bigdata/nifi"
   tag: "1.16.3"
-  pullPolicy: "IfNotPresent"
+  pullPolicy: "Always"
 
 securityContext:
   runAsUser: 0
   fsGroup: 0
+
 imagePullSecrets:
 - name: regcred
 
@@ -131,7 +132,9 @@ ingress:
   
 
 # Amount of memory to give the NiFi java heap
-jvmMemory: 24g
+jvmMemory: 
+  xms: 8g
+  xmx: 24g
 
 sidecar:
   image:  et02-harbor.safaricomet.net/bigdata/busybox
@@ -175,8 +178,8 @@ persistence:
 resources: 
   limits:
    cpu: 5
-   memory: 30Gi
-   ephemeral-storage: 5Gi
+   memory: 45Gi
+   ephemeral-storage: 10Gi
   requests:
    cpu: 2
    memory: 8Gi
