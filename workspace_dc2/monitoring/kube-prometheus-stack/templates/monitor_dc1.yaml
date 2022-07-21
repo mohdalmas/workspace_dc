@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  # the name here should match the name of the Service
+  name: dc1-prometheus
+subsets:
+  - addresses:
+      - ip: 10.3.41.60
+    ports:
+      - port: 9090
+        name: tcp-prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dc1-prometheus
+spec:
+  ports:
+    - protocol: TCP
+      port: 9090
+      name: tcp-prometheus
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dc1-prometheus
+  labels:
+    release: bigdata-prometheus
+spec:
+  selector:
+    matchLabels:
+       name: dc1-prometheus
+  namespaceSelector:
+    matchNames:
+    - et01-tkg-bigdata-prod
+    any: true
+  endpoints:
+  - port: tcp-prometheus
+    interval: 15s
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  # the name here should match the name of the Service
+  name: dc1-alertmanager
+subsets:
+  - addresses:
+      - ip: 10.3.41.61
+    ports:
+      - port: 9093
+        name: tcp-alertmanager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dc1-alertmanager
+spec:
+  ports:
+    - protocol: TCP
+      port: 9093
+      name: tcp-alertmanager
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dc1-alertmanager
+  labels:
+    release: bigdata-prometheus
+spec:
+  selector:
+    matchLabels:
+      name: dc1-alertmanager
+  namespaceSelector:
+    matchNames:
+    - et01-tkg-bigdata-prod
+    any: true
+  endpoints:
+  - port: tcp-alertmanager
+    interval: 15s
