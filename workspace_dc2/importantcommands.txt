@@ -97,16 +97,19 @@ kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7
 kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7 dedicated-
 kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7  dedicated-
 
+--------------------------------
 
-#kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
-#kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
-#kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
+kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
+
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
+kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
+
 kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5jsm5c  dedicated-
 kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5lwcml  dedicated-
 kubectl taint nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5psmcq  dedicated-
-#kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b546qj6  dedicated-
-#kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cb69m  dedicated-
-#kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5cx4ws  dedicated-
 kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5jsm5c  dedicated-
 kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5lwcml  dedicated-
 kubectl label nodes et01-tkg-bigdata-prod-workload-cluster-workers-qgbj4-948b5psmcq  dedicated-

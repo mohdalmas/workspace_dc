@@ -22,12 +22,13 @@ spec:
 {{- end }}
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
       labels:
         app: {{ include "hadoop.name" . }}
         release: {{ .Release.Name }}
         component: yarn-nm
     spec:
-      prometheus.io/scrape: "true"
 {{- if .Values.imagePullSecret }}
       imagePullSecrets:
       - name: {{ .Values.imagePullSecret }}

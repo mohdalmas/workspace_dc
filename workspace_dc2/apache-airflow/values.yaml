@@ -49,7 +49,7 @@ defaultAirflowRepository: et02-harbor.safaricomet.net/bigdata/apache
 defaultAirflowTag: "airflow-2.3.2-spark-2.3.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "2.3.0"
+airflowVersion: "2.3.2"
 
 # Images
 images:
@@ -366,7 +366,7 @@ data:
 
 # Fernet key settings
 # Note: fernetKey can only be set during install, not upgrade
-fernetKey: T0E5U1FVVFBzRVN6M1B3WmluVzlrUzVQWkpPTGdOODQ=
+fernetKey: d9NQS-Z8vUv9MVMW9RzkrIHxoaYkTNIiiMn_Hb6-4_c=
 fernetKeySecretName: ~
 
 # Flask secret key for Airflow Webserver: `[webserver] secret_key` in airflow.cfg
@@ -1616,7 +1616,7 @@ dags:
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
+    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
     branch: dc2
     rev: HEAD
     depth: 1

@@ -20,7 +20,6 @@ spec:
   template:
     metadata:
       annotations:
-        prometheus.io/port: "17106"
         prometheus.io/scrape: "true"
       labels:
         app: {{ include "hadoop.name" . }}
@@ -100,6 +99,10 @@ spec:
       - name: hbase-master
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - containerPort: 17108
+          name: master-jmx
+          protocol: TCP
         command:
         - "/bin/bash"
         - "/tmp/hbase-config/bootstrap.sh"
