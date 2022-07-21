@@ -119,7 +119,7 @@ spec:
 {{- if .Values.extraContainers }}
 {{- toYaml .Values.extraContainers | nindent 6 }}
 {{- end }}
-      - name: server
+      - name: nifi
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ["bash", "/opt/nifi/scripts/startup.sh"]

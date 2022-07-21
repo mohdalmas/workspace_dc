@@ -22,7 +22,7 @@ spec:
       serviceAccountName: bigdata
       containers:
       - name: nifi-registry
-        image: "kapkiai/nifi-registry:1.15.1"
+        image: "et01-harbor.safaricomet.net/bigdata/nifi-registry:1.15.1"
         imagePullPolicy: IfNotPresent
         command: 
         - sh

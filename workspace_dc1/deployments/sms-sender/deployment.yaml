@@ -18,8 +18,8 @@ spec:
       serviceAccountName: bigdata
       containers:
         - name: sms-sender
-          # image: et01-harbor.safaricomet.net/bigdata/sms-sender:0.0.4
-          image: docker.io/kapkiai/sms-sender:0.0.4
+          image: et01-harbor.safaricomet.net/bigdata/sms-sender:0.0.4
+          # image: docker.io/kapkiai/sms-sender:0.0.4
           ports:
             - containerPort: 8085
           imagePullPolicy: Always
