@@ -3,9 +3,12 @@ kind: Endpoints
 metadata:
   # the name here should match the name of the Service
   name: dc1-prometheus
+  labels:
+    app: dc1-prometheus
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 subsets:
   - addresses:
-      - ip: 10.3.41.60
+      - ip: 10.3.41.54
     ports:
       - port: 9090
         name: tcp-prometheus
@@ -14,6 +17,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: dc1-prometheus
+  labels:
+    app: dc1-prometheus
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 spec:
   ports:
     - protocol: TCP
@@ -26,17 +32,19 @@ metadata:
   name: dc1-prometheus
   labels:
     release: bigdata-prometheus
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-       name: dc1-prometheus
+      app: dc1-prometheus
   namespaceSelector:
     matchNames:
-    - et01-tkg-bigdata-prod
+    - bigdata-monitoring
     any: true
   endpoints:
   - port: tcp-prometheus
     interval: 15s
+    path: /metrics
 
 ---
 apiVersion: v1
@@ -44,37 +52,47 @@ kind: Endpoints
 metadata:
   # the name here should match the name of the Service
   name: dc1-alertmanager
+  labels:
+    app: dc1-alertmanager
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 subsets:
   - addresses:
-      - ip: 10.3.41.61
+      - ip: 10.3.41.53
     ports:
       - port: 9093
-        name: tcp-alertmanager
+        name: web
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: dc1-alertmanager
+  labels:
+    app: dc1-alertmanager
+    release: bigdata-prometheus
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 spec:
   ports:
     - protocol: TCP
       port: 9093
-      name: tcp-alertmanager
+      name: web
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: dc1-alertmanager
   labels:
+    app: dc1-alertmanager
     release: bigdata-prometheus
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      name: dc1-alertmanager
+      app: dc1-alertmanager
   namespaceSelector:
     matchNames:
-    - et01-tkg-bigdata-prod
+    - bigdata-monitoring
     any: true
   endpoints:
-  - port: tcp-alertmanager
+  - port: web
     interval: 15s
+    path: /metrics
