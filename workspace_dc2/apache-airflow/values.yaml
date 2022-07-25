@@ -56,7 +56,7 @@ images:
   airflow:
     repository: ~
     tag: ~
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   # To avoid images with user code, you can turn this to 'true' and
   # all the 'run-airflow-migrations' and 'wait-for-airflow-migrations' containers/jobs
   # will use the images from 'defaultAirflowRepository:defaultAirflowTag' values
@@ -67,31 +67,31 @@ images:
   pod_template:
     repository: ~
     tag: ~
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   flower:
     repository: ~
     tag: ~
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   statsd:
     repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-statsd-exporter-2021.04.28-v0.17.0
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   redis:
     repository: et02-harbor.safaricomet.net/bigdata/redis
     tag: 7.0.4-bullseye
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   pgbouncer:
     repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-pgbouncer-2021.04.28-1.14.0
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   pgbouncerExporter:
     repository: et02-harbor.safaricomet.net/bigdata/airflow
     tag: airflow-pgbouncer-exporter-2021.09.22-0.12.0
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   gitSync:
     repository: et02-harbor.safaricomet.net/bigdata/git-sync
     tag: v3.4.0
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
 # Select certain nodes for airflow pods.
 nodeSelector: {}
