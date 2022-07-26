@@ -173,8 +173,8 @@ persistence:
 resources: 
   limits:
    cpu: 5
-   memory: 30Gi
-   ephemeral-storage: 5Gi
+   memory: 45Gi
+   ephemeral-storage: 10Gi
   requests:
    cpu: 2
    memory: 8Gi
@@ -329,12 +329,13 @@ zookeeper:
 metrics:
   prometheus:
     # Enable Prometheus metrics
-    enabled: false
+    enabled: true
     # Port used to expose Prometheus metrics
     port: 9092
     serviceMonitor:
       # Enable deployment of Prometheus Operator ServiceMonitor resource
-      enabled: false
+      enabled: true
       # namespace: monitoring
       # Additional labels for the ServiceMonitor
       labels: {}
+      

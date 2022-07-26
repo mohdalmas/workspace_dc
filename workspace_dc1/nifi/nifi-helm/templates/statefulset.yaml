@@ -111,10 +111,10 @@ spec:
       - name: {{ $key }}
 {{ toYaml $value | indent 8 }}
 {{- end }}
-{{- if .Values.imagePullSecrets }}
+      {{- if .Values.image.pullSecret }}
       imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
-{{- end}}
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
       containers:
 {{- if .Values.extraContainers }}
 {{- toYaml .Values.extraContainers | nindent 6 }}

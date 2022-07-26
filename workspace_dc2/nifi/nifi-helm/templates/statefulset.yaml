@@ -34,8 +34,10 @@ spec:
 {{ toYaml .Values.extraLabels | indent 8 }}
 {{- end }}
     spec:
+{{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end}}
 {{- if .Values.sts.useHostNetwork }}
       hostNetwork: {{ .Values.sts.useHostNetwork }}
       dnsPolicy: ClusterFirstWithHostNet
