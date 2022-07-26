@@ -132,9 +132,7 @@ ingress:
   
 
 # Amount of memory to give the NiFi java heap
-jvmMemory: 
-  xms: 8g
-  xmx: 24g
+jvmMemory: 24g
 
 sidecar:
   image: et01-harbor.safaricomet.net/bigdata/busybox
@@ -173,8 +171,8 @@ persistence:
 resources: 
   limits:
    cpu: 5
-   memory: 45Gi
-   ephemeral-storage: 10Gi
+   memory: 30Gi
+   ephemeral-storage: 5Gi
   requests:
    cpu: 2
    memory: 8Gi

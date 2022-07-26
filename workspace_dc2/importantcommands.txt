@@ -83,12 +83,12 @@ kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbj7
 kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7 dedicated=Hadoop:NoSchedule
 kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbt2kw7  dedicated=Hadoop
 
-#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
-#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
-#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
-#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
-#kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
-#kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbb8wkln  dedicated-
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbgqhcr  dedicated-
+kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
+kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbhf9tz  dedicated-
 
 kubectl taint nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated-
 kubectl label nodes et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbl7t84  dedicated-
