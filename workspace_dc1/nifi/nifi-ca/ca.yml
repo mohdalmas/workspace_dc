@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: nifi-ca
-  namespace: et01-tkg-bigdata-prod
   labels:
     app: nifi-ca
 spec:
@@ -13,17 +12,18 @@ spec:
   serviceName: nifi
   template:
     metadata:
-      namespace: et01-tkg-bigdata-prod
       labels:
         app: nifi-ca
     spec:
+      # imagePullSecrets:
+      # - name: regcred
       serviceAccountName: bigdata
       containers:
         - name: nifi-ca
-          image: et01-harbor.safaricomet.net/bigdata/nifi-toolkit:1.15.1
+          image: apache/nifi-toolkit:1.16.3
           securityContext:
             runAsUser: 0
-            # fsGroup: 0
+            #fsGroup: 1000
           ports:
             - containerPort: 9443
               name: ca-client-port
@@ -31,10 +31,10 @@ spec:
             - bash
             - -c
             - |
-              if [ -f config.json ]; then
-              OPTIONS="--configJson config.json --useConfigJson"
+              if [ -f /opt/nifi/nifi-toolkit-current/cert/config.json ]; then
+              OPTIONS="--configJson /opt/nifi/nifi-toolkit-current/cert/config.json --useConfigJson"
               fi
-              exec /opt/nifi/nifi-toolkit-current/bin/tls-toolkit.sh server -c nifi-ca-cs -t "1234578912345678912" ${OPTIONS}
+              exec /opt/nifi-toolkit/nifi-toolkit-1.16.3/bin/tls-toolkit.sh server -c nifi-ca-cs -t "1234578912345678912" ${OPTIONS}
           volumeMounts:
           - mountPath: /opt/nifi/nifi-toolkit-current/cert
             name: nifi-ca
