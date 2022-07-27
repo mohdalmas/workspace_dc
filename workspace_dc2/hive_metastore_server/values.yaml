@@ -11,21 +11,21 @@ imagePullSecrets:
 
 serviceAccount: bigdata
 
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "Hadoop"
-  effect: "NoSchedule"
+# tolerations:
+# - key: "dedicated"
+  # operator: "Equal"
+  # value: "Hadoop"
+  # effect: "NoSchedule"
   
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: dedicated
-          operator: In
-          values:
-          - Hadoop
+# affinity:
+  # nodeAffinity:
+    # requiredDuringSchedulingIgnoredDuringExecution:
+      # nodeSelectorTerms:
+      # - matchExpressions:
+        # - key: dedicated
+          # operator: In
+          # values:
+          # - Hadoop
 
 annotations:
   kubernetes.io/psp: "privileged"
