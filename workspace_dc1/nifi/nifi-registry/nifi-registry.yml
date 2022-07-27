@@ -19,6 +19,9 @@ spec:
       labels:
         app: nifi-registry
     spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
       serviceAccountName: bigdata
       containers:
       - name: nifi-registry
