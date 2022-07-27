@@ -32,7 +32,7 @@ spec:
             echo "git dir innitialized";
           else
             echo "Innitializing git dir"
-            git  -c http.sslVerify=false clone https://gitlab.safaricomet.net/bigdata/nifi-registry.git /opt/nifi-registry/data;
+            git  -c http.sslVerify=false clone https://mathew.kiprop:1514tPWyWAYpRVGdG6L5@gitlab.safaricomet.net/bigdata/nifi-registry.git /opt/nifi-registry/data;
             cd nifi-registry && git config http.sslVerify "false"
           fi;
           cat /opt/nifi-registry/nifi-registry-current/conf/providers.tmp > /opt/nifi-registry/nifi-registry-current/conf/providers.xml
