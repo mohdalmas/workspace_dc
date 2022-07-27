@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: nifi-registry
-  namespace: et01-tkg-bigdata-prod
 spec:
   replicas: 1
   updateStrategy:
