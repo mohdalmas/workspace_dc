@@ -32,14 +32,15 @@ spec:
         - sh
         - -c
         - |
+          set -x
           if [ -d ./flow_storage/.git ]; then
             echo "git dir innitialized";
           else
             echo "Innitializing git dir"
-            cd ./flow_storage && rm -rf *
+            
             mkdir -p /opt/nifi-registry/data/
             git  -c http.sslVerify=false clone https://mathew.kiprop:1514tPWyWAYpRVGdG6L5@gitlab.safaricomet.net/bigdata/nifi-registry.git ./flow_storage;
-            cd ./flow_storage && git config http.sslVerify "false"
+            cd ./flow_storage && git config http.sslVerify "false" && cd ..
           fi;
           cat /opt/nifi-registry/nifi-registry-current/conf/providers.tmp > /opt/nifi-registry/nifi-registry-current/conf/providers.xml
           cd /opt/nifi-registry/nifi-registry-current
