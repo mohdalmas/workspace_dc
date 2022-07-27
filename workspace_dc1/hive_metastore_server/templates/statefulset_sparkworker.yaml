@@ -24,10 +24,10 @@ spec:
       serviceAccountName: {{.Values.serviceAccount }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
-      affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-      tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
+      # affinity:
+# {{ toYaml .Values.affinity | indent 8 }}
+      # tolerations:
+# {{ toYaml .Values.tolerations | indent 8 }}
       containers:
       - name: hive-spark-worker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
