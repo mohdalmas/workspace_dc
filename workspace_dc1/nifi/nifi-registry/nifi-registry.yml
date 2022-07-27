@@ -87,7 +87,7 @@ spec:
         - name: LDAP_IDENTITY_STRATEGY
           value: USE_USERNAME
         - name: NIFI_REGISTRY_DB_URL
-          value: jdbc:postgresql://bigdata-psql-postgresql-headless:5432/nifireg  
+          value: jdbc:postgresql://10.3.141.24:5432/postgres  
         - name: NIFI_REGISTRY_DB_CLASS
           value: org.postgresql.Driver
         - name: NIFI_REGISTRY_DB_DIR
