@@ -42,6 +42,7 @@ spec:
             cd ./flow_storage && git config http.sslVerify "false"
           fi;
           cat /opt/nifi-registry/nifi-registry-current/conf/providers.tmp > /opt/nifi-registry/nifi-registry-current/conf/providers.xml
+          cd /opt/nifi-registry/nifi-registry-current
           /opt/nifi-registry/scripts/start.sh
         resources: 
           requests:
