@@ -31,7 +31,7 @@ spec:
         - sh
         - -c
         - |
-          if [ -d /opt/nifi-registry/data/nifi-registry/.git ]; then
+          if [ -d ./flow_storage/.git ]; then
             echo "git dir innitialized";
           else
             echo "Innitializing git dir"
