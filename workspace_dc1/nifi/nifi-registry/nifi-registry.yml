@@ -33,8 +33,8 @@ spec:
           else
             echo "Innitializing git dir"
             mkdir -p /opt/nifi-registry/data/
-            git  -c http.sslVerify=false clone https://mathew.kiprop:1514tPWyWAYpRVGdG6L5@gitlab.safaricomet.net/bigdata/nifi-registry.git /opt/nifi-registry/data;
-            cd /opt/nifi-registry/data/nifi-registry && git config http.sslVerify "false"
+            git  -c http.sslVerify=false clone https://mathew.kiprop:1514tPWyWAYpRVGdG6L5@gitlab.safaricomet.net/bigdata/nifi-registry.git ./flow_storage;
+            cd ./flow_storage && git config http.sslVerify "false"
           fi;
           cat /opt/nifi-registry/nifi-registry-current/conf/providers.tmp > /opt/nifi-registry/nifi-registry-current/conf/providers.xml
           /opt/nifi-registry/scripts/start.sh

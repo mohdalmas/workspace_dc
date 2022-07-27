@@ -18,7 +18,7 @@ data:
     \   <class>org.apache.nifi.registry.provider.flow.FileSystemFlowPersistenceProvider</class>\n
     \   <property name=\"Flow Storage Directory\">./flow_storage</property>\n  </flowPersistenceProvider>\n
     \ -->\n  \n    <flowPersistenceProvider>\n        <class>org.apache.nifi.registry.provider.flow.git.GitFlowPersistenceProvider</class>\n
-    \       <property name=\"Flow Storage Directory\">/opt/nifi-registry/data/nifireg</property>\n
+    \       <property name=\"Flow Storage Directory\">./flow_storage</property>\n
     \       <property name=\"Remote To Push\">origin</property>\n        <property
     name=\"Remote Access User\">nifi</property>\n        <property name=\"Remote Access
     Password\">1514tPWyWAYpRVGdG6L5</property>\n        <property name=\"Remote Clone

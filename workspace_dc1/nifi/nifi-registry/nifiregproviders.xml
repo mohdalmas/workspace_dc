@@ -27,7 +27,7 @@
   
     <flowPersistenceProvider>
         <class>org.apache.nifi.registry.provider.flow.git.GitFlowPersistenceProvider</class>
-        <property name="Flow Storage Directory">../data/nifireg</property>
+        <property name="Flow Storage Directory">./flow_storage</property>
         <property name="Remote To Push">origin</property>
         <property name="Remote Access User">nifi</property>
         <property name="Remote Access Password">1514tPWyWAYpRVGdG6L5</property>
