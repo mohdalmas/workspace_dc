@@ -18,7 +18,7 @@ spec:
       serviceAccountName: bigdata
       containers:
         - name: ebu-business-api
-          image: et01-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.2
+          image: et01-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.3
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
@@ -63,7 +63,7 @@ metadata:
   name: api-ingress
 spec:
   rules:
-    - host: api.big-data2.safaricomet.net
+    - host: api.big-data.safaricomet.net
       http:
         paths:
           - backend:
