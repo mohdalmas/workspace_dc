@@ -44,5 +44,12 @@ spec:
         patternType: literal
         type: topic
 
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-customer-activations
+        patternType: literal
+        type: topic
+
     type: simple
     
