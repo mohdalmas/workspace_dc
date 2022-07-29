@@ -1,0 +1,43 @@
+# apiVersion: monitoring.coreos.com/v1
+# kind: PodMonitor
+# metadata:
+  # name: prom-kafka-pm
+  # labels:
+    # release: bigdata-prometheus
+# spec:
+  # podMetricsEndpoints:
+  # - targetPort: tcp-prometheus
+  # namespaceSelector:
+    # matchNames:
+      # - et01-tkg-bigdata-prod
+  # selector:
+    # matchLabels:
+      # app.kubernetes.io/instance: kafka
+      # app.kubernetes.io/managed-by: strimzi-cluster-operator
+      # app.kubernetes.io/name: kafka
+      # app.kubernetes.io/part-of: strimzi-kafka
+      # controller-revision-hash: kafka-kafka-7d69448d6b
+      # namespace: et01-tkg-bigdata-prod
+      # statefulset.kubernetes.io/pod-name: kafka-kafka-0
+      # strimzi.io/cluster: kafka
+      # strimzi.io/kind: Kafka
+      # strimzi.io/name: kafka-kafka
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bigdata-hdfs-nn
+  labels:
+    release: bigdata-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      app.kubernetes.io/managed-by: Helm
+      chart: hadoop-1.1.4
+      component: hdfs-nn
+      release: hadoop
+  namespaceSelector:
+    matchNames:
+      - et01-tkg-bigdata-prod
+  endpoints:
+    - port: jmx

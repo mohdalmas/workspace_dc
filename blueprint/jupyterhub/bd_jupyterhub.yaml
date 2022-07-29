@@ -1,0 +1,85 @@
+#Jupyterhub-statefulset
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: jupyterhub-statefulset
+  labels: 
+    app: jupyterhub
+spec: 
+  replicas: 1
+  serviceName: jupyterhub-service
+  selector: 
+    matchLabels:
+      app: jupyterhub
+  template: 
+    metadata:
+      labels: 
+        app: jupyterhub 
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      serviceAccountName: bigdata
+      containers:
+      - name: jupyterhub-container 
+        image: et01-harbor.safaricomet.net/bigdata/jupyterhub:v2.3.1-beta-ubi8.5
+        imagePullPolicy: Always
+        command:  
+           - "/bin/bash"
+           - "/etc/jupyterhub/startup.sh"
+        env:
+        - name: TZ
+          value: Africa/Nairobi
+        - name: JAVA_HOME
+          value: "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64"                    
+        - name: http_proxy
+          value: "http://proxy1.safaricomet.net:3128"
+        - name: https_proxy
+          value: "http://proxy1.safaricomet.net:3128"          
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - mountPath: "/etc/jupyterhub/startup.sh"
+          name: jupyterhub-etc-config
+          subPath: startup.sh
+        - mountPath: "/home"
+          name: jupyterhub-home
+        - mountPath: "/srv/jupyterhub/"
+          name: jupyterhub-srv
+        - mountPath: "/etc/jupyterhub/jupyterhub_config.py"
+          name: jupyterhub-etc-config
+          subPath: jupyterhub_config.py
+        - mountPath: "/etc/jupyterhub/certs/"
+          name: jupyterhub-cert-config
+      volumes:
+      - name: jupyterhub-home
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-home
+      - name: jupyterhub-srv
+        persistentVolumeClaim:
+          claimName: jupyterhub-pvc-srv
+      - name: jupyterhub-etc-config
+        configMap:
+          name: jupyterhub-config
+          items:
+          - key: jupyterhub_config.py
+            path: jupyterhub_config.py
+          - key: startup.sh
+            path: startup.sh
+      - name: jupyterhub-cert-config
+        secret:
+          secretName: dc1-tls-secret
+---
+#Jupyterhub-service
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: jupyterhub-service
+spec: 
+  type: ClusterIP
+  clusterIP: None
+  ports: 
+  - name: jupyterhub-port
+    port: 8000
+    protocol: TCP
+  selector: 
+    app: jupyterhub

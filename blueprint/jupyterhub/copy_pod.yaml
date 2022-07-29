@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: copy-pod
+  labels: 
+    app: copy-pod
+spec: 
+  replicas: 1
+  serviceName: ""
+  selector: 
+    matchLabels:
+      app: copy-pod
+  template: 
+    metadata:
+      labels: 
+        app: copy-pod 
+    spec:
+      serviceAccountName: bigdata
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: copy-pod
+        image: mohdalmasansari/hadoop-redhat:hadoop-3.1.1-hbase-2.0.3-phoenix-5.0.0
+        command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: Always
+        # volumeMounts:
+        # - mountPath: "/bitnami/kafka"
+          # name: data
+      # volumes:
+      # - name: data
+        # persistentVolumeClaim:
+          # claimName: data-kafka-0
