@@ -56,7 +56,7 @@ spec:
   - name: container_memory
     rules:     
     - alert: Container Memory Usage - EMERGENCY
-      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 90
+      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 90
       for: 10m
       labels:
         severity: emergency
@@ -64,7 +64,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 90% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - CRITICAL
-      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 80
+      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 80
       for: 15m
       labels:
         severity: critical
@@ -72,7 +72,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 80% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - HIGH
-      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 70
+      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 70
       for: 30m
       labels:
         severity: high
@@ -80,7 +80,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 70% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - MEDIUM
-      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 60
+      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 60
       for: 1h
       labels:
         severity: medium
@@ -88,7 +88,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 60% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - LOW
-      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 50
+      expr: (sum(container_memory_working_set_bytes{namespace="et02-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 50
       for: 2h
       labels:
         severity: low
