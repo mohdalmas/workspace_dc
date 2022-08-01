@@ -58,8 +58,8 @@ configVars:
   druid_emitter_logging_logLevel: debug
   #druid_emitter_http_recipientBaseUrl: http://druid-exporter-prometheus-druid-exporter:8080/druid
   druid_emitter_logging_loggerClass: HttpPostEmitter
-  druid_emitter_parametrized_recipientBaseUrlPattern: http://druid-exporter-prometheus-druid-exporter:8080/druid
-  druid_emitter_composing_emitters: '["logging","http"]'
+  # druid_emitter_parametrized_recipientBaseUrlPattern: http://druid-exporter-prometheus-druid-exporter:8080/druid
+  # druid_emitter_composing_emitters: '["logging","http"]'
   
   druid_auth_authenticatorChain: '["ldap"]'
   druid_auth_authenticator_ldap_type: basic
