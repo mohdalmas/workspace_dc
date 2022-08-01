@@ -73,12 +73,12 @@ configVars:
   druid_auth_authenticator_ldap_credentialsValidator_userAttribute: sAMAccountName
   druid_auth_authenticator_ldap_authorizerName: ldapauth  
   druid_escalator_type: basic
-  druid_escalator_internalClientUsername: Ankit-BI@blueprint.lab
+  druid_escalator_internalClientUsername: Ankit-BI
   druid_escalator_internalClientPassword: hKKUlFmzZ4H_dSGr
   druid_escalator_authorizerName: ldapauth
   druid_auth_authorizers: '["ldapauth"]'
   druid_auth_authorizer_ldapauth_type: basic
-  druid_auth_authorizer_ldapauth_initialAdminUser: Ankit-BI@blueprint.lab
+  druid_auth_authorizer_ldapauth_initialAdminUser: Ankit-BI
   druid_auth_authorizer_ldapauth_initialAdminRole: admin
   druid_auth_authorizer_ldapauth_roleProvider_type: ldap
   #druid_monitoring_monitors: '["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.java.util.metrics.SysMonitor","org.apache.druid.java.util.metrics.JvmMonitor","org.apache.druid.java.util.metrics.JvmCpuMonitor","org.apache.druid.java.util.metrics.CpuAcctDeltaMonitor","org.apache.druid.java.util.metrics.JvmThreadsMonitor","org.apache.druid.java.util.metrics.CgroupMemoryMonitor","org.apache.druid.server.metrics.EventReceiverFirehoseMonitor","org.apache.druid.server.metrics.QueryCountStatsMonitor","org.apache.druid.server.emitter.HttpEmittingMonitor","org.apache.druid.server.metrics.TaskCountStatsMonitor","org.apache.druid.server.metrics.TaskSlotCountStatsMonitor"]'
