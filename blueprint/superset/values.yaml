@@ -174,7 +174,7 @@ initImage:
   pullPolicy: IfNotPresent
 
 service:
-  type: loadBalancer
+  type: LoadBalancer
   port: 8088
   annotations: {}
     # cloud.google.com/load-balancer-type: "Internal"
