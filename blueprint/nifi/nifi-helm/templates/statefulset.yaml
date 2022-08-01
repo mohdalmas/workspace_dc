@@ -317,9 +317,9 @@ spec:
 {{- if not .Values.persistence.enabled }}
       - name: config-data
         emptyDir: {}
-      - name: auth-conf-test
+      - name: auth-conf
         emptyDir: {}
-      - name: data-test
+      - name: data
         emptyDir: {}
       - name: flowfile-repository
         emptyDir: {}
@@ -362,7 +362,7 @@ spec:
           # requests:
             # storage: {{ .Values.persistence.configStorage.size }}
     - metadata:
-        name: data-test
+        name: data
       spec:
         accessModes:
         {{- range .Values.persistence.accessModes }}
@@ -406,7 +406,7 @@ spec:
           # requests:
             # storage: {{ .Values.persistence.provenanceRepoStorage.size }}
     - metadata:
-        name: auth-conf-test
+        name: auth-conf
       spec:
         accessModes:
         {{- range .Values.persistence.accessModes }}
