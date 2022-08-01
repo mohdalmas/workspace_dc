@@ -96,7 +96,7 @@ broker:
   replicaCount: 2
   port: 8082
   serviceType: LoadBalancer
-  # loadBalancerIP: 10.3.41.41
+  loadBalancerIP: 192.168.21.33
   securityContext:
     runAsUser: 0
     runAsGroup: 0
@@ -257,9 +257,9 @@ historical:
 
   persistence:
     enabled: true
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
     size: "4Gi"
-    storageClass: "topology-aware-standard"
+    storageClass: "nfs-bigdata"
 
   antiAffinity: "soft"
 
@@ -341,9 +341,9 @@ middleManager:
 
   persistence:
     enabled: true
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
     size: "4Gi"
-    storageClass: "topology-aware-standard"
+    storageClass: "nfs-bigdata"
 
   antiAffinity: "soft"
 
