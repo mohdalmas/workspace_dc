@@ -73,7 +73,7 @@ configVars:
   druid_auth_authenticator_ldap_credentialsValidator_userAttribute: sAMAccountName
   druid_auth_authenticator_ldap_authorizerName: ldapauth  
   druid_escalator_type: basic
-  druid_escalator_internalClientUsername: Ankit-BI
+  druid_escalator_internalClientUsername: Ankit-BI@blueprint.lab
   druid_escalator_internalClientPassword: hKKUlFmzZ4H_dSGr
   druid_escalator_authorizerName: ldapauth
   druid_auth_authorizers: '["ldapauth"]'
