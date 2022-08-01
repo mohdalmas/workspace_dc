@@ -182,7 +182,7 @@ service:
 
 ingress:
   enabled: true
-  # ingressClassName: nginx
+  ingressClassName: nginx
   annotations: {}
     # kubernetes.io/tls-acme: "true"
     ## Extend timeout to allow long running queries.
