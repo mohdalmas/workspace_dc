@@ -126,7 +126,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   tls: []
   hosts: 
-    - nifi.bigdata.blueprint.lab
+    - nifi-test.bigdata.blueprint.lab
   path: /
   pathType: ImplementationSpecific
   
@@ -155,7 +155,7 @@ persistence:
     size: 100Mi
   # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
   dataStorage:
-    size: 100Gi
+    size: Gi
   # Storage capacity for the FlowFile repository
   flowfileRepoStorage:
     size: 2000Gi
