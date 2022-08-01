@@ -26,7 +26,7 @@ replicaCount: 1
 runAsUser: 0
 
 # Create custom service account for Superset. If create: true and name is not provided, superset.fullname will be used.
-# serviceAccountName: superset
+serviceAccountName: bigdata
 serviceAccount:
   create: false
 
@@ -181,7 +181,7 @@ service:
   loadBalancerIP: null
 
 ingress:
-  enabled: false
+  enabled: true
   # ingressClassName: nginx
   annotations: {}
     # kubernetes.io/tls-acme: "true"
@@ -192,7 +192,7 @@ ingress:
   path: /
   pathType: ImplementationSpecific
   hosts:
-    - chart-example.local
+    - superset.bigdata.blueprint.lab
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -234,11 +234,12 @@ supersetNode:
     # redis_password: superset
     redis_port: "6379"
     # You need to change below configuration incase bringing own PostgresSQL instance and also set postgresql.enabled:false
-    db_host: '{{ template "superset.fullname" . }}-postgresql'
+    # db_host: '{{ template "superset.fullname" . }}-postgresql'
+    db_host: 192.168.21.19
     db_port: "5432"
-    db_user: superset
-    db_pass: superset
-    db_name: superset
+    db_user: postgres
+    db_pass: hKKUlFmzZ4H_dSGr
+    db_name: postgres
   env: {}
   forceReload: false # If true, forces deployment to reload on each upgrade
   initContainers:
@@ -403,7 +404,7 @@ postgresql:
   ##
   ## Use the PostgreSQL chart dependency.
   ## Set to false if bringing your own PostgreSQL.
-  enabled: true
+  enabled: false
 
   ## Authentication parameters
   auth:
