@@ -29,7 +29,7 @@ nameOverride: ""
 kubeVersionOverride: ""
 
 # User and group of airflow user
-uid: 50000
+uid: 0
 gid: 0
 
 # Default security context for airflow
@@ -1611,17 +1611,16 @@ dags:
     subPath: ~
   gitSync:
     enabled: true
-
     # git repo clone url
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
+    repo: https://github.com/mohdalmas/airflow-dags.git
     branch: dc2
     rev: HEAD
     depth: 1
     # the number of consecutive failures allowed before aborting
-    maxFailures: 0
+    maxFailures: 10
     # subpath within the repo where dags are located
     # should be "" if dags are at repo root
     subPath: ""

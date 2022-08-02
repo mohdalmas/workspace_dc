@@ -20,7 +20,7 @@ spec:
       - name: regcred
       containers:
       - name: testpod
-        image: et02-harbor.safaricomet.net/bigdata/postgresql:11.16.0-debian-11-r12s
+        image: ubuntu
         env:
         - name: http_proxy
           value: http://proxy1.safaricomet.net:3128 
@@ -28,13 +28,13 @@ spec:
           value: http://proxy1.safaricomet.net:3128 
         command: ["/bin/sleep", "3650d"]
         imagePullPolicy: Always
-        # volumeMounts:
-        # - mountPath: "/bitnami/kafka"
-          # name: data
-      # volumes:
-      # - name: data
-        # persistentVolumeClaim:
-          # claimName: data-kafka-0
+        volumeMounts:
+        - mountPath: "/bitnami/kafka"
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: airflow-dags
 # apiVersion: v1
 # kind: Service
 # metadata:
