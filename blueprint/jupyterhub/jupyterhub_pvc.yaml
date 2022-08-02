@@ -5,11 +5,11 @@ metadata:
 spec:
    accessModes:
        - ReadWriteOnce
-   storageClassName: topology-aware-standard
+   storageClassName: nfs-bigdata
    volumeMode: Filesystem
    resources:
        requests:
-          storage: 50Gi
+          storage: 10Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -18,38 +18,38 @@ metadata:
 spec:
    accessModes:
        - ReadWriteOnce
-   storageClassName: topology-aware-standard
-   volumeMode: Filesystem
-   resources:
-       requests:
-          storage: 50Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-   name: jupyterhub-pvc-soft
-spec:
-   accessModes:
-       - ReadWriteMany
    storageClassName: nfs-bigdata
    volumeMode: Filesystem
    resources:
        requests:
-          storage: 50Gi
+          storage: 10Gi
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-   name: jupyterhub-pvc-python
-spec:
-   accessModes:
-       - ReadWriteMany
-   storageClassName: nfs-bigdata
-   volumeMode: Filesystem
-   resources:
-       requests:
-          storage: 50Gi
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+   # name: jupyterhub-pvc-soft
+# spec:
+   # accessModes:
+       # - ReadWriteMany
+   # storageClassName: nfs-bigdata
+   # volumeMode: Filesystem
+   # resources:
+       # requests:
+          # storage: 50Gi
 # ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+   # name: jupyterhub-pvc-python
+# spec:
+   # accessModes:
+       # - ReadWriteMany
+   # storageClassName: nfs-bigdata
+   # volumeMode: Filesystem
+   # resources:
+       # requests:
+          # storage: 50Gi
+# # ---
 # apiVersion: v1
 # kind: PersistentVolumeClaim
 # metadata:

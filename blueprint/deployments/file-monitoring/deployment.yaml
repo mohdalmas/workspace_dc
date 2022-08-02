@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: file-monitoring 
-          image:  et01-harbor.safaricomet.net/bigdata/file-monitoring:1.0.1 # Image that will be used to containers in the cluster
+          image:  registry.tools.blueprint.lab/bigdata/file-monitoring:1.0.1 # Image that will be used to containers in the cluster
           imagePullPolicy: Always
           ports:
             - containerPort: 8080 # The port that the container is running on in the cluster
@@ -31,13 +31,13 @@ spec:
 
           env:
             - name: spring.datasource.url
-              value : "jdbc:postgresql://10.3.141.24:5432/file_management"
+              value : "jdbc:postgresql://192.168.21.19:5432/file_management"
             
             - name: spring.datasource.username
-              value: svc-bigdata-admin
+              value: postgres
 
             - name: spring.datasource.password
-              value: lyOdmSBwCsZnD4dLnOAE
+              value: hKKUlFmzZ4H_dSGr
           
           command: ["java","-jar","/app.jar"]
 
@@ -51,7 +51,7 @@ metadata:
   name: file-monitoring-service
 spec:
   type: LoadBalancer
-  loadBalancerIP: 10.3.41.49
+  loadBalancerIP: ""
   ports:
     - protocol: "TCP"
       port: 8080 

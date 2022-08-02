@@ -1615,7 +1615,7 @@ dags:
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://mohdalmas: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@github.com/mohdalmas/airflow-dags
+    repo: https://github.com/mohdalmas/airflow-dags.git 
     branch: dc1
     rev: HEAD
     depth: 1
@@ -1632,7 +1632,7 @@ dags:
     #   metadata:
     #     name: git-credentials
     #   data:
-    #     GIT_SYNC_USERNAME: <base64_encoded_git_username>
+    #     GIT_SYNC_USERNAME: mohdalmas
     #     GIT_SYNC_PASSWORD: <base64_encoded_git_password>
     # and specify the name of the secret below
     #

@@ -21,12 +21,12 @@ metadata:
        more_set_headers "Access-Control-Allow-Origin: accept, content-type, authorization";
        more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; always";
 spec:
-  tls:
-  - hosts:
-      - jupyterhub.big-data.safaricomet.net
-    secretName: dc1-tls-secret
+  # tls:
+  # - hosts:
+      # - jupyterhub.bigdata.blueprint.lab
+    # secretName: dc1-tls-secret
   rules:
-  - host: jupyterhub.big-data.safaricomet.net
+  - host: jupyterhub.bigdata.blueprint.lab
     http:
       paths:
       - path: /
