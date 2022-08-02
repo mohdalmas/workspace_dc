@@ -2,7 +2,7 @@
 name: druid-exporter
 
 image:
-  name: et01-harbor.safaricomet.net/bigdata/druid-exporter
+  name: opstree/druid-exporter
   tag: v0.10
   pullPolicy: IfNotPresent
 
@@ -18,7 +18,7 @@ druidURL: http://druid-router:8888
 logLevel: debug
 logFormat: json
 druid_user: svc-bigdata-admin
-druid_password: lyOdmSBwCsZnD4dLnOAE
+druid_password: cA6gYsJNL4meJJ6elyoc
 
 exporterPort: 8080
 
@@ -29,7 +29,7 @@ serviceAccount:
 serviceType: ClusterIP
 
 serviceMonitor:
-  enabled: enable
+  enabled: false
   namespace: bigdata-monitoring
   interval: 30s
   scrapeTimeout: 10s
