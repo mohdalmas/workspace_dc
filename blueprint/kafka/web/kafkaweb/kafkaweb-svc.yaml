@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafkaweb
+  name: kafkaweb
+spec:
+  ports:
+  - name: kafkaweb-9000
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: kafkaweb
+  type: LoadBalancer
+status:
+  loadBalancer: {}

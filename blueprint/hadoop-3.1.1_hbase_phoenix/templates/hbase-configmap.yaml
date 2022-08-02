@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hbase
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  bootstrap.sh: |
+    #!/bin/bash
+
+    : ${HBASE_PREFIX:= /opt/hbase}
+
+    . $HBASE_PREFIX/conf/hbase-env.sh
+    
+    # Directory to find config artifacts
+    CONFIG_DIR="/tmp/hbase-config"
+    
+    # Copy config files from volume mount
+
+    for f in hbase-site.xml hbase-env.sh regionserver-monitor.sh master-monitor.sh custom-crontab-master custom-crontab-regionserver; do
+      if [[ -e ${CONFIG_DIR}/$f ]]; then
+        cp ${CONFIG_DIR}/$f $HBASE_PREFIX/conf/$f
+      else
+        echo "ERROR: Could not find $f in $CONFIG_DIR"
+        exit 1
+      fi
+    done
+       
+    if [[ $2 == "master" ]]; then
+      # #  wait up to 60 seconds for namenode
+      (while [[ $count -lt 60 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-hdfs-nn:9870` ]]; do ((count=count+1)) ; echo "Waiting for {{ include "hadoop.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 60 ]])
+      #[[ $? -ne 0 ]] && echo "Timeout waiting for Namenode, exiting." && exit 1
+      $HBASE_PREFIX/bin/hbase-daemon.sh start master       
+      #$HBASE_PREFIX/bin/hbase-daemon.sh start thrift
+      chmod +x $HBASE_PREFIX/conf/master-monitor.sh
+      chmod 777 -R $HBASE_PREFIX/conf/master-monitor.sh
+      #crontab $HBASE_PREFIX/conf/custom-crontab-master
+      #while true; do $HBASE_PREFIX/conf/master-monitor.sh; sleep 600; done
+    fi
+    
+    if [[ $2 == "regionserver" ]]; then
+    # wait up to 30 seconds for Hbase masternode then starting Hbase-regionserver
+      (while [[ $count -lt 60 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-hdfs-nn:16010` ]]; do ((count=count+1)) ; echo "Waiting for hbase master" ; sleep 2; done && [[ $count -lt 60 ]])
+      #[[ $? -ne 0 ]] && echo "Timeout waiting for Hbase-master, exiting." && exit 1
+      $HBASE_PREFIX/bin/hbase-daemon.sh start regionserver
+      chmod +x $HBASE_PREFIX/conf/regionserver-monitor.sh
+      chmod 777 -R $HBASE_PREFIX/conf/regionserver-monitor.sh
+      #crontab $HBASE_PREFIX/conf/custom-crontab-regionserver
+      #while true; do $HBASE_PREFIX/conf/regionserver-monitor.sh; sleep 600; done
+    
+    fi
+    
+    if [[ $1 == "-d" ]]; then
+      until find ${HBASE_PREFIX}/logs -mmin -1 | egrep -q '.*'; echo "`date`: Waiting for logs..." ; do sleep 2 ; done
+      tail -F ${HBASE_PREFIX}/logs/* &
+      while true; do sleep 1000; done
+    fi
+
+    if [[ $1 == "-bash" ]]; then
+      /bin/bash
+    fi
+
+  custom-crontab-master: |
+    #Cronjob for regionserver monitor
+    */5 * * * * $HBASE_PREFIX/conf/master-monitor.sh
+    
+  master-monitor.sh: |
+    code=$(curl -s -o /dev/null -w "%{http_code}" 'http://localhost:16010')
+    if [[ $code != 200 || $code != 503 ]]; then
+        $HBASE_PREFIX/bin/hbase-daemon.sh start master
+    else
+        echo HMaster Service is currently running and will not be started.
+    fi
+
+  custom-crontab-regionserver: |
+    #Cronjob for regionserver monitor
+    */5 * * * * $HBASE_PREFIX/conf/regionserver-monitor.sh
+    
+  regionserver-monitor.sh: |
+    code=$(curl -s -o /dev/null -w "%{http_code}" 'http://localhost:16030')
+    if [[ $code != 200 || $code != 503 ]]; then
+        $HBASE_PREFIX/bin/hbase-daemon.sh start regionserver
+    else
+        echo HRegion Service is currently running and will not be started.
+    fi
+    
+  hbase-env.sh: |
+    # Extra Java runtime options.
+    # Below are what we set by default.  May only work with SUN JVM.
+    # For more on why as well as other possible settings,
+    # see http://hbase.apache.org/book.html#performance
+    export HBASE_OPTS="$HBASE_OPTS -XX:+UseConcMarkSweepGC"
+  hbase-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hbase.master</name>
+        <value>>{{ include "hadoop.fullname" . }}-hdfs-nn:16000</value>
+      </property>
+      {{- if index .Values.hbase_conf "hbaseSite" }}
+      {{- range $key, $value := index .Values.hbase_conf "hbaseSite" }}
+      <property><name>{{ $key }}</name><value>{{ $value }}</value></property>
+      {{- end }}
+      {{- end }}
+    </configuration>

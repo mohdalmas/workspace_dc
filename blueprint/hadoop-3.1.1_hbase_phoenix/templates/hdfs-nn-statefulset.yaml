@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-nn
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/hadoop-configmap.yaml") . | sha256sum }}
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-nn
+spec:
+  serviceName: {{ include "hadoop.fullname" . }}-hdfs-nn
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "hadoop.name" . }}
+      release: {{ .Release.Name }}
+      component: hdfs-nn
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ include "hadoop.name" . }}
+        release: {{ .Release.Name }}
+        component: hdfs-nn
+    spec:
+{{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+{{- end }}
+      serviceAccountName: {{.Values.serviceAccount }}
+      affinity:
+        podAntiAffinity:
+        {{- if eq .Values.antiAffinity "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchLabels:
+                app:  {{ include "hadoop.name" . }}
+                release: {{ .Release.Name | quote }}
+                component: hdfs-nn
+        {{- else if eq .Values.antiAffinity "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app:  {{ include "hadoop.name" . }}
+                  release: {{ .Release.Name | quote }}
+                  component: hdfs-nn
+        {{- end }}
+# {{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
+      # affinity:
+# {{ toYaml .Values.affinity | indent 8 }}
+# {{- end }}
+      terminationGracePeriodSeconds: 0
+# {{- if .Values.tolerations }}
+      # tolerations:
+# {{ toYaml .Values.tolerations | indent 8 }}
+# {{- end }}
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: hdfs-nn
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+        - "/bin/bash"
+        - "/tmp/hadoop-config/bootstrap.sh"
+        - "-d"
+        env:
+{{ toYaml .Values.hdfs.nameNode.extraEnvVars | indent 10 }}
+        ports:
+        - containerPort: 17106
+          name: nn-jmx-metrics
+          protocol: TCP
+        resources:
+{{ toYaml .Values.hdfs.nameNode.resources | indent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9870
+          initialDelaySeconds: 60
+          timeoutSeconds: 20
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9870
+          initialDelaySeconds: 90
+          timeoutSeconds: 60
+        volumeMounts:
+        - name: hadoop-config
+          mountPath: /tmp/hadoop-config
+        - name: dfs
+          mountPath: /dfs/name
+      - name: hbase-master
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+        - "/bin/bash"
+        - "/tmp/hbase-config/bootstrap.sh"
+        - "-d"
+        - "master"
+        env:
+{{ toYaml .Values.hbase.master.extraEnvVars | indent 10 }}
+        resources:
+{{ toYaml .Values.hbase.master.resources | indent 10 }}
+        volumeMounts:
+        - name: hbase-config
+          mountPath: /tmp/hbase-config
+      volumes:
+      - name: hadoop-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}
+      - name: hbase-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}-hbase
+  volumeClaimTemplates:
+  - metadata:
+      name: dfs
+    spec:
+      accessModes:
+      - {{ .Values.persistence.nameNode.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.nameNode.size | quote }}
+{{- if .Values.persistence.nameNode.storageClass }}
+{{- if (eq "-" .Values.persistence.nameNode.storageClass) }}
+      storageClassName: ""
+{{- else }}
+      storageClassName: "{{ .Values.persistence.nameNode.storageClass }}"
+{{- end }}
+{{- end }}

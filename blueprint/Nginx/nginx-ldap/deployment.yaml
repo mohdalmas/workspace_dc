@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ldap
+  labels:
+    app: nginx-ldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ldap
+  template:
+    metadata:
+      labels:
+        app: nginx-ldap
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      serviceAccountName: bigdata
+      automountServiceAccountToken: false
+      containers:
+        - name: nginx-ldap
+          image: et01-harbor.safaricomet.net/bigdata/nginx-ldap:python-3.9.10-alpine3.14
+          imagePullPolicy: Always
+          ports:
+            - name: https
+              containerPort: 9000
+          env:
+          - name: LDAP_MANAGER_PASSWORD
+            value: "lyOdmSBwCsZnD4dLnOAE"
+          - name: FLASK_SECRET_KEY
+            value: "YWNkYyByb2NrIQ=="
+          envFrom:
+            - configMapRef:
+                name: nginx-ldap
+            # - secretRef:
+                # name: nginx-ldap
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            runAsUser: 10001
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            httpGet:
+              port: 9000
+              path: /
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              port: 9000
+              path: /
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: vol-tmp
+              mountPath: /tmp
+      volumes:
+        - name: vol-tmp
+          emptyDir: {}
