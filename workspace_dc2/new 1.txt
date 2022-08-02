@@ -1,0 +1,17 @@
+- Deploey Strimzi
+- Kafka
+- nifi CA
+- Nifi
+- Nifi Registry
+
+
+Strimzi
+Nginx
+kafka
+zookeeper
+Gen zk
+Nifi
+Postgress
+
+
+Kafka Cluster ID must be persisted from meta.properties

@@ -1,0 +1,55 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+   name: cvm        
+   labels:
+    strimzi.io/cluster: kafka
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    acls:
+    - host: '*'
+      operation: Write
+      resource:
+        name: cvm-
+        patternType: prefix
+        type: topic
+
+    - host: '*'
+      operation: Read
+      resource:
+        name: cvm-
+        patternType: prefix
+        type: topic
+  
+    - host: '*'
+      operation: Read
+      resource:
+        name: cvm-test-cg
+        patternType: literal
+        type: group
+    
+    - host: '*'
+      operation: Read
+      resource:
+        name: ncc-recharge
+        patternType: literal
+        type: topic
+    
+    - host: '*'
+      operation: Read
+      resource:
+        name: cvm-recharge-cg
+        patternType: literal
+        type: topic
+
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-customer-activations
+        patternType: literal
+        type: topic
+
+    type: simple
+    

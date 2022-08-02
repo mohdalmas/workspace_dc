@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kafkaweb
+  name: kafkaweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafkaweb
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: kafkaweb
+    spec:
+      serviceAccountName: kafka-kafka
+      containers:
+      - image: kapkiai/kafkaweb:v2
+        name: kafkaweb
+        resources: 
+          limits:
+            memory: "1000Mi"
+            cpu: "500Mi"
+          requests:
+            memory: "500Mi"
+            cpu: "250Mi"
+        env:
+        - name: kafka.brokerConnect
+          value: 10.3.41.32:9094
+        - name: kafka.isSecured
+          value: "true"
+        - name: kafka.saslMechanism
+          value: "SCRAM-SHA-512"
+        - name: kafka.securityProtocol
+          value: "SASL_PLAINTEXT"
+        - name: acl.aclEnabled
+          value: "true"
+
+        volumeMounts:
+          - mountPath: /kaas_local_jaas.conf
+            name: foo
+            subPath:  kaas_local_jaas.conf
+      volumes:
+      - name: foo
+        configMap:
+          name: jaas-config
+          defaultMode: 0777
+          items:
+            - key: "jaas.conf"
+              path: "kaas_local_jaas.conf"
+        
+          
+status: {}

@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    prometheus-operator-validated: "true"
+  labels:
+    app: kube-prometheus-stack
+    release: bigdata-prometheus
+  namespace: bigdata-monitoring
+  name: prometheus-rules-druid
+spec:
+  groups:
+  - name: druid
+    rules:
+    - alert: Druid Server DOWN - EMERGENCY
+      expr: count(druid_health_status) != 1
+      for: 5m
+      labels:
+        severity: emergency
+      annotations:
+        summary: 'Druid Service Status'
+        description: 'Druid Service is Down'

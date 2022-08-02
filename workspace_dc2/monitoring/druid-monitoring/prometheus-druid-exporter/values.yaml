@@ -1,0 +1,48 @@
+---
+name: druid-exporter
+
+image:
+  name: et02-harbor.safaricomet.net/bigdata/druid-exporter
+  tag: v0.10
+  pullPolicy: IfNotPresent
+
+imagePullSecret: regcred
+annotations: {}
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+
+
+druidURL: http://druid-router:8888
+logLevel: debug
+logFormat: json
+druid_user: svc-bigdata-admin
+druid_password: lyOdmSBwCsZnD4dLnOAE
+
+exporterPort: 8080
+
+serviceAccount:
+  create: false
+  name: bigdata
+
+serviceType: ClusterIP
+
+serviceMonitor:
+  enabled: enable
+  namespace: bigdata-monitoring
+  interval: 30s
+  scrapeTimeout: 10s
+  additionalLabels:
+    release: bigdata-prometheus
+  targetLabels: []
+
+securityContext: {}
+
+containerSecurityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

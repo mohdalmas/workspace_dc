@@ -1,0 +1,343 @@
+---
+# Number of nifi nodes
+replicaCount: 3
+
+image:
+  repository: "et02-harbor.safaricomet.net/bigdata/nifi"
+  tag: "1.16.3"
+  pullPolicy: "Always"
+
+securityContext:
+  runAsUser: 0
+  fsGroup: 0
+
+imagePullSecrets:
+- name: regcred
+
+serviceAccount: bigdata
+
+sts:
+  podManagementPolicy: Parallel
+  AntiAffinity: "soft"
+  useHostNetwork: null
+  hostPort: null
+  pod:
+    annotations:
+      security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000
+  serviceAccount:
+    create: false
+    annotations: {}
+  hostAliases: []
+
+
+properties:
+  sensitiveKey: changeMechangeMe # Must have at least 12 characters
+  algorithm: NIFI_PBKDF2_AES_GCM_256
+  externalSecure: false
+  isNode: true
+  httpsPort: 8443 
+  webProxyHost: "nifi.big-data2.safaricomet.net"
+  clusterPort: 6007
+  provenanceStorage: "4 GB"
+  siteToSite:
+    port: 10000
+  safetyValve:
+    nifi.web.http.network.interface.default: eth0
+    nifi.web.http.network.interface.lo: lo
+  nifiRegUrl: https://nifi-registry-0.nifi-registry.et02-tkg-bigdata-prod.svc.cluster.local:18443
+  hdfsConfig: /opt/nifi/nifi-current/ext-config/core-site.xml,/opt/nifi/nifi-current/ext-config/hdfs-site.xml
+  hdfsUrl: hdfs://hadoop-hadoop-hdfs-nn:9000
+  hdfsPath: /nifi/nars
+
+  # customLibPath: "/opt/nifi/external-nar"
+
+
+# Nifi User Authentication
+auth:
+  admin: CN=admin, OU=NIFI
+  SSL:
+    keystorePasswd: changeMe
+    truststorePasswd: changeMe
+  
+  singleUser:
+    username: username
+    password: changemechangeme # Must to have at least 12 characters
+
+  ldap:
+    enabled: true
+    host: ldap://10.3.108.11:389
+    searchBase: OU=Domain Users,DC=safaricomet,DC=net
+    admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+    username: Mathew.Kiprop
+    pass: lyOdmSBwCsZnD4dLnOAE
+    searchFilter: (sAMAccountName={0})
+    userIdentityAttribute: cn={0}
+    authStrategy: SIMPLE # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
+    identityStrategy: USE_USERNAME
+    authExpiration: 12 hours
+    tls:
+      enabled: false
+
+  oidc:
+    enabled: false
+    discoveryUrl:
+    clientId:
+    clientSecret:
+    claimIdentifyingUser: email
+    admin: nifi@example.com
+    
+    additionalScopes:
+
+
+headless:
+  type: ClusterIP
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+
+# ui service
+service:
+  type: ClusterIP
+  httpsPort: 8443
+  annotations: {}
+
+ 
+  processors:
+    enabled: false
+    ports:
+      - name: processor01
+        port: 7001
+        targetPort: 7001
+       
+      - name: processor02
+        port: 7002
+        targetPort: 7002
+      
+
+
+ingress:
+  enabled: true
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  tls: []
+  hosts: 
+    - nifi.big-data2.safaricomet.net
+  path: /
+  pathType: ImplementationSpecific
+  
+
+# Amount of memory to give the NiFi java heap
+jvmMemory: 
+  xms: 8g
+  xmx: 24g
+
+sidecar:
+  image:  et02-harbor.safaricomet.net/bigdata/busybox
+  tag: "latest"
+  imagePullPolicy: "IfNotPresent"
+
+
+persistence:
+  enabled: true
+
+  storageClass: topology-aware-standard
+
+  accessModes:  [ReadWriteOnce]
+  ## Storage Capacities for persistent volumes
+  configStorage:
+    size: 100Mi
+  authconfStorage:
+    size: 100Mi
+  # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
+  dataStorage:
+    size: 1Ti
+  # Storage capacity for the FlowFile repository
+  flowfileRepoStorage:
+    size: 2000Gi
+  # Storage capacity for the Content repository
+  contentRepoStorage:
+    size: 2000Gi
+  # Storage capacity for the Provenance repository. When changing this, one should also change the properties.provenanceStorage value above, also.
+  provenanceRepoStorage:
+    size: 2000Gi
+  # Storage capacity for nifi logs
+  logStorage:
+    size: 10Gi
+  
+  extjarsStorage:
+    size: 10Gi
+  
+  extensionsStorage:
+    size: 10Gi
+
+resources: 
+  limits:
+   cpu: 5
+   memory: 45Gi
+   ephemeral-storage: 10Gi
+  requests:
+   cpu: 2
+   memory: 8Gi
+   ephemeral-storage: 4Gi
+
+logresources:
+  requests:
+    cpu: 50m
+    memory: 50Mi
+  limits:
+    cpu: 300Mi
+    memory: 300Mi
+
+
+affinity: {}
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #     - matchExpressions:
+  #       - key: dedicated
+  #         operator: In
+  #         values:
+  #         - Kafka-Nifi
+
+nodeSelector: {}
+
+tolerations: []
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "Kafka-Nifi"
+#   effect: "NoSchedule"
+
+initContainers: {}
+  # nifi-dependencies:
+    # imagePullPolicy: "IfNotPresent"
+    # image: "kapkiai/busybox:1.0.0"
+    # command: ["sh", "-c", "echo Hello"]
+    # volumeMounts:
+    # - name: "ext-nar"
+      # mountPath: /opt/nifi/ext-jar
+    # - mountPath: /opt/nifi/ext-nar
+      # name: ext-nar
+    
+extraVolumeMounts: 
+  - mountPath: /opt/nifi/nifi-current/ext-config/hive-site.xml
+    name: hive-config
+    subPath: hive-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/hbase-site.xml
+    name: hbase-config
+    subPath: hbase-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/core-site.xml
+    name: hadoop-config
+    subPath: core-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/hdfs-site.xml
+    name: hadoop-config
+    subPath: hdfs-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/mapred-site.xml
+    name: hadoop-config
+    subPath: mapred-site.xml
+  - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
+    name: hadoop-config
+    subPath: yarn-site.xml
+  # - mountPath: /opt/nifi/external-nar
+    # name: ext-nar
+  # - mountPath: /opt/nifi/external-jar
+    # name: ext-jar
+
+extraVolumes: 
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: hive-site.xml
+        path: hive-site.xml
+      name: hive-cm
+    name: hive-config
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: hbase-site.xml
+        path: hbase-site.xml
+      name: hadoop-hadoop-hbase
+    name: hbase-config
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: core-site.xml
+        path: core-site.xml
+      - key: hdfs-site.xml
+        path: hdfs-site.xml
+      - key: mapred-site.xml
+        path: mapred-site.xml
+      - key: yarn-site.xml
+        path: yarn-site.xml
+      name: hadoop-hadoop
+    name: hadoop-config
+
+## Extra containers
+extraContainers: []
+# - name: nifi-dependencies
+  # imagePullPolicy: "IfNotPresent"
+  # image: "kapkiai/busybox:1.0.0"
+  # command: ["sh", "-c", "cp ext-jar/* external-jar && cp ext-nar/* external-nar && echo The app is running! && sleep 3600"]
+  # volumeMounts:
+   # - name: "ext-nar"
+     # mountPath: /opt/nifi/external-jar
+   # - mountPath: /opt/nifi/external-nar
+     # name: ext-nar
+    
+
+terminationGracePeriodSeconds: 30
+
+## Extra environment variables that will be pass onto deployment pods
+env: []
+
+## Extra environment variables from secrets and config maps
+envFrom: []
+
+# envFrom:
+#   - configMapRef:
+#       name: config-name
+#   - secretRef:
+#       name: mysecret
+
+ca:
+  ## If true, enable the nifi-toolkit certificate authority
+  enabled: false
+  persistence:
+    enabled: true
+  server: "nifi-ca-cs"
+  service:
+    port: 9443
+  token: "1234578912345678912"
+  admin:
+    cn: admin
+  serviceAccount:
+    create: false
+
+# ------------------------------------------------------------------------------
+# Zookeeper:
+# ------------------------------------------------------------------------------
+zookeeper:
+  enabled: false
+  ## If the Zookeeper Chart is disabled a URL and port are required to connect
+  url: "bigdata-zk-zookeeper-headless"
+  port: 2181
+  path: /nifihelm
+
+
+# Configure metrics
+metrics:
+  prometheus:
+    # Enable Prometheus metrics
+    enabled: true
+    # Port used to expose Prometheus metrics
+    port: 9092
+    serviceMonitor:
+      # Enable deployment of Prometheus Operator ServiceMonitor resource
+      enabled: true
+      # namespace: monitoring
+      # Additional labels for the ServiceMonitor
+      labels: {}

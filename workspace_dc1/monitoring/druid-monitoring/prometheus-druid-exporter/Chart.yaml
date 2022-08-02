@@ -1,0 +1,26 @@
+annotations:
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-druid-exporter
+  artifacthub.io/operator: "true"
+apiVersion: v1
+appVersion: v0.8.0
+description: Druid exporter to monitor druid metrics with Prometheus
+home: https://github.com/opstree/druid-exporter
+icon: https://github.com/opstree/druid-exporter/blob/master/static/druid-exporter-logo.svg
+keywords:
+- kubernetes
+- apache
+- druid
+- exporter
+- prometheus
+- grafana
+maintainers:
+- email: abhishekbhardwaj510@gmail.com
+  name: iamabhishek-dubey
+- email: sandeep@opstree.com
+  name: sandy724
+name: prometheus-druid-exporter
+sources:
+- https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-druid-exporter
+version: 0.11.0

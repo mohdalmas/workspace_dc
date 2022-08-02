@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ebu-business-api
+  name: ebu-business-api
+spec:
+  selector:
+    matchLabels:
+      app: ebu-business-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ebu-business-api
+    spec:
+      serviceAccountName: bigdata
+      containers:
+        - name: ebu-business-api
+          image: et02-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.3
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+      imagePullSecrets:
+        - name: regcred
+
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ebu-business-api
+spec:
+  type: ClusterIP
+  ports:
+    - name: send-port
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: ebu-business-api
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+  labels:
+    name: api-ingress
+  name: api-ingress
+spec:
+  rules:
+    - host: api.big-data2.safaricomet.net
+      http:
+        paths:
+          - backend:
+              service:
+                name: ebu-business-api
+                port:
+                  number: 8080
+            path: /
+            pathType: ImplementationSpecific
+
+

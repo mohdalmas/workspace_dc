@@ -1,0 +1,38 @@
+Prerequisites
+Installation requires a Kubernetes account with cluster admin credentials.
+
+Procedure
+Log in to the Kubernetes cluster using an account that has cluster admin privileges.
+
+Create a new kafka namespace for the Strimzi Kafka Cluster Operator.
+
+kubectl create ns kafka
+Modify the installation files to reference the kafka namespace where you will install the Strimzi Kafka Cluster Operator.
+
+NOTE
+By default, the files work in the myproject namespace.
+On Linux, use:
+
+sed -i 's/namespace: .*/namespace: kafka/' install/cluster-operator/*RoleBinding*.yaml
+On Mac, use:
+
+sed -i '' 's/namespace: .*/namespace: kafka/' install/cluster-operator/*RoleBinding*.yaml
+Create a new my-kafka-project namespace where you will deploy your Kafka cluster.
+
+kubectl create ns my-kafka-project
+Edit the install/cluster-operator/060-Deployment-strimzi-cluster-operator.yaml file and set the STRIMZI_NAMESPACE environment variable to the namespace my-kafka-project.
+
+# ...
+env:
+- name: STRIMZI_NAMESPACE
+  value: my-kafka-project
+# ...
+Give permission to the Cluster Operator to watch the my-kafka-project namespace.
+
+kubectl create -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n my-kafka-project
+kubectl create -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n my-kafka-project
+The commands create role bindings that grant permission for the Cluster Operator to access the Kafka cluster.
+
+Deploy the CRDs and role-based access control (RBAC) resources to manage the CRDs.
+
+kubectl create -f install/cluster-operator/ -n kafka

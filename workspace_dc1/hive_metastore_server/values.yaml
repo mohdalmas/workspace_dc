@@ -1,0 +1,258 @@
+# The base hadoop image to use for all components.
+# See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
+  
+image:
+  repository:  et01-harbor.safaricomet.net/bigdata/hive-spark
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
+  pullPolicy: Always
+
+imagePullSecrets: 
+- name: regcred
+
+serviceAccount: bigdata
+
+# tolerations:
+# - key: "dedicated"
+  # operator: "Equal"
+  # value: "Hadoop"
+  # effect: "NoSchedule"
+  
+# affinity:
+  # nodeAffinity:
+    # requiredDuringSchedulingIgnoredDuringExecution:
+      # nodeSelectorTerms:
+      # - matchExpressions:
+        # - key: dedicated
+          # operator: In
+          # values:
+          # - Hadoop
+
+annotations:
+  kubernetes.io/psp: "privileged"
+  prometheus.io/scrape: "true"
+      
+hive_metastore: 
+  resources: 
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+  extraEnvVars:
+  - name: HIVE_MODE
+    value: "metastore"
+  - name: HADOOP_USER_NAME
+    value: "hive"
+  - name: SPARK_MASTER_HOST
+    value: hive-0
+  - name: SPARK_MASTER_URL
+    value: spark://hive-0:7077
+  - name: HADOOP_OPTS
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6444 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/hive_metastore_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
+      
+hive_server:  
+  resources: 
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+  extraEnvVars:
+  - name: HIVE_MODE
+    value: "server"
+  - name: HADOOP_USER_NAME
+    value: "hive"
+  - name: SPARK_MASTER_HOST
+    value: hive-0
+  - name: SPARK_MASTER_URL
+    value: spark://hive-0:7077
+  - name: HADOOP_CLIENT_OPTS  
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
+
+hive_spark_master:
+  resources: 
+    requests:
+      memory: "1Gi"
+      cpu: "1"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+  extraEnvVars:
+  - name: SPARK_MODE
+    value: "master"
+  - name: "SPARK_MASTER_HOST"
+    value: "hive-0.hive-service"
+  
+hive_spark_worker:
+  replicas: 1
+  cores: 7
+  resources: 
+    requests:
+      memory: "3Gi"
+      cpu: "2"
+    limits:
+      memory: "14Gi"
+      cpu: "7"
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 6
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+ingress:
+  user: hive
+  password: Xj9jzb4xtWzF3Pe6
+  enabled: true
+  hostPaths:
+  - host: hive.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 10002
+  - host: hive-exec-sm.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 8080
+  - host: hive-exec-sw.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 8081
+  - host: hive-exec-wd.big-data.safaricomet.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hive-service
+            port:
+              number: 4040
+conf:
+  hadoopConfigMap: hadoop-hadoop
+  hiveSite:
+    datanucleus.autoCreateSchema: false                                          
+    hive.exec.scratchdir: /tmp/
+    hive.exec.stagingdir: /tmp/
+    hive.execution.engine: spark
+    hive.execution.mode: container
+    hive.metastore.event.db.notification.api.auth: false
+    hive.metastore.schema.verification: false
+    hive.metastore.schema.verification.record.version: false
+    hive.metastore.uris: thrift://hive-0:9083
+    hive.metastore.warehouse.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hive/warehouse
+    hive.server2.enable.doAs: false
+    hive.server2.zookeeper.namespace: hiveserver2
+    hive.txn.manager: org.apache.hadoop.hive.ql.lockmgr.DbTxnManager
+    hive.zookeeper.client.port: "2181"
+    hive.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
+    javax.jdo.option.ConnectionDriverName: org.postgresql.Driver
+    javax.jdo.option.ConnectionPassword: lyOdmSBwCsZnD4dLnOAE
+    javax.jdo.option.ConnectionURL: jdbc:postgresql://bigdata-psql-postgresql-headless/metastore
+    javax.jdo.option.ConnectionUserName: svc-bigdata-admin
+    hive.support.concurrency: true
+    hive.exec.reducers.bytes.per.reducer: "256000000"
+    hive.exec.reducers.max: "1009"
+    hive.compactor.initiator.on: true
+    hive.enforce.bucketing: true
+    hive.exec.dynamic.partition.mode: nonstrict
+    hive.spark.client.channel.log.level: ERROR
+    hive.spark.client.connect.timeout: 30000ms
+    hive.spark.client.rpc.server.address: hive-0.hive-service
+    hive.spark.client.server.connect.timeout: 1000000ms
+    hive.spark.job.monitor.timeout: 360s
+    hive.stats.jdbc.timeout: 30
+    spark.eventLog.dir: /var/log/spark    
+    spark.eventLog.enabled: false
+    spark.master: spark://hive-0.hive-service:7077
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    hive.compactor.initiator.on: true
+    hive.compactor.delta.num.threshold: 2
+    hive.compactor.delta.pct.threshold: "0.1f"
+    hive.txn.strict.locking.mode: true
+    hive.txn.retryable.sqlex.regex: ""
+    NO_AUTO_COMPACTION: false
+    hive.compactor.max.num.delta: 10
+    hive.compactor.check.interval: 300
+    hive.log.explain.output: true
+    hive.metastore.runworker.in: hs2
+    hive.compactor.worker.threads: 1
+    hive.compactor.job.queue: compaction
+    hive.stats.column.autogather: false
+    hive.optimize.sort.dynamic.partition: true
+    hive.server2.session.check.interval: "300000" # 5 minutes 
+    hive.server2.idle.operation.timeout: "480000" # 8 minutes
+    hive.server2.idle.session.timeout: "600000" # 10 minutes
+    spark.driver.memory: 1024m
+    spark.executor.memory: 3072m
+    spark.cores.max: 2
+    spark.driver.cores: 1
+    spark.executor.cores: 2
+    spark.default.parallelism: 7 
+    hive.server2.authentication: NOSASL
+    hive.server2.transport.mode: http
+    hive.server2.thrift.http.port: 10000
+    hive.server2.thrift.http.path:  cliservice
+    hive.kms.api.url: http://10.3.41.29:8080/api/v1/token
+    hive.kms.api.auth.token: hive
+    
+  spark-Defaults:
+    spark.master.rest.enabled: false
+    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0.hive-service:10000"
+    spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0.hive-service:9083"
+    spark.hadoop.hive.zookeeper.quorum: "bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181"
+    spark.master: "spark://hive-0.hive-service:7077"
+    spark.eventLog.enabled: false
+    spark.eventLog.dir: /var/log/spark
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
+    spark.yarn.submit.waitAppCompletion: true
+    spark.driver.memory: 1024m
+    spark.executor.memory: 3072my
+    spark.default.parallelism: 7  
+    spark.dynamicAllocation.enabled: true 
+    spark.dynamicAllocation.executorIdleTimeout: 60s
+    spark.dynamicAllocation.minExecutors: 0
+    spark.worker.memory: 14g
+
+## Configure metrics exporter
+##
+metrics:
+  enabled: enable
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: bigdata-prometheus
+    # interval: 30s
+    # scrapeTimeout: 10s
+    namespace: bigdata-monitoring

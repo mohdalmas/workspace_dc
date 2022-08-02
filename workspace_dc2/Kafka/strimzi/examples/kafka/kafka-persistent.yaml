@@ -1,0 +1,70 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: kafka
+spec:
+  kafka:
+    version: 3.0.0
+    replicas: 3
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: external
+        port: 9094
+        type: loadbalancer
+        tls: false
+        authentication:
+          type: scram-sha-512
+        # configuration:
+          # externalTrafficPolicy: Local
+          # bootstrap:
+            # loadBalancerIP: 192.168.21.58
+          # brokers:
+          # - broker: 0
+            # loadBalancerIP: 192.168.21.17
+          # - broker: 1
+            # loadBalancerIP: 192.168.21.19
+          # - broker: 2
+            # loadBalancerIP: 192.168.21.21
+      # - name: external2
+        # port: 9095
+        # type: ingress
+        # tls: false
+      # - name: external3
+        # port: 9096
+        # type: loadbalancer
+        # tls: false
+        # authentication:
+          # type: tls
+      # - name: tls
+        # port: 9093
+        # type: internal
+        # tls: true
+    authorization:
+      type: simple
+      superUsers:
+        - admin
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      inter.broker.protocol.version: "3.0"
+    storage:
+      type: persistent-claim
+      size: 100Gi
+      class: vsphere-with-tanzu-storage-policy
+      deleteClaim: true
+  zookeeper:
+    replicas: 3
+    storage:
+      type: persistent-claim
+      size: 30Gi
+      class: vsphere-with-tanzu-storage-policy
+      deleteClaim: true
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

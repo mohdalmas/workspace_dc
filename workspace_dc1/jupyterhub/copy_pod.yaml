@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: copy-pod
+  labels: 
+    app: copy-pod
+spec: 
+  replicas: 1
+  serviceName: ""
+  selector: 
+    matchLabels:
+      app: copy-pod
+  template: 
+    metadata:
+      labels: 
+        app: copy-pod 
+    spec:
+      serviceAccountName: bigdata
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: copy-pod
+        image: et01-harbor.safaricomet.net/bigdata/postgresql:11.10.0-debian-10-r83
+        command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: Always
+        # volumeMounts:
+        # - mountPath: "/bitnami/kafka"
+          # name: data
+      # volumes:
+      # - name: data
+        # persistentVolumeClaim:
+          # claimName: data-kafka-0

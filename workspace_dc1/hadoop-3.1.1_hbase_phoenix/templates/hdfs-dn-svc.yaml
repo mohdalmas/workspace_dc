@@ -1,0 +1,41 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-dn
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-dn
+spec:
+  ports:
+  - name: dfs
+    port: 9000
+    protocol: TCP
+  - name: webhdfs
+    port: 50075
+  - name: hbase-regionserver
+    port: 16020
+    protocol: TCP
+  - name: hbase-ui
+    port: 16030
+    protocol: TCP
+  - name: phoenix
+    port: 8765
+    protocol: TCP   
+  - name: datanode-ui
+    port: 9864
+    protocol: TCP  
+  - name: dn-jmx-metrics
+    port: 17107
+    protocol: TCP     
+  - name: regionserver-jmx
+    port: 17109
+    protocol: TCP 
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app: {{ include "hadoop.name" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-dn

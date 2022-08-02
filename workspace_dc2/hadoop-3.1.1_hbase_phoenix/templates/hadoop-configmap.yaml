@@ -1,0 +1,595 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hadoop.fullname" . }}
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  ownhive.sh: |
+    hdfs dfs -chown -R hive:hive /hive
+  
+  datanode-monitor.sh: |
+    code=$(curl -s -o /dev/null -w "%{http_code}" 'http://localhost:9864')
+    if [[ $code != 200 || $code != 503 ]]; then
+        $HADOOP_HOME/bin/hdfs --daemon start datanode
+    else
+        echo DataNode Service is currently running and will not be started.
+    fi
+    
+  bootstrap.sh: |
+    #!/bin/bash
+  
+    #Hadoop Env initialize 
+    : ${HADOOP_HOME:=/opt/hadoop}    
+    . $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+    CONFIG_DIR="/tmp/hadoop-config"
+
+    # Copy hadoop config files from volume mount
+    for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml capacity-scheduler.xml datanode-monitor.sh ownhive.sh; do
+      if [[ -e ${CONFIG_DIR}/$f ]]; then
+        cp ${CONFIG_DIR}/$f $HADOOP_HOME/etc/hadoop/$f
+      else
+        echo "ERROR: Could not find $f in $CONFIG_DIR"
+        exit 1
+      fi
+    done
+
+    
+    # installing libraries if any - (resource urls added comma separated to the ACP system variable)
+    cd $HADOOP_HOME/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
+    
+    #groupadd -r -g 499 hdpusers
+    useradd --comment "Hive user" -u 500 --shell /bin/bash -M -r -g hdpusers hive
+    #useradd --comment "HBase user" -u 501 --shell /bin/bash -M -r -g hdpusers hbase
+    useradd --comment "HDFS user" -u 502 --shell /bin/bash -M -r -g hdpusers hdfs
+    useradd --comment "Spark user" -u 503 --shell /bin/bash -M -r -g hdpusers spark
+    useradd --comment "Yarn user" -u 504 --shell /bin/bash -M -r -g hdpusers yarn
+    useradd --comment "Yarn ATS user" -u 505 --shell /bin/bash -M -r -g hdpusers yarn-ats
+    useradd --comment "Knox user" -u 506 --shell /bin/bash -M -r -g hdpusers knox
+    useradd --comment "MAPR user" -u 507 --shell /bin/bash -M -r -g hdpusers mapred
+    useradd --comment "Kafka user" -u 508 --shell /bin/bash -M -r -g hdpusers kafka
+    useradd --comment "Zookeeper user" -u 509 --shell /bin/bash -M -r -g hdpusers zookeeper
+    useradd --comment "Ranger user" -u 510 --shell /bin/bash -M -r -g hdpusers ranger
+    useradd --comment "Atlas user" -u 511 --shell /bin/bash -M -r -g hdpusers atlas
+    useradd --comment "Tez user" -u 512 --shell /bin/bash -M -r -g hdpusers tez
+    useradd --comment "KMS user" -u 513 --shell /bin/bash -M -r -g hdpusers kms
+    useradd --comment "Oozie user" -u 514 --shell /bin/bash -M -r -g hdpusers oozie
+    useradd --comment "Infra-Solr user" -u 515 --shell /bin/bash -M -r -g hdpusers infra-solr
+    useradd --comment "Livy user" -u 516 --shell /bin/bash -M -r -g hdpusers livy
+    useradd --comment "Druid user" -u 518 --shell /bin/bash -M -r -g hdpusers druid
+    usermod -a -G hdpusers root
+    usermod -a -G hdpusers hive
+    usermod -a -G hdpusers hbase
+    usermod -a -G hdpusers hdfs
+    usermod -a -G hdpusers spark
+    usermod -a -G hdpusers yarn
+    usermod -a -G hdpusers knox
+    usermod -a -G hdpusers mapred
+    usermod -a -G hdpusers kafka
+    usermod -a -G hdpusers yarn-ats
+    usermod -a -G hdpusers zookeeper
+    usermod -a -G hdpusers ranger
+    usermod -a -G hdpusers atlas
+    usermod -a -G hdpusers tez
+    usermod -a -G hdpusers kms
+    usermod -a -G hdpusers oozie
+    usermod -a -G hdpusers infra-solr
+    usermod -a -G hdpusers livy
+    #usermod -a -G hdpusers ambari-qa
+    usermod -a -G hdpusers druid
+    
+    chown -R hdfs:hdpusers /dfs
+    chown -R hdfs:hdpusers /opt/hadoop   
+    
+    
+     if [[ "${HOSTNAME}" =~ "hdfs-nn" ]]; then
+    #  mkdir -p /root/hdfs/namenode
+      # The below format command must run once with installation then it must be comment and upgrade the chart.  
+      if [ ! -d "/dfs/name/current" ]; then
+         # Take action if /root/hdfs/namenode/current does not exists. #
+          $HADOOP_HOME/bin/hdfs namenode -format -force -nonInteractive
+      fi
+      
+      #Replace the Cluster ID
+      sed -i '/clusterID=CID-/c\clusterID=CID-37f8ac39-a345-4119-893f-bd85be359786' /dfs/name/current/VERSION
+      
+      #Replace the Block Pool ID
+      sed -i '/blockpoolID=BP-/c\blockpoolID=BP-506570155-data-1646504148639' /dfs/name/current/VERSION
+      
+      $HADOOP_HOME/bin/hdfs --daemon start namenode
+   
+    fi
+
+    if [[ "${HOSTNAME}" =~ "hdfs-dn" ]]; then
+
+    
+      # #  wait up to 30 seconds for namenode
+      (while [[ $count -lt 30 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-hdfs-nn:9870` ]]; do ((count=count+1)) ; echo "Waiting for {{ include "hadoop.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 30 ]])
+      #[[ $? -ne 0 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
+      
+      #Replace the Cluster ID
+      sed -i '/clusterID=CID-/c\clusterID=CID-37f8ac39-a345-4119-893f-bd85be359786' /dfs/data/current/VERSION    
+      
+      $HADOOP_HOME/bin/hdfs --daemon start datanode
+       
+      hdfs dfsadmin -safemode leave
+      
+      ########Harmful lines########
+      hdfs dfs -chmod -R 777 "/"
+      hdfs dfs -chown root:hdpusers "/"
+      
+      if [ ! -d "hdfs dfs -ls /tmp" ]; then
+         #Create tmp dir
+         hdfs dfs -mkdir /tmp
+         hdfs dfs -chmod -R 777 /tmp
+         hdfs dfs -chmod g+w /tmp
+         hdfs dfs -chown -R hive:hdpusers /tmp
+      fi
+      
+      if [ ! -d "hdfs dfs -ls /user" ]; then
+         #Create user dir
+         hdfs dfs -mkdir /user
+         hdfs dfs -chmod -R 777 /user
+         hdfs dfs -chmod g+w /user
+         hdfs dfs -chown -R root:hdpusers /user
+      fi
+      
+      if [ ! -d "hdfs dfs -ls /hbase" ]; then
+         #Create HBase dir
+         hdfs dfs -mkdir -p /hbase
+         hdfs dfs -chmod -R 777 /hbase
+         hdfs dfs -chmod g+w /hbase
+         hdfs dfs -chown -R hbase:hbase /hbase
+      fi
+      
+      if [ ! -d "hdfs dfs -ls /hive" ]; then
+         #Create Hive dir
+         hdfs dfs -mkdir -p /hive/warehouse
+         hdfs dfs -chmod -R 777 /hive
+         hdfs dfs -chmod g+w /hive
+         hdfs dfs -chown -R hive:hive /hive
+      fi    
+
+
+      chmod 777 -R /opt/hadoop/etc/hadoop/datanode-monitor.sh
+      chmod +x /opt/hadoop/etc/hadoop/datanode-monitor.sh  
+      chmod 777 -R /opt/hadoop/etc/hadoop/ownhive.sh
+      chmod +x /opt/hadoop/etc/hadoop/ownhive.sh
+      
+      #Monitor DataNodes
+      #while true; do $HADOOP_HOME/etc/hadoop/datanode-monitor.sh; sleep 600; done &
+
+    fi
+ 
+    if [[ "${HOSTNAME}" =~ "hdfs-dn-0" ]]; then
+      #owning hive in every 2mins
+      while true; do $HADOOP_HOME/etc/hadoop/ownhive.sh; sleep 120; done
+    fi
+
+    if [[ "${HOSTNAME}" =~ "yarn-rm" ]]; then
+      cp ${CONFIG_DIR}/start-yarn-rm.sh $HADOOP_HOME/sbin/
+      cd $HADOOP_HOME/sbin
+      chmod +x start-yarn-rm.sh
+      ./start-yarn-rm.sh
+    fi
+
+    if [[ "${HOSTNAME}" =~ "yarn-nm" ]]; then
+
+      cp ${CONFIG_DIR}/start-yarn-nm.sh $HADOOP_HOME/sbin/
+      cd $HADOOP_HOME/sbin
+      chmod +x start-yarn-nm.sh
+
+      #  wait up to 30 seconds for resourcemanager
+      (while [[ $count -lt 15 && -z `curl -sf http://{{ include "hadoop.fullname" . }}-yarn-rm:8088/ws/v1/cluster/info` ]]; do ((count=count+1)) ; echo "Waiting for {{ include "hadoop.fullname" . }}-yarn-rm" ; sleep 2; done && [[ $count -lt 15 ]])
+      [[ $? -ne 0 ]] && echo "Timeout waiting for yarn-rm, exiting." && exit 1
+
+      ./start-yarn-nm.sh
+    fi
+
+    if [ ! -d "${HADOOP_HOME}/logs"  ]; then
+       mkdir ${HADOOP_HOME}/logs
+    fi
+
+    if [[ $1 == "-d" ]]; then
+      until find ${HADOOP_HOME}/logs -mmin -1 | egrep -q '.*'; echo "`date`: Waiting for logs..." ; do sleep 2 ; done
+      tail -F ${HADOOP_HOME}/logs/* &
+      while true; do sleep 1000; done
+    fi
+    
+    if [[ $1 == "-bash" ]]; then
+      /bin/bash
+    fi
+    
+  core-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+            <name>fs.defaultFS</name>
+            <value>hdfs://{{ include "hadoop.fullname" . }}-hdfs-nn:9000</value>
+            <description>NameNode URI</description>
+        </property>
+      <property>
+         <name>hadoop.security.authorization</name>
+         <value>false</value>
+      </property>
+      <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>yarn</value>
+        <description>Yarn UI User</description>
+      </property>
+      <property><name>hadoop.proxyuser.hive.groups</name><value>*</value></property>
+      <property><name>hadoop.proxyuser.hive.hosts</name><value>*</value></property>
+      <property><name>hadoop.proxyuser.hdfs.groups</name><value>*</value></property>
+      <property><name>hadoop.proxyuser.hdfs.hosts</name><value>*</value></property>
+      <property><name>ipc.maximum.data.length</name><value>134217728</value></property>
+    </configuration>
+
+  hdfs-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+    
+{{- if .Values.hdfs.webhdfs.enabled -}}
+      <property>
+          <name>dfs.webhdfs.enabled</name>
+          <value>true</value>
+      </property> 
+{{- end -}}
+      <property>
+        <name>dfs.client.datanode-restart.timeout</name>
+        <value>30</value>
+      </property>
+      <property>
+        <name>dfs.datanode.use.datanode.hostname</name>
+        <value>false</value>
+      </property>
+
+      <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>false</value>
+      </property>
+
+      <property>
+        <name>dfs.replication</name>
+          <value>3</value>
+      </property>
+
+      <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///dfs/data</value>
+        <description>DataNode directory</description>
+      </property>
+
+      <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///dfs/name</value>
+        <description>NameNode directory for namespace and transaction logs storage.</description>
+      </property>
+
+      <property>
+        <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+        <value>false</value>
+      </property>
+
+      <!-- Bind to all interfaces -->
+      <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <property>
+        <name>dfs.namenode.servicerpc-bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <!-- /Bind to all interfaces -->
+      <property><name>ipc.maximum.data.length</name><value>134217728</value></property>
+      <property><name>dfs.client.block.write.replace-datanode-on-failure.enable</name><value>true</value></property>
+      <property><name>dfs.client.block.write.replace-datanode-on-failure.policy</name><value>ALWAYS</value></property>       
+    </configuration>
+
+  mapred-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm.{{ .Release.Namespace }}.svc.cluster.local:10020</value>
+      </property>
+      <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm.{{ .Release.Namespace }}.svc.cluster.local:19888</value>
+      </property>
+      <property>
+        <name>yarn.application.classpath</name>
+        <value>
+          /opt/hadoop/etc/*,
+          /opt/hadoop/etc/hadoop/*,
+          /opt/hadoop/lib/*,
+          /opt/hadoop/lib/native/*,
+          /opt/hadoop/share/hadoop/common/*,
+          /opt/hadoop/share/hadoop/common/lib/*,
+          /opt/hadoop/share/hadoop/hdfs/*,
+          /opt/hadoop/share/hadoop/hdfs/lib/*,
+          /opt/hadoop/share/hadoop/yarn/*,
+          /opt/hadoop/share/hadoop/yarn/lib/*,
+          /opt/hadoop/share/hadoop/mapreduce/*,
+          /opt/hadoop/share/hadoop/mapreduce/lib/*,
+          /opt/hadoop/share/hadoop/yarn/hadoop-yarn-common-3.1.1.jar,
+          /opt/hadoop/share/hadoop/yarn/hadoop-yarn-client-3.1.1.jar
+        </value>
+      </property> 
+      <property><name>yarn.app.mapreduce.am.env</name><value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value></property>       
+      <property><name>yarn.app.mapreduce.am.resource.mb</name><value>2048</value></property> 
+    </configuration>
+
+  slaves: |
+    localhost
+
+  start-yarn-nm.sh: |
+    #!/usr/bin/env bash
+
+    # Licensed to the Apache Software Foundation (ASF) under one or more
+    # contributor license agreements.  See the NOTICE file distributed with
+    # this work for additional information regarding copyright ownership.
+    # The ASF licenses this file to You under the Apache License, Version 2.0
+    # (the "License"); you may not use this file except in compliance with
+    # the License.  You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+
+    # Start all yarn daemons.  Run this on master node.
+
+    echo "starting yarn daemons"
+
+    bin=`dirname "${BASH_SOURCE-$0}"`
+    bin=`cd "$bin"; pwd`
+
+    HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
+    HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
+    . $HADOOP_LIBEXEC_DIR/yarn-config.sh
+
+    # start nodeManager
+    $HADOOP_HOME/bin/yarn --daemon start nodemanager
+
+  start-yarn-rm.sh: |
+    #!/usr/bin/env bash
+
+    # Licensed to the Apache Software Foundation (ASF) under one or more
+    # contributor license agreements.  See the NOTICE file distributed with
+    # this work for additional information regarding copyright ownership.
+    # The ASF licenses this file to You under the Apache License, Version 2.0
+    # (the "License"); you may not use this file except in compliance with
+    # the License.  You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+
+    # Start all yarn daemons.  Run this on master node.
+
+    echo "starting yarn daemons"
+
+    bin=`dirname "${BASH_SOURCE-$0}"`
+    bin=`cd "$bin"; pwd`
+
+    HADOOP_DEFAULT_LIBEXEC_DIR_DIR="$bin"/../libexec
+    HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR_DIR}
+    . $HADOOP_LIBEXEC_DIR/yarn-config.sh
+
+    # start resourceManager
+    $HADOOP_HOME/bin/yarn --daemon start resourcemanager
+    # start proxyserver
+    $HADOOP_HOME/bin/yarn --daemon start proxyserver
+
+  yarn-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+    <configuration>
+      <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm</value>
+      </property>
+      <!-- Bind to all interfaces -->
+      <property>
+        <description>Web Proxy Server</description>
+        <name>yarn.web-proxy.address</name>
+        <value>0.0.0.0:9046</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <property>
+        <name>yarn.timeline-service.bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <!-- /Bind to all interfaces -->
+
+      <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+      </property>
+
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+
+      <property>
+        <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      </property>
+
+      <property>
+        <description>List of directories to store localized files in.</description>
+        <name>yarn.nodemanager.local-dirs</name>
+        <value>/var/lib/hadoop-yarn/cache/${user.name}/nm-local-dir</value>
+      </property>
+
+      <property>
+        <description>Where to store container logs.</description>
+        <name>yarn.nodemanager.log-dirs</name>
+        <value>/var/log/hadoop-yarn/containers</value>
+      </property>
+
+      <property>
+        <description>Where to aggregate logs to.</description>
+        <name>yarn.nodemanager.remote-app-log-dir</name>
+        <value>/var/log/hadoop-yarn/apps</value>
+      </property>
+
+      <property>
+        <name>yarn.application.classpath</name>
+        <value>
+          /opt/hadoop/etc/hadoop,
+          /opt/hadoop/share/hadoop/common/*,
+          /opt/hadoop/share/hadoop/common/lib/*,
+          /opt/hadoop/share/hadoop/hdfs/*,
+          /opt/hadoop/share/hadoop/hdfs/lib/*,
+          /opt/hadoop/share/hadoop/yarn/*,
+          /opt/hadoop/share/hadoop/yarn/lib/*,
+          /opt/hadoop/share/hadoop/mapreduce/*,
+          /opt/hadoop/share/hadoop/mapreduce/lib/*,
+          /opt/hadoop/share/hadoop/yarn/hadoop-yarn-common-3.1.1.jar,
+          /opt/hadoop/share/hadoop/yarn/hadoop-yarn-client-3.1.1.jar
+        </value>
+      </property> 
+      <property>
+        <name>mapreduce.application.classpath</name>
+        <value>
+          /opt/hadoop/share/hadoop/mapreduce/lib/*,
+          /opt/hadoop/share/hadoop/hdfs/*,
+          /opt/hadoop/share/hadoop/hdfs/lib/*,
+          /opt/hadoop/share/hadoop/common/lib/*,
+          /opt/hadoop/share/hadoop/mapreduce/*,
+          /opt/hadoop/share/hadoop/common/*,
+          /opt/hadoop/share/hadoop/yarn/lib/*,
+          /opt/hadoop/share/hadoop/yarn/*
+        </value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.env-whitelist</name>
+        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+      </property>
+      <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+      </property>    
+      <property>
+        <name>yarn.log.server.url</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm.{{ .Release.Namespace }}.svc.cluster.local:19888/jobhistory/logs</value>
+      </property>
+      <property>
+        <name>yarn.log-aggregation.retain-seconds</name>
+        <value>604800</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>8192</value>
+      </property>
+      <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>2048</value>
+      </property>
+      <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>8192</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>2</value>
+      </property>
+       <property>
+         <name>mapreduce.framework.name</name>
+         <value>yarn</value>
+       </property>
+       <property>
+       <name>yarn.resourcemanager.address</name>
+       <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm</value>
+       <description>Enter your ResourceManager hostname.</description>
+       </property>
+      <property>
+       <name>yarn.resourcemanager.scheduler.address</name>
+       <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm</value>
+       <description>Enter your ResourceManager hostname.</description>
+      </property>
+      <property>
+       <name>yarn.resourcemanager.resourcetracker.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm</value>
+        <description>Enter your ResourceManager hostname.</description>
+      </property>
+     <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm.{{ .Release.Namespace }}.svc.cluster.local:10020</value>
+      </property>
+      <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm.{{ .Release.Namespace }}.svc.cluster.local:19888</value>
+      </property>
+      <property>
+       <name>yarn.resourcemanager.resourcetracker.address</name>
+        <value>{{ include "hadoop.fullname" . }}-yarn-rm-0.{{ include "hadoop.fullname" . }}-yarn-rm</value>
+      </property>
+      <property>
+       <name>yarn.resourcemanager.scheduler.class</name>
+       <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+      </property>
+    </configuration>
+    
+  capacity-scheduler.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>yarn.scheduler.capacity.root.queues</name>
+        <value>default,compaction,dataengineering</value>
+        <description>
+          The queues at the this level (root is the root queue).
+        </description>
+      </property>
+      <property>
+        <name>yarn.scheduler.capacity.root.default.capacity</name>
+        <value>20</value>
+        <description>Compaction queue target capacity.</description>
+      </property>
+      <property>
+        <name>yarn.scheduler.capacity.root.compaction.capacity</name>
+        <value>40</value>
+        <description>Compaction queue target capacity.</description>
+      </property>
+      <property>
+        <name>yarn.scheduler.capacity.root.dataengineering.capacity</name>
+        <value>40</value>
+        <description>DataEngineering queue target capacity.</description>
+      </property>
+      <property>
+        <name>yarn.scheduler.capacity.queue-mappings</name>
+        <value>u:hive:compaction,g:hdpuser:dataengineering</value>
+        <description>
+          A list of mappings that will be used to assign jobs to queues
+          The syntax for this list is [u|g]:[name]:[queue_name][,next mapping]*
+          Typically this list will be used to map users to queues,
+          for example, u:%user:%user maps all users to queues with the same name
+          as the user.
+        </description>
+      </property> 
+    </configuration>

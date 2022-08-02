@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-worker
+  labels:
+    app.kubernetes.io/name: {{ include "spark.name" . }}
+    app.kubernetes.io/component: worker
+    {{- include "spark.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "spark.name" . }}
+      app.kubernetes.io/component: worker
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  serviceName: {{ .Release.Name }}-headless
+  replicas: {{ .Values.spark_worker.replicas }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "spark.name" . }}
+        app.kubernetes.io/component: worker
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    spec:
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      serviceAccountName: {{.Values.serviceAccount }}
+      affinity:
+        podAntiAffinity:
+        {{- if eq .Values.antiAffinity "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+                matchExpressions:
+                - key: dedicated
+                  operator: In
+                  values:
+                  - Hadoop
+        {{- else if eq .Values.antiAffinity "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchExpressions:
+                - key: dedicated
+                  operator: In
+                  values:
+                  - Hadoop
+        {{- end }}
+{{- if and .Values.affinity (and (ne .Values.antiAffinity "hard") (ne .Values.antiAffinity "soft")) }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+      containers:
+      - name: spark-worker
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command:
+          - /bin/bash
+          - /opt/spark/conf/startup.sh
+        ports:
+        - name: http
+          containerPort: 8081
+          protocol: TCP
+        - name: cluster
+          containerPort: 7077
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: SPARK_MODE
+          value: "worker"
+        - name: SPARK_MASTER_HOST
+          value: {{ .Values.spark.master.host | quote }}
+        - name: SPARK_MASTER_URL
+          value: {{ .Values.spark.master.url | quote }}
+        - name: SPARK_EXECUTION_CORES
+          value: {{ .Values.spark.worker.executioncores | quote }}
+        - name: SPARK_EXECUTION_MEMORY
+          value: {{ .Values.spark.worker.executionmemory | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8081
+        #   initialDelaySeconds: 5
+        #   timeoutSeconds: 2
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8081
+        #   initialDelaySeconds: 10
+        #   timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /opt/spark/conf/hive-site.xml
+          name: spark-config
+          subPath: hive-site.xml
+        - mountPath: /opt/spark/conf/spark-defaults.conf
+          name: spark-config
+          subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/startup.sh
+          name: spark-config
+          subPath: startup.sh
+        - mountPath: /opt/spark/conf/core-site.xml
+          name: hadoop-config
+          subPath: core-site.xml
+        - mountPath: /opt/spark/conf/hdfs-site.xml
+          name: hadoop-config
+          subPath: hdfs-site.xml
+        - mountPath: /opt/spark/conf/mapred-site.xml
+          name: hadoop-config
+          subPath: mapred-site.xml
+        - mountPath: /opt/spark/conf/yarn-site.xml
+          name: hadoop-config
+          subPath: yarn-site.xml
+      volumes:
+      - name: spark-config
+        configMap:
+          name: {{ .Release.Name }}-cm
+          items:
+          - key: hive-site.xml
+            path: hive-site.xml
+          - key: spark-defaults.conf
+            path: spark-defaults.conf
+          - key: startup.sh
+            path: startup.sh
+      - name: hadoop-config
+        configMap:
+          {{- if .Values.conf.hadoopConfigMap }}
+          name: {{ .Values.conf.hadoopConfigMap }}
+          items:
+          - key: core-site.xml
+            path: core-site.xml
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+          - key: mapred-site.xml
+            path: mapred-site.xml
+          - key: yarn-site.xml
+            path: yarn-site.xml
+          {{- end }}

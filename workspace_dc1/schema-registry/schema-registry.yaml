@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: schema-registry
+  name: schema-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schema-registry
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: schema-registry
+    spec:
+      serviceAccountName: bigdata
+      containers:
+      - image: kapkiai/schema-registry:1.0.2
+        name: schema-registry
+        command:
+          - "sh"
+          - "-c"
+          - |
+            cat /opt/config/registry.yaml > /${SCHEMA_REG_HOME}/conf/registry.yaml
+            ./bootstrap/bootstrap-storage.sh create
+            ../scripts/startup.sh
+        resources: 
+          requests:
+            cpu: "500m"
+            memory: "2Gi"
+            ephemeral-storage: "2Gi"
+          limits:
+            cpu: "1000m"
+            memory: "3Gi"
+            ephemeral-storage: "3Gi"
+        ports:
+        - containerPort: 9090
+          name: http-port
+        - containerPort: 9091
+          name: admin
+        env:
+          - name: CONFIG_FILE
+            value: /opt/config/registry.yaml
+          - name: CONFIG_FILE_PATH
+            value: /opt/config/registry.yaml
+        volumeMounts:
+          - mountPath: /opt/config/registry.yaml
+            name: schema-config
+            subPath: registry.yaml
+      
+      volumes:
+        - name: schema-config
+          configMap:
+            name: schemareg-config
+            items:
+              - key: registry-postgres.yaml
+                path: registry.yaml
+        
+
