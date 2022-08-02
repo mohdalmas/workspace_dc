@@ -124,6 +124,7 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 40m
   tls: []
   hosts: 
     - nifi.bigdata.blueprint.lab
