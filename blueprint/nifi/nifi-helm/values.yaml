@@ -64,12 +64,12 @@ auth:
     password: changemechangeme # Must to have at least 12 characters
 
   ldap:
-    enabled: true
-    host: ldap://blueprint.lab:389
-    searchBase: OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab
-    admin: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
-    username: Ankit-BI
-    pass: cA6gYsJNL4meJJ6elyoc
+    enabled: false
+    host: ldap://10.3.108.11:389
+    searchBase: OU=Domain Users,DC=safaricomet,DC=net
+    admin: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+    username: Mathew.Kiprop
+    pass: lyOdmSBwCsZnD4dLnOAE
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
     authStrategy: SIMPLE # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
@@ -124,7 +124,6 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 40m
   tls: []
   hosts: 
     - nifi.bigdata.blueprint.lab

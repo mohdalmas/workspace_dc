@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   rules:
-  - host: nginx-ldap.big-data.safaricomet.net
+  - host: nginx-ldap.bigdata.blueprint.lab
     http:
       paths:
       - path: /
