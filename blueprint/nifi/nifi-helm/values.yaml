@@ -66,7 +66,7 @@ auth:
   ldap:
     enabled: true
     host: ldap://blueprint.lab:389
-    searchBase: OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab
+    searchBase: OU=Blueprint,DC=blueprint,DC=lab
     admin: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
     username: Ankit-BI
     pass: cA6gYsJNL4meJJ6elyoc
