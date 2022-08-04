@@ -50,7 +50,7 @@ livenessProbe:
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/grafana
-  tag: 7.1.5
+  tag: 9.0.6-ubuntu
   sha: ""
   pullPolicy: IfNotPresent
 

@@ -1,0 +1,44 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
+    apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"policy/v1beta1","kind":"PodSecurityPolicy","metadata":{"annotations":{"apparmor.security.beta.kubernetes.io/allowedProfileNames":"runtime/default","apparmor.security.beta.kubernetes.io/defaultProfileName":"runtime/default","seccomp.security.alpha.kubernetes.io/allowedProfileNames":"docker/default,runtime/default"},"name":"restricted"},"spec":{"allowPrivilegeEscalation":false,"fsGroup":{"ranges":[{"max":65535,"min":1}],"rule":"MustRunAs"},"hostIPC":false,"hostNetwork":false,"hostPID":false,"privileged":false,"readOnlyRootFilesystem":false,"requiredDropCapabilities":["ALL"],"runAsUser":{"rule":"MustRunAsNonRoot"},"seLinux":{"rule":"RunAsAny"},"supplementalGroups":{"ranges":[{"max":65535,"min":1}],"rule":"MustRunAs"},"volumes":["configMap","emptyDir","projected","secret","downwardAPI","csi","persistentVolumeClaim","ephemeral"]}}
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default,runtime/default
+  creationTimestamp: "2022-02-22T03:55:12Z"
+  name: restricted
+  resourceVersion: "2794090"
+  uid: adba83cc-f37e-4cfe-8741-3542d6421199
+spec:
+  allowPrivilegeEscalation: false
+  fsGroup:
+    ranges:
+    - max: 65535
+      min: 1
+    rule: MustRunAs
+  requiredDropCapabilities:
+  - ALL
+  runAsUser:
+    rule: MustRunAsNonRoot
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    ranges:
+    - max: 65535
+      min: 1
+    rule: MustRunAs
+  volumes:
+  - configMap
+  - emptyDir
+  - projected
+  - secret
+  - downwardAPI
+  - csi
+  - persistentVolumeClaim
+  - ephemeral

@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sms-sender
+  name: sms-sender
+spec:
+  selector:
+    matchLabels:
+      app: sms-sender
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sms-sender
+    spec:
+      serviceAccountName: bigdata
+      containers:
+        - name: sms-sender
+          image: et01-harbor.safaricomet.net/bigdata/sms-sender:0.0.4
+          # image: docker.io/kapkiai/sms-sender:0.0.4
+          ports:
+            - containerPort: 8085
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          env:
+            - name: smppHost
+              value: "10.32.9.97"
+            - name: smppPort
+              value: "5016"
+            - name: smppSystemId
+              value: "bigdata"
+            - name: smppPassword
+              value: "B1gD@7a"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sms-sender
+spec:
+  type: LoadBalancer
+  ports:
+    - name: send-port
+      port: 8085
+      targetPort: 8085
+      protocol: TCP
+  selector:
+    app: sms-sender

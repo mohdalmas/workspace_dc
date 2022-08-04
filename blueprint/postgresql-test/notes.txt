@@ -1,0 +1,3 @@
+Apply the below commands
+CREATE USER hive WITH PASSWORD 'hive';
+GRANT ALL PRIVILEGES ON DATABASE metastore to hive;

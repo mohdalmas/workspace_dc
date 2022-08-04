@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    prometheus-operator-validated: "true"
+  labels:
+    app: kube-prometheus-stack
+    release: bigdata-prometheus
+  namespace: bigdata-monitoring
+  name: prometheus-rules-hive
+spec:
+  groups:
+  - name: hive
+    rules:
+    - alert: Hive Server DOWN - EMERGENCY
+      expr: count(java_lang_Memory_HeapMemoryUsage_max{pod="hive-0"}) == 0
+      for: 5m
+      labels:
+        severity: emergency
+      annotations:
+        summary: 'Hive Server Status'
+        description: 'Hive Server is Down'
+    # # # # # # # # - alert: Hive_Metastore_Service_DOWN_CRITICAL
+      # # # # # # # # expr: count(java_lang_Memory_HeapMemoryUsage_max{app_kubernetes_io_instance="hive"})) != 0
+      # # # # # # # # for: 5m
+      # # # # # # # # labels:
+        # # # # # # # # severity: critical
+      # # # # # # # # annotations:
+        # # # # # # # # summary: 'Hive Metastore Status'
+        # # # # # # # # description: 'Hive Metastore is Down'

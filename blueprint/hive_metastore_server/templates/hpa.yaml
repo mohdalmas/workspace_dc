@@ -1,0 +1,19 @@
+{{- if .Values.hive_spark_worker.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ include "hive.name" . }}
+    app.kubernetes.io/component: hive
+    {{- include "hive.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ .Release.Name }}-worker
+  minReplicas: {{ .Values.hive_spark_worker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.hive_spark_worker.autoscaling.maxReplicas }}
+  metrics:
+{{ toYaml .Values.hive_spark_worker.autoscaling.metrics | indent 4 }}
+{{- end }}
