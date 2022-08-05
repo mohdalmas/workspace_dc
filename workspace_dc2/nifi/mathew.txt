@@ -31,3 +31,5 @@ kafka-acls.sh --authorizer-properties zookeeper.connect=zk-zookeeper-headless:21
 security.protocol=SASL_PLAINTEXT
 sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;
 sasl.mechanism=SCRAM-SHA-512
+
+ldapsearch -H ldap://safaricomet.net:389 -x -b "OU=Domain Users,DC=safaricomet,DC=net" -D "CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net" -w lyOdmSBwCsZnD4dLnOAE "(objectClass=inetOrgPerson)"
