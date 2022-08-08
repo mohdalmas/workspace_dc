@@ -66,10 +66,10 @@ auth:
   ldap:
     enabled: true
     host: ldap://blueprint.lab:389
-    searchBase: OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab
+    searchBase: OU=Blueprint,DC=blueprint,DC=lab
     admin: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
-    username: Ankit-BI
-    pass: cA6gYsJNL4meJJ6elyoc
+    username: Kenneth-TechM
+    pass: BPaccess@21
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
     authStrategy: SIMPLE # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
@@ -124,6 +124,7 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    ingress.kubernetes.io/proxy-body-size: "50m"
   tls: []
   hosts: 
     - nifi-test.bigdata.blueprint.lab
