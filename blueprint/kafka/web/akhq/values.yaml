@@ -4,8 +4,8 @@ serviceAccount:
   create: false
 
 image:
-  repository: et01-harbor.safaricomet.net/bigdata/akhq
-  tag: "latest" # uses Chart.AppVersion by default
+  repository: tchiotludo/akhq
+  tag: "" # uses Chart.AppVersion by default
 
 # custom annotations (example: for prometheus)
 annotations:
@@ -65,18 +65,19 @@ configuration:
         default:
           enabled: true
           context:
-            server: "ldap://10.3.108.11:389"
-            managerDn: "CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net"
-            managerPassword: "lyOdmSBwCsZnD4dLnOAE"
+            server: "ldap://blueprint.lab:389"
+            managerDn: "CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=labt"
+            managerPassword: "cA6gYsJNL4meJJ6elyoc"
           search:
             enabled: true
             filter: "sAMAccountName={0}"
-            base: "OU=Domain Users,DC=safaricomet,DC=net"
+            base: " OU=Blueprint,DC=blueprint,DC=lab"
           groups:
             enabled: true
             subtree: true
-            base: "OU=Domain Users,DC=safaricomet,DC=net"
+            base: " OU=Blueprint,DC=blueprint,DC=lab"
             filter: "sAMAccountName={0}"
+
   akhq:
     security:
       default-group: no-roles
@@ -456,17 +457,11 @@ configuration:
     connections:
       dc1-cluster: # url friendly name for the cluster (letter, number, _, -, ... dot are not allowed here)
         properties: # standard kafka properties (optional)
-          bootstrap.servers: "10.3.41.32:9094"
-          sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="cu5RAwn7tk18";'
+          bootstrap.servers: "192.168.21.21:9094"
+          sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="eYzZiQPNa477";'
           security.protocol: SASL_PLAINTEXT
           sasl.mechanism: SCRAM-SHA-512
 
-      dc2-cluster:
-        properties:
-          bootstrap.servers: "10.3.141.30:9094"
-          security.protocol: SASL_PLAINTEXT
-          sasl.mechanism: SCRAM-SHA-512
-          sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="nv6t5s8EuPJd";'
 
     # Topic list display options (optional)
     topic:
@@ -583,7 +578,7 @@ ingress:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka.big-data.safaricomet.net
+    - kafka.bigdata.blueprint.lab
   tls: []
   #  - secretName: akhq
   #    hosts:
@@ -594,11 +589,11 @@ readinessProbe:
 
 resources:
   limits:
-    cpu: 1000M
-    memory: 1G
+    cpu: 1000m
+    memory: 4G
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 1G
 
 nodeSelector: {}
 
