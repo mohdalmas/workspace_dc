@@ -33,3 +33,10 @@ sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule require
 sasl.mechanism=SCRAM-SHA-512
 
 ldapsearch -H ldap://safaricomet.net:389 -x -b "OU=Domain Users,DC=safaricomet,DC=net" -D "CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net" -w lyOdmSBwCsZnD4dLnOAE "(objectClass=inetOrgPerson)"
+
+#psql
+psql -h 10.3.41.27 -U svc-bigdata-admin -p 5432 -d postgres -W
+
+psql -h 10.3.141.24 -U svc-bigdata-admin -p 5432 -d analytics -W
+
+mvn archetype:generate -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple
