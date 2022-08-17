@@ -42,8 +42,8 @@ spec:
           configMap:
             name: ebu-config
             items:
-              - key: application.yaml
-                path: application.yaml
+              - key: application.properties
+                path: application.properties
       imagePullSecrets:
         - name: regcred
 
