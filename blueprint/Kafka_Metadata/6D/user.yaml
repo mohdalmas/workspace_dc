@@ -1,0 +1,150 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+   name: 6d        
+   labels:
+    strimzi.io/cluster: kafka
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    acls:
+    - host: '*'
+      operation: Write
+      resource:
+        name: 6d-
+        patternType: prefix
+        type: topic
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-
+        patternType: prefix
+        type: topic
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-com-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-com-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-case-management-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-case-management-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-deposit-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-deposit-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-sm-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-sm-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-nms-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-nms-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-dunning-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-dunning-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-invoice-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-invoice-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-loyalty-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-loyalty-cg2
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-arm-cg
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: IMPL_PRMGROUP
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: edgelogstash
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-gl-cg1
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: 6d-bill-gl-cg2
+        patternType: literal
+        type: group
+    type: simple

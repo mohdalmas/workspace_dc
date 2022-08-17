@@ -3,6 +3,8 @@ kind: Kafka
 metadata:
   name: kafka
 spec:
+        #clusterCa:
+          # generateCertificateAuthority: false
   kafka:
     template:
       pod:
@@ -27,7 +29,7 @@ spec:
           labels:
             namespace: "it-w01-bigdata"
     version: 3.2.0
-    replicas: 2
+    replicas: 3
     listeners:
       - name: plain
         port: 9092
@@ -52,18 +54,18 @@ spec:
           - broker: 2
             loadBalancerIP: ""
       
-      - name: tls-external
+      - name: tls
         port: 9095
         type: loadbalancer
         tls: true
         authentication:
-          type: tls-external
+          type: tls
         configuration:
           externalTrafficPolicy: Local
           brokerCertChainAndKey:
-          secretName: kafka-cert-secret
-          certificate: kafka-cert.crt
-          key: kafka-key.key
+             secretName: kafka-cert-secret
+             certificate: kafka.crt
+             key: cert.key
           bootstrap:
             loadBalancerIP: ""
           brokers:
@@ -104,7 +106,7 @@ spec:
             prometheus.io/port: "9404"
           labels:
             namespace: "it-w01-bigdata"
-    replicas: 2
+    replicas: 3
     # resources:
       # requests:
         # memory: 2Gi
