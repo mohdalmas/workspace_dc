@@ -63,18 +63,22 @@ spec:
         configuration:
           externalTrafficPolicy: Local
           brokerCertChainAndKey:
-             secretName: kafka-cert-secret
-             certificate: kafka.crt
-             key: cert.key
+             secretName: my-kafka-secret
+             certificate: server.crt
+             key: server.key
           bootstrap:
             loadBalancerIP: ""
-          brokers:
-          - broker: 0
+      - name: tlsstrimzi
+        port: 9096
+        type: loadbalancer
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          externalTrafficPolicy: Local
+          bootstrap:
             loadBalancerIP: ""
-          - broker: 1
-            loadBalancerIP: ""
-          - broker: 2
-            loadBalancerIP: ""
+
     authorization:
       type: simple
       superUsers:
