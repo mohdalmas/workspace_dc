@@ -66,7 +66,7 @@ auth:
   ldap:
     enabled: true
     host: ldap://blueprint.lab:389
-    searchBase: OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab
+    searchBase: OU=Blueprint,DC=blueprint,DC=lab
     admin: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
     username: Ankit-BI
     pass: cA6gYsJNL4meJJ6elyoc
@@ -99,7 +99,7 @@ service:
   type: ClusterIP
   httpsPort: 8443
   annotations: {}
-
+  # loadBalancerIP: 192.168.21.38
  
   processors:
     enabled: false
@@ -124,6 +124,7 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 40m
   tls: []
   hosts: 
     - nifi.bigdata.blueprint.lab
