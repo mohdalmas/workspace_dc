@@ -237,6 +237,9 @@ extraVolumeMounts:
   - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
     name: hadoop-config
     subPath: yarn-site.xml
+  - mountPath: /tmp
+    name: cert-config
+    readOnly: true
   # - mountPath: /opt/nifi/extensions
   #   name: nifi-extensions
   # - mountPath: /opt/nifi/external-nar
@@ -272,6 +275,9 @@ extraVolumes:
         path: yarn-site.xml
       name: hadoop-hadoop
     name: hadoop-config
+  - name: cert-config
+    secret:
+      secretName: nifi-tls
 
 ## Extra containers
 extraContainers: []
