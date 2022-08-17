@@ -36,7 +36,7 @@ spec:
           volumeMounts:
             - mountPath: /tmp/application.properties
               name: ebu-config
-              subPath: application.yaml
+              subPath: application.properties
       volumes:
         - name: ebu-config
           configMap:
