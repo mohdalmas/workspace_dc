@@ -20,22 +20,22 @@ data:
     c.Application.log_level = 'DEBUG'
     ##LDAP Authentication Section##
     c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
-    c.LDAPAuthenticator.server_address =  'safaricomet.net'
+    c.LDAPAuthenticator.server_address =  '172.24.14.10'
     c.LDAPAuthenticator.lookup_dn = True
     c.LDAPAuthenticator.lookup_dn_search_filter = '({login_attr}={login})'
-    c.LDAPAuthenticator.lookup_dn_search_user = 'CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
-    c.LDAPAuthenticator.lookup_dn_search_password = 'lyOdmSBwCsZnD4dLnOAE'
-    c.LDAPAuthenticator.user_search_base = 'OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net'
+    c.LDAPAuthenticator.lookup_dn_search_user = 'CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab'
+    c.LDAPAuthenticator.lookup_dn_search_password = 'cA6gYsJNL4meJJ6elyoc'
+    c.LDAPAuthenticator.user_search_base = 'OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab'
     c.LDAPAuthenticator.username_pattern = '[a-zA-Z0-9_.][a-zA-Z0-9_.-]{0,252}[a-zA-Z0-9_.$-]?'
     c.LDAPAuthenticator.valid_username_regex = '^[a-zA-Z][.a-zA-Z0-9_-]*$'
     c.LDAPAuthenticator.user_attribute = 'sAMAccountName'
     c.LDAPAuthenticator.lookup_dn_user_dn_attribute = 'cn'
     c.LDAPAuthenticator.escape_userdn = False
     c.LDAPAuthenticator.use_lookup_dn_username = False
-    c.Authenticator.admin_users = {'Mohd.Almas','Umesha.Gowda','Alphonce.Oniala'}
+    c.Authenticator.admin_users = {'Mo-BI','Alphonce-BI'}
     #c.Authenticator.allowed_users = {'Mohd.Almas'}
-    c.JupyterHub.ssl_key = '/etc/jupyterhub/certs/tls.key'
-    c.JupyterHub.ssl_cert = '/etc/jupyterhub/certs/tls.crt'
+    # c.JupyterHub.ssl_key = '/etc/jupyterhub/certs/tls.key'
+    # c.JupyterHub.ssl_cert = '/etc/jupyterhub/certs/tls.crt'
 
     def pre_spawn_hook(spawner):
         username = spawner.user.name
