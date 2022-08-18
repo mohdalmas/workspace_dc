@@ -1,0 +1,17 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-jks-pvc
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-nn
+spec:
+   accessModes:
+       - ReadWriteMany
+   storageClassName: nfs-bigdata
+   volumeMode: Filesystem
+   resources:
+       requests:
+          storage: 1Gi

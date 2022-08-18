@@ -1,0 +1,41 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-nn
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-nn
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+  - name: thrift
+    port: 9090
+    protocol: TCP
+  - name: thrift-ui
+    port: 9095
+    protocol: TCP
+  - name: hbase-master
+    port: 16000
+    protocol: TCP
+  - name: hbase-ui
+    port: 16010
+    protocol: TCP
+  - name: phoenix
+    port: 8765
+    protocol: TCP
+  - name: dfs
+    port: 9000
+    protocol: TCP
+  - name: http-webhdfs
+    port: 9870
+  - name: https-webhdfs
+    port: 9871
+  clusterIP: None
+  selector:
+    app: {{ include "hadoop.name" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-nn

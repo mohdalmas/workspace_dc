@@ -1,0 +1,3 @@
+kubectl run --namespace tkg-bigdata-ns mongo-mongodb-client --rm --tty -i --restart='Never' --env="MONGODB_ROOT_PASSWORD=admin123" --image docker.io/bitnami/mongodb:4.4.10-debian-10-r44 --command -- bash
+
+mongo admin --host "mongo-mongodb-0.mongo-mongodb-headless.tkg-bigdata-ns.svc.cluster.local:27017,mongo-mongodb-1.mongo-mongodb-headless.tkg-bigdata-ns.svc.cluster.local:27017,mongo-mongodb-2.mongo-mongodb-headless.tkg-bigdata-ns.svc.cluster.local:27017" --authenticationDatabase admin -u root -p admin123

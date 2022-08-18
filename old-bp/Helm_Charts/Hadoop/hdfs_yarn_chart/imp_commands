@@ -1,0 +1,80 @@
+kubectl vsphere login --server=192.168.21.1 --insecure-skip-tls-verify --vsphere-username=Mo-BI@blueprint.lab
+
+kubectl vsphere login --server=192.168.21.1 --insecure-skip-tls-verify --tanzu-kubernetes-cluster-name tkg-cluster-bigdata --tanzu-kubernetes-cluster-namespace it-w01-bigdata-ns01 --vsphere-username=Mo-BI@blueprint.lab
+SDrnN3%@4P
+
+kubectl config use-context it-w01-bigdata-ns01
+kubectl config use-context tgs-bigdata-ns
+
+sudo docker-credential-vsphere login 192.168.21.2 --user Mo-BI@blueprint.lab 
+sudo docker tag <image> 192.168.21.2/it-w01-bigdata-ns01/<image>
+
+sudo docker push 192.168.21.2/<your namespace> /<image>
+sudo docker-credential-vsphere logout 192.168.21.2
+
+
+sudo docker tag bitnami/kafka:2.8.1-debian-10-r57 192.168.21.2/it-w01-bigdata-ns01/kafka:1.0
+
+sudo docker push 192.168.21.2/it-w01-bigdata-ns01/kafka:1.0
+
+
+kubectl get svc --namespace tkg-bigdata-ns -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka,pod" -w
+kubectl exec -it kafka-0 -- cat /opt/bitnami/kafka/config/server.properties | Select-String 'advertised.listeners'
+
+Agenda:
+Deployments:
+- Kafka
+- Zookeeper
+- Kafka-Exporter
+
+Upload Images to Artifactory
+- Kafka, zookeeper have been uploaded
+
+Check the Values.yaml
+
+Apply the Helm Charts
+- Applied the chart in diagnostic mode.
+- No pvc
+- No Monitoring
+- No Security
+
+Verify Deployments.
+
+
+Hdfs commands:
+hdfs dfs -ls /hbase to list directory
+hadoop fs -chmod 777 /hbase
+cat ~/hdfs/datanode/current/VERSION
+cat ~/hdfs/namenode/current/VERSION
+
+
+Name Node			-> Master				-> Control Plane
+Resource Manager	-> Master				-> Control Plane
+
+Web Proxy Server				->				-> Control Plane
+MapReduce Job History Server	->				-> Control Plane
+
+DataNode		-> Worker
+NodeManager	    -> Worker					-> Control Plane
+
+Name Node | SecondaryNameNode | DataNode	-> HDFS Services
+ResourceManager | NodeManager | WebAppProxy	-> YARN Services
+MapReduce
+
+https://www.youtube.com/watch?v=0uHpSm1SkX8
+
+HDFS 	
+Yarn	-> Resource manager for processing jobs
+
+HIVE	-> Query Language built on mapReduce for data processing 
+HBase	-> NoSQL DB built on top of HDFS
+Pheonix	-> DB Engine for HBase that supports OLTP
+
+Spark	-> MapReduce Component, uzd 4 data processing
+
+pSQL
+Ambari	-> Manage and Visualize Hadoop
+
+Knox	-> For security, L7 Full-Proxy, Outside Communication
+Ranger	-> IAM
+

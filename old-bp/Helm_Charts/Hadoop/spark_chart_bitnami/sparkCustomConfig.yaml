@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-custom-config
+data:
+  hive-site.xml: |
+{{ tpl (.Files.Get "resources/config/hive-site.xml") . | indent 4 }}

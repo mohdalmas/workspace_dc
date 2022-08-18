@@ -1,0 +1,177 @@
+# The base hadoop image to use for all components.
+# See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
+image:
+  repository: mohdalmasansari/hadoop-redhat
+  tag: hadoop-3.1.1-hbase-2.0.3-phoenix-5.0.0
+  pullPolicy: IfNotPresent
+
+# The version of the hadoop libraries being used in the image.
+hadoopVersion: 3.1.1
+# The version of the hadoop libraries being used in the image.
+hbaseVersion: 2.0.3
+
+# Select antiAffinity as either hard or soft, default is soft
+antiAffinity: "soft"
+
+hdfs:
+  nameNode:
+    pdbMinAvailable: 0
+
+    # resources:
+    #   requests:
+    #     memory: "256Mi"
+    #     cpu: "10m"
+    #   limits:
+    #     memory: "2048Mi"
+    #     cpu: "1000m"
+
+  dataNode:
+    replicas: 4
+    pdbMinAvailable: 0
+
+    # resources:
+    #   requests:
+    #     memory: "256Mi"
+    #     cpu: "10m"
+    #   limits:
+    #     memory: "2048Mi"
+    #     cpu: "1000m"
+
+  webhdfs:
+    enabled: false
+
+yarn:
+  resourceManager:
+    pdbMinAvailable: 0
+
+    resources: {}
+      # requests:
+      #   memory: "256Mi"
+      #   cpu: "10m"
+      # limits:
+      #   memory: "2048Mi"
+      #   cpu: "2000m"
+
+  nodeManager:
+    pdbMinAvailable: 0
+
+    # The number of YARN NodeManager instances.
+    replicas: 1
+
+    # Create statefulsets in parallel (K8S 1.7+)
+    parallelCreate: false
+
+    # CPU and memory resources allocated to each node manager pod.
+    # This should be tuned to fit your workload.
+    resources:
+      # requests:
+      #   memory: "2048Mi"
+      #   cpu: "1000m"
+      # limits:
+      #   memory: "2048Mi"
+      #   cpu: "1000m"
+hbase:
+  master:
+    resources: {}
+      # requests:
+        # memory: "256Mi"
+        # cpu: "10m"
+      # limits:
+        # memory: "2048Mi"
+        # cpu: "1000m"
+  regionServer:
+    resources: {}
+      # requests:
+        # memory: "256Mi"
+        # cpu: "10m"
+      # limits:
+        # memory: "2048Mi"
+        # cpu: "1000m"
+        
+ingress:
+  nameNode:
+    enabled: true
+  yarn:
+    enabled: true
+
+persistence:
+  nameNode:
+    enabled: true
+    storageClass: "nfs-bigdata"
+    accessMode: ReadWriteMany
+    size: 10Gi
+
+  dataNode:
+    enabled: true
+    storageClass: "nfs-bigdata"
+    accessMode: ReadWriteMany
+    size: 50Gi
+ 
+nn_fqdn: "hadoop-hadoop-hdfs-nn.tkg-bigdata-ns.svc.cluster.local"
+dn_fqdn: "hadoop-hadoop-hdfs-dn.tkg-bigdata-ns.svc.cluster.local"
+rm_fqdn: "hadoop-hadoop-yarn-rm.tkg-bigdata-ns.svc.cluster.local"
+nm_fqdn: "hadoop-hadoop-yarn-nm.tkg-bigdata-ns.svc.cluster.local"
+realm: "BIG-DATA.BLUEPRINT.LAB"
+
+    
+hbase_conf:
+  hadoopUserName: root
+  hbaseSite:
+    hbase.rootdir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase # default is "hdfs://{{.Release.Name}}-hdfs-namenode:8020/hbase"
+    hbase.zookeeper.quorum: zk-zookeeper-0.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local:2181,zk-zookeeper-1.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local:2181,zk-zookeeper-2.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local:2181 # default is "{{.Release.Name}}-zookeeper:2181"
+    zookeeper.znode.parent: /hbase
+    hbase.master.maxclockskew: "500000"
+    hbase.cluster.distributed: true
+    phoenix.schema.isNamespaceMappingEnabled: true
+    hbase.unsafe.stream.capability.enforce: false
+    hbase.regionserver.executor.openregion.threads: "100"
+    hbase.hregion.majorcompaction: "604800000"
+    hbase.hregion.majorcompaction.jitter: "0.50"
+    hbase.hregion.max.filesize: "10737418240"
+    hbase.hregion.memstore.block.multiplier: "4"
+    hbase.hregion.memstore.flush.size: "134217728"
+    hbase.hregion.memstore.mslab.enabled: true
+    hbase.hstore.blockingStoreFiles: "100"
+    hbase.hstore.compaction.max: "10"
+    hbase.hstore.compactionThreshold: "3"
+    hbase.master.wait.on.regionservers.timeout: "90000"
+    hbase.region.server.rpc.scheduler.factory.class: org.apache.hadoop.hbase.ipc.PhoenixRpcSchedulerFactory
+    hbase.regionserver.executor.openregion.threads: "20"
+    hbase.regionserver.global.memstore.size: "0.4"
+    hbase.regionserver.handler.count: "100"
+    hbase.regionserver.info.port: "16030"
+    hbase.regionserver.port: "16020"
+    hbase.regionserver.thread.compaction.small: "3"
+    hbase.regionserver.wal.codec: org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec
+    hbase.thrift.support.proxyuser: true
+    hbase.regionserver.thrift.http: true
+    hbase.master.keytab.file: /etc/security/keytabs/hbase.service.keytab
+    hbase.master.kerberos.principal: hbase/hbase@BIG-DATA.BLUEPRINT.LAB
+    hbase.regionserver.keytab.file: /etc/security/keytabs/hbase.service.keytab
+    hbase.regionserver.kerberos.principal: hbase/hbase@BIG-DATA.BLUEPRINT.LAB
+    hbase.client.keytab.file: /etc/security/keytabs/hbase.service.keytab
+    hbase.client.kerberos.principal: hbase/hbase@BIG-DATA.BLUEPRINT.LAB 
+    hbase.security.authentication.spnego.kerberos.principal: HTTP/hbase@BIG-DATA.BLUEPRINT.LAB
+    hbase.security.authentication.spnego.kerberos.keytab: /etc/security/keytabs/hbase.service.keytab
+    hbase.rpc.engine: org.apache.hadoop.hbase.ipc.SecureRpcEngine 
+    hbase.security.authentication: kerberos
+    hbase.superuser: hbase    
+    hbase.coprocessor.region.classes: org.apache.hadoop.hbase.security.token.TokenProvider,org.apache.hadoop.hbase.security.access.SecureBulkLoadEndpoint,org.apache.hadoop.hbase.security.access.AccessController 
+    hbase.rpc.engine: org.apache.hadoop.hbase.ipc.SecureRpcEngine   
+    hbase.security.authorization: true
+    hbase.coprocessor.master.classes: org.apache.hadoop.hbase.security.access.AccessController
+    hbase.bulkload.staging.dir: /hbase/staging
+    hbase.rpc.protection: authentication
+    hadoop.proxyuser.hbase.groups: "*"
+    hadoop.proxyuser.hbase.hosts: "*"
+    hbase.rest.authentication.type: kerberos
+    hbase.rest.authentication.kerberos.principal: HTTP/hbase@BIG-DATA.BLUEPRINT.LAB
+    hbase.rest.authentication.kerberos.keytab: /etc/security/keytabs/hbase.service.keytab
+    hbase.thrift.keytab.file: /etc/security/keytabs/hbase.service.keytab
+    hbase.thrift.kerberos.principal: hbase/hbase@BIG-DATA.BLUEPRINT.LAB
+    hbase.thrift.security.qop: auth
+    hbase.zookeeper.property.maxClientCnxns: 100
+    hbase.zookeeper.property.clientPort: 2181
+    hbase.zookeeper.peerport: 2888
+    hbase.zookeeper.leaderport: 3888
+

@@ -1,0 +1,41 @@
+hadoop-hadoop-hdfs-dn    3/3     2d20h   hdfs-dn                       danisla/hadoop:2.8.3
+hadoop-hadoop-hdfs-nn    1/1     2d20h   hdfs-nn                       danisla/hadoop:2.8.3
+hadoop-hadoop-yarn-nm    1/1     2d20h   yarn-nm                       danisla/hadoop:2.8.3
+hadoop-hadoop-yarn-rm    1/1     2d20h   yarn-rm                       danisla/hadoop:2.8.3
+hb-hbase-master          1/1     2d23h   master                        mohdalmasansari/hbase-base:2.0.2
+hb-hbase-regionserver    3/3     2d23h   regionserver                  mohdalmasansari/hbase-base:2.0.2
+hm-hive-metastore        1/1     4d      metastore                     mohdalmasansari/hive-metastore:2.3.2
+hm-postgresql            1/1     4d      hm-postgresql                 docker.io/bitnami/postgresql:11.10.0-debian-10-r83
+hv-hive-server           1/1     2d23h   server                        mohdalmasansari/hive-metastore:2.3.2
+jupyterhub-statefulset   2/2     3d4h    jupyterhub-container          mohdalmasansari/jupyterhub:latest
+kafka                    2/3     25d     kafka                         docker.io/bitnami/kafka:2.8.1-debian-10-r57
+mongodb-dev              3/3     28d     mongodb                       docker.io/bitnami/mongodb:4.4.10-debian-10-r44
+nifi                     3/3     2d17h   nifi,clean-logs,access-logs   kapkiai/nifi:1.15.2,busybox,busybox
+nifi-registry            1/1     11d     nifi-registry                 kapkiai/nifi-registry:1.15.0
+nifit                    0/1     2d      nifi                          kapkiai/nifi:1.14.0
+spark-master             1/1     14d     spark-master                  docker.io/mohdalmasansari/spark:3.2.0-debian-10-r33
+spark-worker             2/2     14d     spark-worker                  docker.io/mohdalmasansari/spark:3.2.0-debian-10-r33
+zk-zookeeper             3/3     28d     zookeeper                     zookeeper:3.5.5	
+
+
+docker pull danisla/hadoop:2.8.3
+docker pull mohdalmasansari/hbase-base:2.0.2
+docker pull mohdalmasansari/hive-metastore:2.3.2
+docker pull bitnami/postgresql:11.10.0-debian-10-r83
+docker pull mohdalmasansari/jupyterhub:latest
+docker pull mohdalmasansari/spark:3.2.0-debian-10-r33
+docker pull mohdalmasansari/jupyterhub:latest
+docker pull bitnami/mongodb:4.4.10-debian-10-r44
+
+docker tag danisla/hadoop:2.8.3 192.168.21.2/it-w01-bigdata-ns01/hadoop:2.8.3
+docker tag mohdalmasansari/hbase-base:2.0.2 192.168.21.2/it-w01-bigdata-ns01/hbase-base:2.0.2
+docker tag mohdalmasansari/hive-metastore:2.3.2 192.168.21.2/it-w01-bigdata-ns01/hive-metastore:2.3.2
+docker tag bitnami/postgresql:11.10.0-debian-10-r83 192.168.21.2/it-w01-bigdata-ns01/postgresql:11.10.0-debian-10-r83
+docker tag mohdalmasansari/jupyterhub:latest 192.168.21.2/it-w01-bigdata-ns01/jupyterhub:1.0
+docker tag mohdalmasansari/spark:3.2.0-debian-10-r33 192.168.21.2/it-w01-bigdata-ns01/spark:3.2.0-debian-10-r33
+docker tag bitnami/mongodb:4.4.10-debian-10-r44 192.168.21.2/it-w01-bigdata-ns01/mongodb:4.4.10-debian-10-r44
+
+
+docker push 192.168.21.2/it-w01-bigdata-ns01/hadoop:2.8.3
+docker-credential-vsphere logout 192.168.21.2
+

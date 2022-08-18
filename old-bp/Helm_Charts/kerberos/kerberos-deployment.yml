@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kerberos
+spec:
+  replicas: 1
+  serviceName: kerberos-service
+  selector:
+    matchLabels:
+      name: hdfs-kerberos
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: kerberos
+      labels:
+        name: hdfs-kerberos
+        kerberosService: kerberos
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - /start-kdc.sh
+        name: kerberos
+        image: mohdalmasansari/hadoop-base:2.0
+        ports:
+        - containerPort: 8889
+          protocol: TCP
+        - containerPort: 80
+          protocol: TCP
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /etc/krb5.conf
+          name: krb5-config
+          subPath: krb5.conf
+        - mountPath: /etc/hosts
+          name: krb5-config
+          subPath: hosts
+        - mountPath: /var/kerberos/krb5kdc/kdc.conf
+          name: krb5-config
+          subPath: kdc.conf
+        - mountPath: /var/kerberos/krb5kdc/kadm5.acl
+          name: krb5-config
+          subPath: kadm5.acl          
+        - mountPath: /start-kdc.sh
+          name: krb5-config
+          subPath: start-kdc.sh
+        - mountPath: /etc/security/keytabs
+          name: kerb-keytab
+      restartPolicy: Always
+      volumes:
+      - name: krb5-config
+        configMap:
+          name: kerberos-config
+          items:
+          - key: krb5.conf
+            path: krb5.conf
+          - key: start-kdc.sh
+            path: start-kdc.sh
+          - key: hosts
+            path: hosts   
+          - key: kdc.conf
+            path: kdc.conf   
+          - key: kadm5.acl
+            path: kadm5.acl         
+      - name: kerb-keytab
+        persistentVolumeClaim:
+          claimName: server-keytab

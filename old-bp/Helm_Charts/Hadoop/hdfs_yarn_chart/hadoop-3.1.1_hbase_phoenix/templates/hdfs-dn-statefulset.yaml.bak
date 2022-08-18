@@ -1,0 +1,172 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "hadoop.fullname" . }}-hdfs-dn
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/hadoop-configmap.yaml") . | sha256sum }}
+  labels:
+    app: {{ include "hadoop.name" . }}
+    chart: {{ include "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    component: hdfs-dn
+spec:
+  serviceName: {{ include "hadoop.fullname" . }}-hdfs-dn
+  replicas: {{ .Values.hdfs.dataNode.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "hadoop.name" . }}
+      release: {{ .Release.Name }}
+      component: hdfs-dn
+  template:
+    metadata:
+      labels:
+        app: {{ include "hadoop.name" . }}
+        release: {{ .Release.Name }}
+        component: hdfs-dn
+    spec:
+      affinity:
+        podAntiAffinity:
+        {{- if eq .Values.antiAffinity "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchLabels:
+                app:  {{ include "hadoop.name" . }}
+                release: {{ .Release.Name | quote }}
+                component: hdfs-dn
+        {{- else if eq .Values.antiAffinity "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app:  {{ include "hadoop.name" . }}
+                  release: {{ .Release.Name | quote }}
+                  component: hdfs-dn
+        {{- end }}
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: hdfs-dn
+        env:
+        - name: http_proxy
+          value: "http://172.24.14.197:3128"
+        - name: https_proxy
+          value: "http://172.24.14.197:3128"
+        - name: HDFS_DATANODE_SECURE_USER
+          value: ""
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+           - "/bin/bash"
+           - "/tmp/hadoop-config/bootstrap.sh"
+           - "-d"
+        resources:
+{{ toYaml .Values.hdfs.dataNode.resources | indent 10 }}
+        volumeMounts:
+        - name: hadoop-config
+          mountPath: /tmp/hadoop-config
+        - name: dfs
+          mountPath: /dfs/data
+        - name: hadoop-sc
+          mountPath: /tmp/key
+        - name: jks-file
+          mountPath: /etc/security/keytabs
+        # - name: hadoop-config1
+          # mountPath: /etc/hosts
+          # subPath: hosts  
+      - name: hbase-regionserver
+        env:
+        - name: http_proxy
+          value: "http://172.24.14.197:3128"
+        - name: https_proxy
+          value: "http://172.24.14.197:3128"
+        - name: HDFS_DATANODE_SECURE_USER
+          value: ""
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+           - "/bin/bash"
+           - "/tmp/hbase-config/bootstrap.sh"
+           - "-d"
+           - "regionserver"
+        env:
+        - name: HADOOP_USER_NAME
+          value: {{ .Values.hbase_conf.hadoopUserName }}
+        - name: PHOENIX_HOME
+          value: "/opt/phoenix"
+        - name: TZ
+          value: Europe/Amsterdam
+        - name: HBASE_OPTS
+          value: "-Djava.security.auth.login.config=/opt/hbase/conf/hbase-client.jaas"
+        - name: HBASE_SERVER_JAAS_OPTS
+          value: "-Djava.security.auth.login.config=/opt/hbase/conf/hbase-server.jaas"
+        - name: HBASE_MASTER_OPTS
+          value: "-Djava.security.auth.login.config=/opt/hbase/conf/hbase-server.jaas"
+        - name: HBASE_REGIONSERVER_OPTS
+          value: "-Djava.security.auth.login.config=/opt/hbase/conf/hbase-server.jaas"
+        - name: HBASE_MANAGES_ZK
+          value: "false"
+        resources:
+{{ toYaml .Values.hbase.regionServer.resources | indent 10 }}
+        volumeMounts:
+        - name: hbase-config
+          mountPath: /tmp/hbase-config
+        - name: hadoop-sc
+          mountPath: /tmp/key
+        - name: jks-file
+          mountPath: /etc/security/keytabs
+        - name: hadoop-config2
+          mountPath: /opt/hbase/conf/hdfs-site.xml
+          subPath: hdfs-site.xml  
+        - name: hadoop-config2
+          mountPath: /opt/hbase/conf/core-site.xml
+          subPath: core-site.xml  
+        - name: hadoop-config2
+          mountPath: /etc/krb5.conf
+          subPath: krb5.conf 
+      volumes:
+      - name: hadoop-sc
+        persistentVolumeClaim:
+          claimName: keytab-pvc
+      - name: jks-file
+        persistentVolumeClaim:
+          claimName: {{ include "hadoop.fullname" . }}-hdfs-jks-pvc  
+      - name: hadoop-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}        
+      - name: hadoop-config2
+        configMap:
+          name: {{ include "hadoop.fullname" . }}
+          items:
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+          - key: core-site.xml  
+            path: core-site.xml 
+          - key: krb5.conf  
+            path: krb5.conf 
+      # - name: hadoop-config1
+        # configMap:
+          # name: {{ include "hadoop.fullname" . }}
+          # items:
+          # - key: hosts
+            # path: hosts
+      - name: hbase-config
+        configMap:
+          name: {{ include "hadoop.fullname" . }}-hbase
+  volumeClaimTemplates:
+  - metadata:
+      name: dfs
+    spec:
+      accessModes:
+      - {{ .Values.persistence.dataNode.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.dataNode.size | quote }}
+{{- if .Values.persistence.dataNode.storageClass }}
+{{- if (eq "-" .Values.persistence.dataNode.storageClass) }}
+      storageClassName: ""
+{{- else }}
+      storageClassName: "{{ .Values.persistence.dataNode.storageClass }}"
+{{- end }}
+{{- end }}

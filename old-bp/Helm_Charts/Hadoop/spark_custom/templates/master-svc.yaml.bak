@@ -1,0 +1,35 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-master-service
+  labels:
+    app.kubernetes.io/name: {{ include "spark.name" . }}
+    app.kubernetes.io/component: master
+    {{- include "spark.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  ports:
+  - name: cluster
+    port: 7077
+    protocol: TCP
+    targetPort: cluster
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: api
+    port: 6066
+    protocol: TCP
+    targetPort: 6066
+  - name: spark-worker-dtls
+    port: 4040
+    protocol: TCP
+    targetPort: 4040
+  selector:
+    app.kubernetes.io/name: {{ include "spark.name" . }}
+    app.kubernetes.io/component: master
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}

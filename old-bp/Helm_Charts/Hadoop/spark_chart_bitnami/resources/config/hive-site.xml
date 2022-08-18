@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+<property><name>hive.exec.scratchdir</name><value>/tmp/hive</value></property>
+<property><name>hive.execution.engine</name><value>MR</value></property>
+<property><name>hive.metastore.uris</name><value>thrift://hm-hive-metastore:9083</value></property>
+</configuration>

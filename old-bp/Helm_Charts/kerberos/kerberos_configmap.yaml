@@ -1,0 +1,87 @@
+d/apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kerberos-config
+data:
+  krb5.conf: |
+    includedir /etc/krb5.conf.d/
+
+    [logging]
+    default = FILE:/var/log/krb5libs.log
+    kdc = FILE:/var/log/krb5kdc.log
+    admin_server = FILE:/var/log/kadmind.log
+    
+    [libdefaults]
+    dns_lookup_realm = false
+    dns_lookup_kdc = true
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+    rdns = false
+    default_realm = BLUEPRINT.LAB
+    # default_ccache_name = KEYRING:persistent:%{uid}
+    
+    [realms]
+    BLUEPRINT.LAB = {
+      kdc = blueprint.lab
+      admin_server = blueprint.lab:749
+      master_kdc = blueprint.lab:88
+      kdc = blueprint.lab:88
+      default_domain = blueprint.lab
+    }
+    
+    [domain_realm]
+    .blueprint.lab = BLUEPRINT.LAB
+    blueprint.lab = BLUEPRINT.LAB
+
+  start-kdc.sh: |
+    #! /bin/bash
+
+    /usr/sbin/kdb5_util -P changeme create -s
+    
+    
+    ## password only user
+    /usr/sbin/kadmin.local -q "addprinc  -randkey admin"
+    /usr/sbin/kadmin.local -q "ktadd -k /etc/security/keytabs/admin.keytab admin"
+    
+    /usr/sbin/kadmin.local -q "addprinc -randkey hive/hv-hive-server-0"
+    /usr/sbin/kadmin.local -q "ktadd -k /etc/security/keytabs/hive.service.keytab hive/hv-hive-server-0"
+    
+    /usr/sbin/kadmin.local -q "addprinc -randkey Mo-BI"
+    /usr/sbin/kadmin.local -q "ktadd -k /etc/security/keytabs/mo.service.keytab Mo-BI"
+
+    #chown hive /etc/security/keytabs/hive.service.keytab
+    #chown hdfs /etc/security/keytabs/hdfs.keytab
+    
+    ktpass -princ hive/hv-hive-server-0@BLUEPRINT.LAB -mapuser Mo-BI@BLUEPRINT.LAB -crypto rc4-hmac-nt -pass SDrnN3%@4P -ptype KRB5_NT_PRINCIPAL -out /etc/security/keytabs/hive.service.keytab
+    
+    #keytool -genkey -alias hv-hive-server-0 -keyalg rsa -keysize 1024 -dname "CN=hv-hive-server-0" -keypass changeme -keystore /etc/security/keytabs/hive.service.keytab -storepass changeme   
+    keytool -genkey -alias hv-hive-server-0 -keyalg rsa -keysize 1024 -dname "CN=hv-hive-server-0" -keypass changeme -keystore /etc/security/keytabs/hive.jks -storepass changeme
+    chmod 700 /etc/security/keytabs/hive.jks
+    chown hive /etc/security/keytabs/hive.jks
+    
+    
+    krb5kdc -n
+  hosts: |
+    172.24.14.10 blueprint.lab
+    127.0.0.1       localhost
+    ::1     localhost ip6-localhost ip6-loopback
+    fe00::0 ip6-localnet
+    fe00::0 ip6-mcastprefix
+    fe00::1 ip6-allnodes
+    fe00::2 ip6-allrouters
+    192.0.9.199 hv-hive-server-0
+  kdc.conf: |
+    [kdcdefaults]
+    kdc_ports = 88
+    kdc_tcp_ports = 88
+
+    [realms]
+    BLUEPRINT.LAB = {
+     #master_key_type = aes256-cts
+     acl_file = /var/kerberos/krb5kdc/kadm5.acl
+     dict_file = /usr/share/dict/words
+     admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+     supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal
+  kadm5.acl: |
+    */admin@BLUEPRINT.LAB     *

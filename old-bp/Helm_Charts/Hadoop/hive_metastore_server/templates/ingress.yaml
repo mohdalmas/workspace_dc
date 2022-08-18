@@ -1,0 +1,48 @@
+{{- if .Values.ingress.hive.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "hive.name" . }}-ingress
+  labels:
+    app.kubernetes.io/name: {{ include "hive.name" . }}
+    app.kubernetes.io/component: hive
+    {{- include "hive.labels" . | nindent 4 }}
+  annotations: 
+     ingress.kubernetes.io/rewrite-target: /
+     kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: hive.big-data.blueprint.lab
+    http:
+      paths:
+      - path: /
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 10002
+        pathType: ImplementationSpecific
+      - path: /static
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 10002
+        pathType: ImplementationSpecific
+      - path: /hive/sm
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 8080
+        pathType: ImplementationSpecific
+      - path: /hive/sw
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 8081
+        pathType: ImplementationSpecific
+      - path: /hive/wd
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 4040
+        pathType: ImplementationSpecific
+      - path: /hive/static
+        backend:
+            serviceName: {{ include "hive.name" . }}-service
+            servicePort: 8080
+        pathType: ImplementationSpecific
+{{- end -}}

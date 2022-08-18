@@ -1,0 +1,126 @@
+# Default values for hbase
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# The base hadoop image to use for all components.
+# See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
+image:
+  repository: mohdalmasansari/hadoop-redhat
+  tag: hbase-phoenix-2.0.2-5.0.0
+  pullPolicy: Always
+
+# The version of the hadoop libraries being used in the image.
+hbaseVersion: 2.0.2
+
+# Select antiAffinity as either hard or soft, default is 'soft'
+# 'hard' is recommended for higher availaility
+antiAffinity: "soft"
+
+conf:
+  hadoopUserName: root
+  hbaseSite:
+    hbase.rootdir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase # default is "hdfs://{{.Release.Name}}-hdfs-namenode:8020/hbase"
+    hbase.zookeeper.quorum: zk-zookeeper:2181 # default is "{{.Release.Name}}-zookeeper:2181"
+    hbase.master.maxclockskew: "100000"
+    phoenix.schema.isNamespaceMappingEnabled: True
+    hbase.unsafe.stream.capability.enforce: false
+    hbase.master: "ip-hmaster:60000"
+    hbase.regionserver.executor.openregion.threads: "100"
+    hbase.hregion.majorcompaction: "604800000"
+    hbase.hregion.majorcompaction.jitter: "0.50"
+    hbase.hregion.max.filesize: "10737418240"
+    hbase.hregion.memstore.block.multiplier: "4"
+    hbase.hregion.memstore.flush.size: "134217728"
+    hbase.hregion.memstore.mslab.enabled: true
+    hbase.hstore.blockingStoreFiles: "100"
+    hbase.hstore.compaction.max: "10"
+    hbase.hstore.compactionThreshold: "3"
+    hbase.master.wait.on.regionservers.timeout: "90000"
+    hbase.region.server.rpc.scheduler.factory.class: org.apache.hadoop.hbase.ipc.PhoenixRpcSchedulerFactory
+    hbase.regionserver.executor.openregion.threads: "20"
+    hbase.regionserver.global.memstore.size: "0.4"
+    hbase.regionserver.handler.count: "100"
+    hbase.regionserver.info.port: "16030"
+    hbase.regionserver.port: "16020"
+    hbase.regionserver.thread.compaction.small: "3"
+    hbase.regionserver.wal.codec: org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec
+hbase:
+  master:
+    replicas: 1
+    # resources:
+      # requests:
+        # memory: "256Mi"
+        # cpu: "10m"
+      # limits:
+        # memory: "2048Mi"
+        # cpu: "1000m"
+  regionServer:
+    replicas: 1
+    # resources:
+      # requests:
+        # memory: "256Mi"
+        # cpu: "10m"
+      # limits:
+        # memory: "2048Mi"
+        # cpu: "1000m"
+
+## Prometheus Exporter Configuration
+## ref: https://prometheus.io/docs/instrumenting/exporters/
+prometheus:
+  ## JMX Exporter Configuration
+  ## ref: https://github.com/prometheus/jmx_exporter
+  ## ref: https://github.com/chuyeow/prometheus-jmx-exporter-kubernetes
+  enabled: false
+  port: 5556
+  # hbase-master pods runs two jvm processes: hbase and the thrift api.
+  thriftPort: 5557
+  resources: {}
+  image: spdigital/prometheus-jmx-exporter-kubernetes
+  imageTag: "0.3.1"
+  # prometheus jmx_exporter config https://github.com/prometheus/jmx_exporter
+  config:
+    lowercaseOutputName: true
+    lowercaseOutputLabelNames: true
+    rules:
+    - pattern: Hadoop<service=HBase, name=RegionServer, sub=Regions><>Namespace_([^\W_]+)_table_([^\W_]+)_region_([^\W_]+)_metric_(\w+)
+      name: HBase_metric_$4
+      labels:
+        namespace: "$1"
+        table: "$2"
+        region: "$3"
+    - pattern: Hadoop<service=(\w+), name=(\w+), sub=(\w+)><>([\w._]+)
+      name: hadoop_$1_$4
+      labels:
+        "name": "$2"
+        "sub": "$3"
+    - pattern: .+
+
+# manage hdfs from dependencies
+hdfs:
+  enabled: false
+
+# manage zookeeper from dependencies
+zookeeper:
+  enabled: false
+  replicaCount: 1
+
+
+# 1. You can get an HBASE Shell by running this command:
+   # kubectl exec -n tkg-bigdata-ns -it hbase-hbase-master-0 -- hbase shell
+
+# 2. Inspect hbase master service ports with:
+   # kubectl exec -n tkg-bigdata-ns describe service hbase-hbase-master
+
+# 3. Create a port-forward to the hbase manager UI:
+   # kubectl port-forward -n tkg-bigdata-ns svc/hbase-hbase-master 16010:16010
+
+   # Then open the ui in your browser:
+
+   # open http://localhost:16010
+
+# 4. Create a port-forward to the hbase thrift manager UI:
+   # kubectl port-forward -n tkg-bigdata-ns svc/hbase-hbase-master 9095:9095
+
+   # Then open the ui in your browser:
+
+   # open http://localhost:9095

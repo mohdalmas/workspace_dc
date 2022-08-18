@@ -1,0 +1,120 @@
+# The base hadoop image to use for all components.
+# See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
+
+postgresql:
+  postgresqlUsername: hive
+  postgresqlPassword: hive
+  postgresqlDatabase: metastore
+  initdbScriptsConfigMap: hive-metastore-postgresql-init
+  
+image:
+  repository: mohdalmasansari/hive-spark
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
+  pullPolicy: IfNotPresent
+
+# init:
+  # image:
+    # repository: busybox
+    # tag: latest
+    # pullPolicy: IfNotPresent
+ 
+resources: 
+  # requests:
+    # memory: "256Mi"
+    # cpu: "10m"
+  # limits:
+    # memory: "2048Mi"
+    # cpu: "1000m"
+
+ingress:
+  hive:
+    enabled: true
+
+# persistence:
+  # hive:
+    # enabled: true
+    # storageClass: "nfs-bigdata"
+    # accessMode: ReadWriteMany
+    # size: 1Gi
+
+conf:
+  hadoopConfigMap: hadoop-hadoop
+  hiveSite:
+    datanucleus.autoCreateSchema: false                                          
+    hive.exec.scratchdir: /tmp/
+    hive.exec.stagingdir: /tmp/
+    hive.execution.engine: spark
+    hive.execution.mode: container
+    hive.metastore.event.db.notification.api.auth: false
+    hive.metastore.schema.verification: false
+    hive.metastore.schema.verification.record.version: false
+    hive.metastore.uris: thrift://hive-0:9083
+    hive.metastore.warehouse.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hive/warehouse
+    hive.server2.enable.doAs: true
+    hive.server2.zookeeper.namespace: hiveserver2
+    hive.txn.manager: org.apache.hadoop.hive.ql.lockmgr.DbTxnManager
+    hive.zookeeper.client.port: 2181
+    hive.zookeeper.quorum: zk-zookeeper-0.zk-zookeeper-headless:2181,zk-zookeeper-1.zk-zookeeper-headless:2181,zk-zookeeper-2.zk-zookeeper-headless:2181
+    javax.jdo.option.ConnectionDriverName: org.postgresql.Driver
+    javax.jdo.option.ConnectionPassword: hive
+    javax.jdo.option.ConnectionURL: jdbc:postgresql://hive-postgresql/metastore
+    javax.jdo.option.ConnectionUserName: hive
+    hive.support.concurrency: true
+    hive.exec.reducers.bytes.per.reducer: 256000000
+    hive.exec.reducers.max: 1009
+    hive.compactor.initiator.on: true
+    hive.enforce.bucketing: true
+    hive.exec.dynamic.partition.mode: nonstrict
+    hive.spark.client.channel.log.level: ERROR
+    hive.spark.client.connect.timeout: 30000ms
+    hive.spark.client.rpc.server.address: hive-0
+    hive.spark.client.server.connect.timeout: 1000000ms
+    hive.spark.job.monitor.timeout: 360s
+    hive.stats.jdbc.timeout: 30
+    spark.driver.cores: 2
+    spark.eventLog.dir: /var/log/spark
+    spark.eventLog.enabled: false
+    spark.master: spark://hive-0:7077
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    hive.compactor.initiator.on: true
+    hive.compactor.delta.num.threshold: 2
+    hive.compactor.delta.pct.threshold: 0.1f
+    hive.txn.strict.locking.mode: true
+    hive.txn.retryable.sqlex.regex: ""
+    NO_AUTO_COMPACTION: false
+    hive.compactor.max.num.delta: 10
+    hive.compactor.check.interval: 30
+    hive.log.explain.output: true
+    hive.metastore.runworker.in: hs2
+    hive.compactor.worker.threads: 1
+    hive.compactor.job.queue: compaction
+    hive.metastore.sasl.enabled: true
+    hive.metastore.kerberos.keytab.file: /etc/security/keytabs/hive.service.keytab
+    hive.metastore.kerberos.principal: hive/hive@BIG-DATA.BLUEPRINT.LAB
+    hive.server2.authentication: KERBEROS
+    hive.server2.authentication.kerberos.keytab: /etc/security/keytabs/hive.service.keytab
+    hive.server2.authentication.kerberos.principal: hive/hive@BIG-DATA.BLUEPRINT.LAB
+    hive.server2.authentication.spnego.keytab: /etc/security/keytabs/hive.service.keytab
+    hive.server2.authentication.spnego.principal: HTTP/hive@BIG-DATA.BLUEPRINT.LAB
+
+    
+
+  spark-Defaults:
+    spark.master.rest.enabled: false
+    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0:10000/default;principal=hive/hive@BIG-DATA.BLUEPRINT.LAB"
+    spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0:9083"
+    spark.hadoop.hive.zookeeper.quorum: "zk-zookeeper-0.zk-zookeeper-headless:2181,zk-zookeeper-1.zk-zookeeper-headless:2181,zk-zookeeper-2.zk-zookeeper-headless:2181"
+    spark.master: "spark://hive-0:7077"
+    spark.executor.memory: 4096m
+    spark.eventLog.enabled: false
+    spark.eventLog.dir: /var/log/spark
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    spark.driver.memory: 5g
+    spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
+    spark.yarn.submit.waitAppCompletion: true
+    spark.driver.cores: 2
+    spark.executor.cores: 2
+    spark.default.parallelism: 7  
+    spark.sql.hive.hiveserver2.jdbc.url.principal: hive/hive@BIG-DATA.BLUEPRINT.LAB
+    spark.yarn.keytab: /etc/security/keytabs/hive.service.keytab
+    spark.yarn.principal: hive/hive@BIG-DATA.BLUEPRINT.LAB

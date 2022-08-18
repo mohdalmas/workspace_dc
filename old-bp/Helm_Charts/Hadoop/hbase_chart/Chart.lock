@@ -1,0 +1,9 @@
+dependencies:
+- name: hdfs
+  repository: file://../hdfs
+  version: 0.1.10
+- name: zookeeper
+  repository: https://charts.bitnami.com/bitnami
+  version: 6.3.4
+digest: sha256:d3c78f0b073f56726c2bc3a578da1a930de7a27b708e06adfe90abaa908a1cd7
+generated: "2021-09-06T13:35:13.670923103+02:00"

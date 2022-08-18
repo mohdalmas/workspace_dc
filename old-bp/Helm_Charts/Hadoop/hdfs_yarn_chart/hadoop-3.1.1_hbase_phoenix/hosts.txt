@@ -1,0 +1,4 @@
+192.0.26.62     hadoop-hadoop-hdfs-dn-0.hadoop-hadoop-hdfs-dn.tkg-bigdata-ns.svc.cluster.local  hadoop-hadoop-hdfs-dn-0
+192.0.14.142    zk-zookeeper-0.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local   zk-zookeeper-0
+192.0.26.61     zk-zookeeper-1.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local   zk-zookeeper-1
+192.0.8.69      zk-zookeeper-2.zk-zookeeper-headless.tkg-bigdata-ns.svc.cluster.local   zk-zookeeper-2

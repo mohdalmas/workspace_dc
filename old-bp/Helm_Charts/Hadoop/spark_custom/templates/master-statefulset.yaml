@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-master
+  labels:
+    app.kubernetes.io/name: {{ include "spark.name" . }}
+    app.kubernetes.io/component: master
+    {{- include "spark.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "spark.name" . }}
+      app.kubernetes.io/component: master
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  serviceName: {{ .Release.Name }}-headless
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "spark.name" . }}
+        app.kubernetes.io/component: master
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "spark.name" . }}
+                  app.kubernetes.io/component: master
+                  app.kubernetes.io/instance: {{ .Release.Name | quote }}
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - name: spark-master
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: cluster
+          containerPort: 7077
+        env:
+        - name: SPARK_MODE
+          value: "master"
+        - name: http_proxy
+          value: http://172.24.14.197:3128
+        - name: https_proxy
+          value: http://172.24.14.197:3128
+        - name: SPARK_MASTER_HOST
+          value: {{ .Values.spark.master.host | quote }}
+        - name: SPARK_MASTER_URL
+          value: {{ .Values.spark.master.url | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8080
+        #   initialDelaySeconds: 5
+        #   timeoutSeconds: 2
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8080
+        #   initialDelaySeconds: 10
+        #   timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /opt/spark/conf/hive-site.xml
+          name: spark-config
+          subPath: hive-site.xml
+        - mountPath: /opt/spark/conf/spark-defaults.conf
+          name: spark-config
+          subPath: spark-defaults.conf
+        - mountPath: /opt/spark/conf/core-site.xml
+          name: hadoop-config
+          subPath: core-site.xml
+        - mountPath: /opt/spark/conf/hdfs-site.xml
+          name: hadoop-config
+          subPath: hdfs-site.xml
+        - mountPath: /opt/spark/conf/mapred-site.xml
+          name: hadoop-config
+          subPath: mapred-site.xml
+        - mountPath: /opt/spark/conf/yarn-site.xml
+          name: hadoop-config
+          subPath: yarn-site.xml
+      volumes:
+      - name: spark-config
+        configMap:
+          name: {{ .Release.Name }}-cm
+          items:
+          - key: hive-site.xml
+            path: hive-site.xml
+          - key: spark-defaults.conf
+            path: spark-defaults.conf
+      - name: hadoop-config
+        configMap:
+          {{- if .Values.conf.hadoopConfigMap }}
+          name: {{ .Values.conf.hadoopConfigMap }}
+          items:
+          - key: core-site.xml
+            path: core-site.xml
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+          - key: mapred-site.xml
+            path: mapred-site.xml
+          - key: yarn-site.xml
+            path: yarn-site.xml
+          {{- end }}
+          
+          
+   
