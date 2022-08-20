@@ -3,6 +3,8 @@ kind: Kafka
 metadata:
   name: kafka
 spec:
+        #clusterCa:
+          # generateCertificateAuthority: false
   kafka:
     template:
       pod:
@@ -33,6 +35,7 @@ spec:
         port: 9092
         type: internal
         tls: false
+
       - name: external
         port: 9094
         type: loadbalancer
@@ -50,6 +53,32 @@ spec:
             loadBalancerIP: ""
           - broker: 2
             loadBalancerIP: ""
+      
+      - name: tls
+        port: 9095
+        type: loadbalancer
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          externalTrafficPolicy: Local
+          brokerCertChainAndKey:
+             secretName: my-kafka-secret
+             certificate: server.crt
+             key: server.key
+          bootstrap:
+            loadBalancerIP: ""
+      - name: tlsstrimzi
+        port: 9096
+        type: loadbalancer
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          externalTrafficPolicy: Local
+          bootstrap:
+            loadBalancerIP: ""
+
     authorization:
       type: simple
       superUsers:
@@ -63,8 +92,8 @@ spec:
       inter.broker.protocol.version: "3.2"
     storage:
       type: persistent-claim
-      size: 100Gi
-      class: topology-aware-standard
+      size: 10Gi
+      class: nfs-bigdata
       deleteClaim: false
     metricsConfig:
       type: jmxPrometheusExporter
@@ -92,7 +121,7 @@ spec:
     storage:
       type: persistent-claim
       size: 1Gi
-      class: topology-aware-standard
+      class: nfs-bigdata
       deleteClaim: false
     metricsConfig:
       type: jmxPrometheusExporter
