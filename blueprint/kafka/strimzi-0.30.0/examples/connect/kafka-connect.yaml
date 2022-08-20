@@ -54,3 +54,8 @@ spec:
         annotations:
           serviceAccountName: bigdata
 
+  logging:
+    type: inline
+    loggers:
+      log4j.rootLogger: "DEBUG"
+
