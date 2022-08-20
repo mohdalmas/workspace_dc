@@ -1,14 +1,14 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
-  name:  blueprint-connect-cluster
+  name:  kafka-connect
   annotations:
 #  # use-connector-resources configures this KafkaConnect
 #  # to use KafkaConnector resources to avoid
 #  # needing to call the Connect REST API directly
    strimzi.io/use-connector-resources: "true"
 spec:
-  version: 3.2.0
+  version: 3.0.0
   replicas: 3
   bootstrapServers: kafka-kafka-0:9094,kafka-kafka-1:9094,kafka-kafka-2:9094
   authentication:
@@ -17,8 +17,8 @@ spec:
     passwordSecret:
       secretName: admin
       password: password
-  tls:
-    trustedCertificates: []
+  # tls:
+  #   trustedCertificates: []
       # - secretName: my-cluster-cluster-ca-cert
       #   certificate: ca.crt
   config:
@@ -31,17 +31,19 @@ spec:
     offset.storage.replication.factor: -1
     status.storage.replication.factor: -1
 
-  # build:
-  #   output:
-  #     type: docker
-  #     image: registry.tools.blueprint.lab/bigdata/blueprint-connect-cluster:latest
-  #     pushSecret: regcred
-  #   plugins: 
-  #     - name: splunk-connector
-  #       artifacts:
-  #         - type: jar
-  #           url: https://github.com/splunk/kafka-connect-splunk/releases/download/v2.0.9/splunk-kafka-connect-v2.0.9.jar
-            # sha512sum: 14e793bebf7f0b196884b68c68cc7ac7a8c80cedcb8bb296af57781f8ad5450f3d6d45f60abebaf5310a46cdc2fa85e01a20f8bff4ce66e94cb180002f8127c5
+  build:
+    output:
+      type: docker
+      additionalKanikoOptions:
+      - --skip-tls-verify
+      image: et02-harbor.safaricomet.net/bigdata/blueprint-connect-cluster:latest
+      pushSecret: regcred
+    plugins: 
+      - name: splunk-connector
+        artifacts:
+          - type: jar
+            url: https://github.com/splunk/kafka-connect-splunk/releases/download/v2.0.9/splunk-kafka-connect-v2.0.9.jar
+            sha512sum: 14e793bebf7f0b196884b68c68cc7ac7a8c80cedcb8bb296af57781f8ad5450f3d6d45f60abebaf5310a46cdc2fa85e01a20f8bff4ce66e94cb180002f8127c5
   template:
     pod:
       imagePullSecrets:
@@ -57,5 +59,5 @@ spec:
   logging:
     type: inline
     loggers:
-      log4j.rootLogger: "DEBUG"
+      log4j.rootLogger: "INFO"
 
