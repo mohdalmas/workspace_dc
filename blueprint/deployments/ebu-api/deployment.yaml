@@ -18,9 +18,13 @@ spec:
       serviceAccountName: bigdata
       containers:
         - name: ebu-business-api
-          image: et01-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.2
+          image: registry.tools.blueprint.lab/bigdata/ebu-business-api:1.0.3
           ports:
             - containerPort: 8080
+          command:
+            - sh
+            - -c
+            - java -jar /ebu-api-1.0.3.jar --spring.config.location=/tmp/application.properties
           imagePullPolicy: Always
           resources:
             requests:
@@ -29,6 +33,17 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "2"
+          volumeMounts:
+            - mountPath: /tmp/application.properties
+              name: ebu-config
+              subPath: application.properties
+      volumes:
+        - name: ebu-config
+          configMap:
+            name: ebu-config
+            items:
+              - key: application.properties
+                path: application.properties
       imagePullSecrets:
         - name: regcred
 
@@ -63,7 +78,7 @@ metadata:
   name: api-ingress
 spec:
   rules:
-    - host: api.big-data2.safaricomet.net
+    - host: api.bigdata.blueprint.lab
       http:
         paths:
           - backend:
@@ -74,4 +89,43 @@ spec:
             path: /
             pathType: ImplementationSpecific
 
+---
+apiVersion: v1
+data:
+  application.properties: |-
+    ## default connection pool
+    spring.datasource.hikari.connectionTimeout=20000
+    spring.datasource.hikari.maximumPoolSize=5    
 
+    ### PostgreSQL User
+    spring.datasource.user.url=jdbc:postgresql://192.168.21.19:5432/appusers
+    spring.datasource.user.username=postgres
+    spring.datasource.user.password=hKKUlFmzZ4H_dSGr
+
+    ## PostgreSQL Business
+    spring.datasource.business.url=jdbc:postgresql://192.168.21.19:5432/analytics
+    spring.datasource.business.username=postgres
+    spring.datasource.business.password=hKKUlFmzZ4H_dSGr
+
+    #drop n create table again, good for testing, comment this in production
+    #spring.jpa.hibernate.ddl-auto=create
+
+    app.name = ebu-business-api
+    jwt.header = Authorization
+    jwt.expires_in = 600
+    jwt.secret = amasegnelahuedewdew
+
+    ldap.userDn=CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
+    ldap.bind.password=cA6gYsJNL4meJJ6elyoc
+    ldap.url=ldap://blueprint.lab:389
+    ldap.userSearchBase=OU=Blueprint,DC=blueprint,DC=lab
+    ldap.userSearchFilter=(sAMAccountName={0})
+    ldap.rawIdentityStrategy=USE_USERNAME
+
+    # Enable Request logging
+    logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=DEBUG
+    logging.file=/tmp/ebu/requests.log
+
+kind: ConfigMap
+metadata:
+  name: ebu-config
