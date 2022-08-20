@@ -14,7 +14,9 @@ spec:
   authentication:
     type: scram-sha-512
     username: admin
-    passwordSecret: admin
+    passwordSecret:
+      secretName: admin
+      password: password
   tls:
     trustedCertificates: []
       # - secretName: my-cluster-cluster-ca-cert
