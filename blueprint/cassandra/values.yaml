@@ -103,7 +103,7 @@ image:
 dbUser:
   user: cassandra
   forcePassword: false
-  password: ""
+  password: "cassandra"
   ## Use an existing secrets which already stores your password data.
   ## for backwards compatibility, existingSecret can be a simple string,
   ## referencing the secret by name.
@@ -452,7 +452,7 @@ serviceAccount:
 service:
   ## @param service.type Cassandra service type
   ##
-  type: ClusterIP
+  type: LoadBalancer
   ## @param service.ports.cql Cassandra service CQL Port
   ## @param service.ports.metrics Cassandra service metrics port
   ##
