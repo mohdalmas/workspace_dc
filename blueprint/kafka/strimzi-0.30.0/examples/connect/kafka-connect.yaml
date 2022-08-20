@@ -46,6 +46,10 @@ spec:
     pod:
       imagePullSecrets:
         - name: regcred
-    serviceAccount: bigdata
-    buildServiceAccount: bigdata
+      # serviceAccountName: bigdata
+    buildServiceAccount:
+      labels:
+      - serviceAccountName: bigdata
+      annotations:
+      - serviceAccountName: bigdata
 
