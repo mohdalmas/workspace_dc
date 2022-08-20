@@ -50,7 +50,7 @@ spec:
     buildServiceAccount:
       metadata:
         labels:
-        - serviceAccountName: bigdata
+          serviceAccountName: bigdata
         annotations:
-        - serviceAccountName: bigdata
+          serviceAccountName: bigdata
 
