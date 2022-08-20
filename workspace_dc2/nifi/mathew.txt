@@ -40,3 +40,9 @@ psql -h 10.3.41.27 -U svc-bigdata-admin -p 5432 -d postgres -W
 psql -h 10.3.141.24 -U svc-bigdata-admin -p 5432 -d analytics -W
 
 mvn archetype:generate -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple
+
+ docker run -d --name gitlab-runner --restart always -v /home/ankit-bi@blueprint.lab/gitlabrunner:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock --add-host=gitlab.safaricomet.net:10.3.124.26 gitlab/gitlab-runner:latest
+
+ environment = ["https_proxy=http://172.24.14.197:3128", "http_proxy=http://172.24.14.197:3128", "HTTPS_PROXY=https://172.24.14.197:3128", "HTTP_PROXY=http://172.24.14.197:3128", "NO_PROXY=localhost,gitlab.safaricomet.net,10.3.124.2"]
+
+
