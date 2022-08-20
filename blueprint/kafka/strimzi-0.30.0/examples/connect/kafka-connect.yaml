@@ -48,8 +48,9 @@ spec:
         - name: regcred
       # serviceAccountName: bigdata
     buildServiceAccount:
-      labels:
-      - serviceAccountName: bigdata
-      annotations:
-      - serviceAccountName: bigdata
+      metadata:
+        labels:
+        - serviceAccountName: bigdata
+        annotations:
+        - serviceAccountName: bigdata
 
