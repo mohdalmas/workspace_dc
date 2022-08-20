@@ -67,9 +67,9 @@ storageProviderConfiguration:
    queryTimeoutInSecs: 30
    db.properties:
      dataSourceClassName: "org.postgresql.ds.PGSimpleDataSource"
-     dataSource.url: "jdbc:postgresql://hive-postgresql/schemareg"
-     dataSource.user: "hive"
-     dataSource.password: "hive"
+     dataSource.url: "jdbc:postgresql://192.168.21.19:5432/schemareg"
+     dataSource.user: "postgres"
+     dataSource.password: "hKKUlFmzZ4H_dSGr"
 
 #swagger configuration
 swagger:

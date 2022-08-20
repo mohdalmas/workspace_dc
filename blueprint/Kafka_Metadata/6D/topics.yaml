@@ -1,0 +1,934 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: 6d-bill-gl-edr
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 2
+  config:
+    retention.ms: 518400000
+
+---
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sm-edrs
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-med-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-ccbl-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-slm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-rpt-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-bill-deposit-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-case-management-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-com-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-bill-invoice-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-loyalty-cdr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sm-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-nms-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sim-topic-wakanda
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sim-swap-wakanda
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-dna-pairing-wakanda
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-sim-status-change-wakanda
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-number-swap-wakanda
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-arm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-prm-rating-cdr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-prm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-lms-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-com-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name:         
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-ns-log
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-ns-cdr
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-cm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-ums-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-keycloak-log
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-bil-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-bill-deposit-edr 
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-scm-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-apigw-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-som-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-som-edr
+spec:
+  config:
+    retention.ms: 432000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-upc-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-esb-log
+spec:
+  config:
+    retention.ms: 172800000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-execute-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-execute-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-iterateday-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-iterateday-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-executeaction-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-executeaction-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-executeservicepostrespcheck-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-executeservicepostrespcheck-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removeruledetailmap-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removeruledetailmap-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-insertruledetailmap-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-insertruledetailmap-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removerulenodelevelmap-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removerulenodelevelmap-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removerulelevelnodemap-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-removerulelevelnodemap-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-tpscontrollerenqueue-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-tpscontrollerenqueue-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-cacheclear-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-cacheclear-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-processactionsubruleexecution-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-processactionsubruleexecution-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-getexecutingrules-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-getexecutingrules-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-checkquarantinedetail4action-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-checkquarantinedetail4action-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: 6d-nms-cdr
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    retention.ms: 172800000 
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name:  6d-bill-dunning-edr
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-crm-log
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: 6d-customer-activations
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    retention.ms: 172800000 
+
+
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-checkquarantinedetail4action-req
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: kafka
+  name: 6d-checkquarantinedetail4action-resp
+spec:
+  config:
+    retention.ms: 18000000
+  partitions: 6
+  replicas: 3
+---  
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: 6d-kc-session
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    retention.ms: 172800000 
+
+---  
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: 6d-logstash-connection-edge
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    retention.ms: 172800000 
+
