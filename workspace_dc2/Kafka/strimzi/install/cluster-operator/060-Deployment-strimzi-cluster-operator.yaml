@@ -97,6 +97,12 @@ spec:
               value: ""
             - name: STRIMZI_IMAGE_PULL_SECRETS
               value: "regcred"
+            # - name: HTTP_PROXY
+            #   value: "http://10.3.124.1:3128"
+            # - name: HTTPS_PROXY
+            #   value: "http://10.3.124.1:3128"
+            # - name: NO_PROXY
+            #   value: ".safaricomet.net"
           livenessProbe:
             httpGet:
               path: /healthy
