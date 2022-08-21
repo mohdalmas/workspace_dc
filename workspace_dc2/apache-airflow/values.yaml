@@ -29,7 +29,7 @@ nameOverride: ""
 kubeVersionOverride: ""
 
 # User and group of airflow user
-uid: 0
+uid: 50000
 gid: 0
 
 # Default security context for airflow
@@ -455,10 +455,10 @@ workers:
       maxUnavailable: "50%"
 
   # When not set, the values defined in the global securityContext will be used
-  securityContext: {}
-  #  runAsUser: 50000
-  #  fsGroup: 0
-  #  runAsGroup: 0
+  securityContext:
+   runAsUser: 0
+   fsGroup: 0
+   runAsGroup: 0
 
   # Create ServiceAccount
   serviceAccount:
