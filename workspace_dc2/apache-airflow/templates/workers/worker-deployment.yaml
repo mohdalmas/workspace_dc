@@ -226,6 +226,9 @@ spec:
           {{- if .Values.workers.logGroomerSidecar.command }}
           command: {{ tpl (toYaml .Values.workers.logGroomerSidecar.command) . | nindent 12 }}
           {{- end }}
+          securityContext:
+            runAsUser: 50000
+            allowPrivilegeEscalation: false
           {{- if .Values.workers.logGroomerSidecar.args }}
           args: {{ tpl (toYaml .Values.workers.logGroomerSidecar.args) . | nindent 12 }}
           {{- end }}
