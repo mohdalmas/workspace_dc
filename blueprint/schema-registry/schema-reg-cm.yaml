@@ -431,7 +431,7 @@ data:
      className: com.hortonworks.registries.ha.zk.ZKLeadershipParticipant
      config:
        # This url is a list of ZK servers separated by ,
-       connect.url: "bigdata-zk-zookeeper-headless :2181"
+       connect.url: "bigdata-zk-zookeeper-headless:2181"
        # root node prefix in ZK for this instance
        root: "/registry"
        session.timeout.ms: 30000
