@@ -43,6 +43,14 @@ spec:
           - type: jar
             url: https://github.com/splunk/kafka-connect-splunk/releases/download/v2.0.9/splunk-kafka-connect-v2.0.9.jar
             sha512sum: 14e793bebf7f0b196884b68c68cc7ac7a8c80cedcb8bb296af57781f8ad5450f3d6d45f60abebaf5310a46cdc2fa85e01a20f8bff4ce66e94cb180002f8127c5
+          - type: maven
+            groupId: io.confluent
+            artifactId: kafka-connect-jdbc
+            version: 10.4.0
+          - type: maven
+            groupId: io.confluent
+            artifactId: kafka-connect-elasticsearch
+            version: 11.1.10
   template:
     pod:
       imagePullSecrets:
