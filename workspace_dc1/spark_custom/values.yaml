@@ -7,26 +7,26 @@ image:
 serviceAccount: bigdata
 
 # Select antiAffinity as either hard or soft, default is soft
-antiAffinity: ""
+antiAffinity: "soft"
 
 imagePullSecrets:
 - name: regcred
 
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "Hadoop"
-  effect: "NoSchedule"
+# tolerations:
+# - key: "dedicated"
+  # operator: "Equal"
+  # value: "Hadoop"
+  # effect: "NoSchedule"
   
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: dedicated
-          operator: In
-          values:
-          - Hadoop
+# affinity:
+  # nodeAffinity:
+    # requiredDuringSchedulingIgnoredDuringExecution:
+      # nodeSelectorTerms:
+      # - matchExpressions:
+        # - key: dedicated
+          # operator: In
+          # values:
+          # - Hadoop
 
 spark_master:
   resources: 
