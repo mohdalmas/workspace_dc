@@ -51,18 +51,18 @@ spec:
           - type: jar
             fileName: elasticsearch
             url: https://packages.confluent.io/maven/io/confluent/kafka-connect-elasticsearch/11.1.10/kafka-connect-elasticsearch-11.1.10.jar
-      - name: jdbc-connector
-        artifacts:
-          - type: jar
-            fileName: jdbc
-            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.4.0/kafka-connect-jdbc-10.4.0.jar
-
       # - name: jdbc-connector
       #   artifacts:
-          # - type: maven
-          #   group: io.confluent
-          #   artifact: kafka-connect-jdbc
-          #   version: 10.4.0
+      #     - type: jar
+      #       fileName: jdbc
+      #       url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.4.0/kafka-connect-jdbc-10.4.0.jar
+
+      - name: jdbc-connector
+        artifacts:
+          - type: maven
+            group: io.confluent
+            artifact: kafka-connect-jdbc
+            version: 10.4.0
       # - name: elasticsearch-connector
       #   artifacts:
           # - type: maven
