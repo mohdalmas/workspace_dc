@@ -41,3 +41,8 @@ spec:
             group: org.apache.kafka
             artifact: connect-file
             version: 3.2.0
+
+  logging:
+    type: inline
+    loggers:
+      log4j.rootLogger: "DEBUG"

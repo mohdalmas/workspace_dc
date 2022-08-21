@@ -168,10 +168,10 @@ configuration:
               - reader
 
         users:
-          - username: Kenneth.Kipkogei
+          - username: Kenneth-TechM
             groups:
               - admin
-          - username: Mathew.Kiprop
+          - username: Mathew-TechM
             groups:
               - admin
           - username: Alphonce-BI
