@@ -58,10 +58,10 @@ spec:
             group: io.confluent
             artifact: kafka-connect-jdbc
             version: 10.4.0
-          - type: maven
-            group: io.confluent
-            artifact: kafka-connect-elasticsearch
-            version: 11.1.10
+          # - type: maven
+          #   group: io.confluent
+          #   artifact: kafka-connect-elasticsearch
+          #   version: 11.1.10
   template:
     pod:
       imagePullSecrets:
