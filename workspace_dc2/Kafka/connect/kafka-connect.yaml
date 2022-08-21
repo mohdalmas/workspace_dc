@@ -37,10 +37,10 @@ spec:
       additionalKanikoOptions:
       - --skip-tls-verify
       - --verbosity
-      - --build-arg "http_proxy=http://proxy1.safaricomet.net:3128"
-      - --build-arg "HTTP_PROXY=http://proxy1.safaricomet.net:3128"
-      - --build-arg "https_proxy=http://proxy1.safaricomet.net:3128"
-      - --build-arg "HTTPS_PROXY=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "http_proxy=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "HTTP_PROXY=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "https_proxy=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "HTTPS_PROXY=http://proxy1.safaricomet.net:3128"
       image: et02-harbor.safaricomet.net/bigdata/blueprint-connect-cluster:latest
       pushSecret: regcred
     plugins: 
@@ -49,15 +49,15 @@ spec:
           - type: jar
             url: https://github.com/splunk/kafka-connect-splunk/releases/download/v2.0.9/splunk-kafka-connect-v2.0.9.jar
             sha512sum: 14e793bebf7f0b196884b68c68cc7ac7a8c80cedcb8bb296af57781f8ad5450f3d6d45f60abebaf5310a46cdc2fa85e01a20f8bff4ce66e94cb180002f8127c5
-          # - type: jar
-          #   url: https://packages.confluent.io/maven/io/confluent/kafka-connect-elasticsearch/11.1.10/kafka-connect-elasticsearch-11.1.10.jar
-          # - type: jar
-          #   url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.4.0/kafka-connect-jdbc-10.4.0.jar
+          - type: jar
+            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-elasticsearch/11.1.10/kafka-connect-elasticsearch-11.1.10.jar
+          - type: jar
+            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.4.0/kafka-connect-jdbc-10.4.0.jar
 
-          - type: maven
-            group: io.confluent
-            artifact: kafka-connect-jdbc
-            version: 10.4.0
+          # - type: maven
+          #   group: io.confluent
+          #   artifact: kafka-connect-jdbc
+          #   version: 10.4.0
           # - type: maven
           #   group: io.confluent
           #   artifact: kafka-connect-elasticsearch
