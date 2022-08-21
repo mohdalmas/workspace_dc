@@ -36,7 +36,7 @@ spec:
       type: docker
       additionalKanikoOptions:
       - --skip-tls-verify
-      - --verbosity
+      - --verbosity debug
       # - --build-arg "http_proxy=http://proxy1.safaricomet.net:3128"
       # - --build-arg "HTTP_PROXY=http://proxy1.safaricomet.net:3128"
       # - --build-arg "https_proxy=http://proxy1.safaricomet.net:3128"
