@@ -60,6 +60,7 @@ spec:
       - name: jdbc-connector
         artifacts:
           - type: maven
+            repository: https://packages.confluent.io/maven/
             group: io.confluent
             artifact: kafka-connect-jdbc
             version: 10.4.0
