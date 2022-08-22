@@ -10,7 +10,7 @@ metadata:
     strimzi.io/cluster: kafka-connect
 spec:
   class: com.splunk.kafka.connect.SplunkSinkConnector
-  tasksMax: 10
+  tasksMax: 25
   config:
     splunk.indexes: step_bss_kafka_logs
     topics: 6d-sm-log,6d-med-log,6d-ccbl-log,6d-slm-log,6d-rpt-log,6d-nms-log,6d-arm-log,6d-prm-log,6d-lms-log,6d-com-log,6d-crm-log,6d-ns-log,6d-cm-log,6d-ums-log,6d-keycloak-log,6d-bil-log,6d-scm-log,6d-apigw-log,6d-som-log,6d-upc-log,6d-esb-log,6d-com-edr,6d-kc-session
