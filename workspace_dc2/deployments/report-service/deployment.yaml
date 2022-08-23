@@ -75,6 +75,11 @@ data:
     #    username: bigdata
     #    password: mat@1234
 
+      servlet:
+        multipart:
+          maxFileSize: 10MB
+          maxRequestSize: 10MB
+
       mail:
         host: 10.3.124.25
         port: 25
