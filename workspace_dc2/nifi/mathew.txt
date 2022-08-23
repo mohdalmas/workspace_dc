@@ -50,3 +50,4 @@ docker run --rm -it -v /home/mathew.kiprop@safaricomet.net/gitlabrunner:/etc/git
  environment = ["https_proxy=http://172.24.14.197:3128", "http_proxy=http://172.24.14.197:3128", "HTTPS_PROXY=https://172.24.14.197:3128", "HTTP_PROXY=http://172.24.14.197:3128", "NO_PROXY=localhost,gitlab.safaricomet.net,10.3.124.2"]
 
 
+mvn install:install-file -Dfile=/home/kapkiai/Safaricomet/workspace/repo/report/lib/reportEngine-1.0.jar -DgroupId=com.CommonIntrest.reportEngine -DartifactId=reportEngine -Dversion=1.0 -Dpackaging=jar -DlocalRepositoryPath=libs -DcreateChecksum=true
