@@ -1,0 +1,107 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: report-service
+  name: report-service
+spec:
+  selector:
+    matchLabels:
+      app: report-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: report-service
+    spec:
+      serviceAccountName: bigdata
+      containers:
+        - name: report-service
+          image: docker.io/kapkiai/report-service:1.0.3
+          ports:
+            - containerPort: 8080
+          command:
+            - sh
+            - -c
+            - java -jar /report-1.0.3.jar --spring.config.location=/tmp/application.yaml
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          volumeMounts:
+            - mountPath: /tmp/application.yaml
+              name: report-config
+              subPath: application.yaml
+      volumes:
+        - name: report-config
+          configMap:
+            name: report-config
+            items:
+              - key: application.yaml
+                path: application.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: send-port
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: report-service
+
+---
+apiVersion: v1
+data:
+  application.yaml: |-
+    spring:
+      datasource:
+        url: jdbc:postgresql://10.3.41.27:5432/postgres
+        username: svc-bigdata-admin
+        password: lyOdmSBwCsZnD4dLnOAE
+    #    url: jdbc:postgresql://localhost:5432/ebu
+    #    username: bigdata
+    #    password: mat@1234
+
+      mail:
+        host: 10.3.124.25
+        port: 25
+        username: BigdataAlerts@safaricom.et
+        password:
+        properties:
+          mail:
+            smtp:
+              auth: false
+              starttls:
+                enable: false
+
+    sms:
+      endpoint: http://sms-sender:8085/api/v1/send
+      user: user
+      pass: 5H5_ECC@F][^gtQeu:d,&$sAx>,+EN
+      receiver: 251799100163
+      senderlabel: SAFREPORT
+
+    mail:
+      to: mathew.kapkiai@safaricom.et
+      subject: Hello From Report Service
+
+    report:
+      md_xml_file_name: /tmp/report/ebu_report.xml
+      md_xml_output: /tmp/report/ebu_report_output.xml
+      md_rtf_file_name: /tmp/report/ebu_report.rtf
+      md_style_output: /tmp/report/ebu_report_output.xls
+      md_pdf_file_name: /tmp/report/ebu_report.pdf
+kind: ConfigMap
+metadata:
+  name: report-config
