@@ -24,7 +24,7 @@ spec:
           command:
             - sh
             - -c
-            - java -jar /ebu-api-1.0.3.jar --spring.config.location=/tmp/application.properties
+            - java -jar /ebu-api-1.0.4.jar --spring.config.location=/tmp/application.properties
           imagePullPolicy: Always
           resources:
             requests:
