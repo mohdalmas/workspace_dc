@@ -16,6 +16,8 @@ spec:
         app: ebu-business-api
     spec:
       serviceAccountName: bigdata
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: ebu-business-api
           image: et02-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.3
@@ -28,11 +30,7 @@ spec:
               cpu: "250m"
             limits:
               memory: "2Gi"
-              cpu: "2"
-      imagePullSecrets:
-        - name: regcred
-
-          
+              cpu: "2"          
 ---
 apiVersion: v1
 kind: Service

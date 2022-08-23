@@ -16,6 +16,8 @@ spec:
         app: report-service
     spec:
       serviceAccountName: bigdata
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: report-service
           image: et02-harbor.safaricomet.net/bigdata/report-service:1.0.3
