@@ -54,7 +54,7 @@ kind: Service
 metadata:
   name: ebu-business-api
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: send-port
       port: 8080
