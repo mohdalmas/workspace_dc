@@ -49,6 +49,12 @@ spec:
         name: bigdata-6d-group
         patternType: literal
         type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: bigdata-6dee-group
+        patternType: literal
+        type: group
 
     - host: '*'
       operation: Write
