@@ -30,6 +30,9 @@ spec:
             memory: 500M
 
           env:
+            - name: server.port
+              value: 8080
+              
             - name: spring.datasource.url
               value : "jdbc:postgresql://192.168.21.19:5432/admin"
             
