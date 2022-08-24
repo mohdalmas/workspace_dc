@@ -46,7 +46,9 @@ spec:
           volumeMounts:
           - mountPath: /logs
             name: logs
-
+      volumes:
+      - name: logs
+        emptyDir: {}
       serviceAccountName: bigdata
       imagePullSecrets:
         - name: regcred
