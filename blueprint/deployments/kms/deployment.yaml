@@ -48,6 +48,9 @@ spec:
             - name: ldap.userSearchFilter
               value: sAMAccountName={0}  
 
+            - name: ldap.filter
+              value: sAMAccountName
+
             - name: ldap.rawIdentityStrategy
               value: USE_USERNAME
 
@@ -61,7 +64,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: bigdata-psql-postgresql
-                  key: postgresql-ldap-password
+                  key: postgresql-password
           
           command: ["java","-jar","/app.jar"]
           volumeMounts:
