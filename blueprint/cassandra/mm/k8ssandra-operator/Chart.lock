@@ -1,0 +1,9 @@
+dependencies:
+- name: k8ssandra-common
+  repository: file://../k8ssandra-common
+  version: 0.28.6
+- name: cass-operator
+  repository: file://../cass-operator
+  version: 0.37.1
+digest: sha256:d6eef451cc9ffee19db83371be05cacd2257d803278b6c1e7bebb8beedc0eff0
+generated: "2022-07-22T16:26:53.339615765Z"
