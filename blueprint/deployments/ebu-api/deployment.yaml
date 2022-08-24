@@ -18,13 +18,13 @@ spec:
       serviceAccountName: bigdata
       containers:
         - name: ebu-business-api
-          image: registry.tools.blueprint.lab/bigdata/ebu-business-api:1.0.3
+          image: registry.tools.blueprint.lab/bigdata/ebu-business-api:1.0.4
           ports:
             - containerPort: 8080
           command:
             - sh
             - -c
-            - java -jar /ebu-api-1.0.3.jar --spring.config.location=/tmp/application.properties
+            - java -jar /ebu-api-1.0.4.jar --spring.config.location=/tmp/application.properties
           imagePullPolicy: Always
           resources:
             requests:
@@ -54,7 +54,7 @@ kind: Service
 metadata:
   name: ebu-business-api
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: send-port
       port: 8080
@@ -123,8 +123,18 @@ data:
     ldap.rawIdentityStrategy=USE_USERNAME
 
     # Enable Request logging
-    logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=DEBUG
-    logging.file=/tmp/ebu/requests.log
+    #logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=DEBUG
+    #logging.file=/tmp/ebu/requests.log
+    
+    #management.endpoints.web.exposure.include=info,health,httptrace
+    management.endpoints.web.exposure.include=*
+    management.trace.http.include=AUTHORIZATION_HEADER,COOKIE_HEADERS,PRINCIPAL,REMOTE_ADDRESS,REQUEST_HEADERS,RESPONSE_HEADERS,SESSION_ID,TIME_TAKEN
+    management.endpoint.auditevents.enabled=true
+    management.endpoints.prometheus.enabled=true
+    management.endpoints.sessions.enabled=true
+    spring.mvc.dispatch-trace-request=true
+    management.endpoint.health.show-details=always
+    server.error.include-stacktrace=always
 
 kind: ConfigMap
 metadata:
