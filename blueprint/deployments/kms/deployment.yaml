@@ -43,6 +43,9 @@ spec:
                   key: postgresql-ldap-password
           
           command: ["java","-jar","/app.jar"]
+          volumeMounts:
+          - mountPath: /logs
+            name: logs
 
       serviceAccountName: bigdata
       imagePullSecrets:
