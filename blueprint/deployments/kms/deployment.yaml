@@ -31,8 +31,26 @@ spec:
 
           env:
             - name: server.port
-              value: 8080
-              
+              value: "8080"
+
+            - name: ldap.userDn 
+              value: "CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab"
+
+            - name: ldap.bind.password
+              value: cA6gYsJNL4meJJ6elyoc
+
+            - name: ldap.url
+              value: "ldap://blueprint.lab:389" 
+
+            - name: ldap.userSearchBase
+              value: "OU=Blueprint,DC=blueprint,DC=lab"
+
+            - name: ldap.userSearchFilter
+              value: sAMAccountName={0}  
+
+            - name: ldap.rawIdentityStrategy
+              value: USE_USERNAME
+
             - name: spring.datasource.url
               value : "jdbc:postgresql://192.168.21.19:5432/admin"
             
