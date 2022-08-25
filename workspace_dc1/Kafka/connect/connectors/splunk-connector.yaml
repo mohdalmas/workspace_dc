@@ -19,6 +19,7 @@ spec:
     splunk.hec.ssl.validate.certs: false
     splunk.hec.ack.enabled : false
     splunk.hec.raw: true
+    splunk.hec.raw.line.breaker: "####"
 
     key.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter: org.apache.kafka.connect.storage.StringConverter
@@ -29,3 +30,4 @@ spec:
     internal.key.converter.schemas.enable: false
     internal.value.converter.schemas.enable: false
     offset.flush.interval.ms: 10000
+    splunk.hec.json.event.formatted: true

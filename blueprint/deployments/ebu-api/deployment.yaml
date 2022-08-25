@@ -135,6 +135,10 @@ data:
     spring.mvc.dispatch-trace-request=true
     management.endpoint.health.show-details=always
     server.error.include-stacktrace=always
+    
+    springdoc.show-actuator=true
+    management.server.port=9090
+    springdoc.packagesToScan= com.safaricomet.bigdata.ebu
 
 kind: ConfigMap
 metadata:
