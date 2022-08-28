@@ -4,7 +4,7 @@ replicaCount: 3
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/nifi
-  tag: "1.16.3"
+  tag: "1.16.3-test"
   pullPolicy: "Always"
 
 securityContext:
@@ -124,6 +124,7 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/session-cookie-name: nifi-cookie
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 40m
   tls: []
   hosts: 
     - nifi.big-data.safaricomet.net
