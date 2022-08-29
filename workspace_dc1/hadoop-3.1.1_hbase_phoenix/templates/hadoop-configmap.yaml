@@ -325,7 +325,7 @@ data:
       <property><name>mapreduce.map.resource.memory-mb</name><value>3072</value></property>
       <property><name>mapreduce.reduce.resource.memory-mb</name><value>3072</value></property>
       <property><name>mapreduce.map.resource.vcores</name><value>2</value></property>
-      <property><name>mapreduce.reduce.resource.vcores</name><value>2</value></property></configuration>
+      <property><name>mapreduce.reduce.resource.vcores</name><value>2</value></property>
     </configuration>
 
   slaves: |
