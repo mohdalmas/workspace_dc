@@ -322,6 +322,10 @@ data:
       </property> 
       <property><name>yarn.app.mapreduce.am.env</name><value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value></property>       
       <property><name>yarn.app.mapreduce.am.resource.mb</name><value>2048</value></property> 
+      <property><name>mapreduce.map.resource.memory-mb</name><value>3072</value></property>
+      <property><name>mapreduce.reduce.resource.memory-mb</name><value>3072</value></property>
+      <property><name>mapreduce.map.resource.vcores</name><value>2</value></property>
+      <property><name>mapreduce.reduce.resource.vcores</name><value>2</value></property></configuration>
     </configuration>
 
   slaves: |
@@ -400,6 +404,10 @@ data:
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
     <configuration>
+      <property>      <name>yarn.scheduler.increment-allocation-mb</name>      <value>1024</value></property>
+      <property>      <name>yarn.scheduler.increment-allocation-vcores</name>  <value>1</value>    </property>
+      <property>      <name>yarn.scheduler.minimum-allocation-vcores</name>    <value>4</value>    </property>
+      <property>      <name>yarn.scheduler.maximum-allocation-vcores</name>    <value>8</value>    </property>
       <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>{{ include "hadoop.fullname" . }}-yarn-rm</value>
@@ -504,7 +512,7 @@ data:
       </property>
       <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>8192</value>
+        <value>12288</value>
       </property>
       <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
@@ -512,11 +520,11 @@ data:
       </property>
       <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
-        <value>8192</value>
+        <value>12288</value>
       </property>
       <property>
         <name>yarn.nodemanager.resource.cpu-vcores</name>
-        <value>2</value>
+        <value>8</value>
       </property>
        <property>
          <name>mapreduce.framework.name</name>
@@ -573,12 +581,12 @@ data:
       </property>
       <property>
         <name>yarn.scheduler.capacity.root.compaction.capacity</name>
-        <value>40</value>
+        <value>60</value>
         <description>Compaction queue target capacity.</description>
       </property>
       <property>
         <name>yarn.scheduler.capacity.root.dataengineering.capacity</name>
-        <value>40</value>
+        <value>20</value>
         <description>DataEngineering queue target capacity.</description>
       </property>
       <property>
