@@ -87,7 +87,7 @@ hive_spark_master:
   
 hive_spark_worker:
   replicas: 1
-  cores: 7
+  cores: 17
   resources: 
     requests:
       memory: "3Gi"
