@@ -218,7 +218,7 @@ conf:
     spark.cores.max: 4
     spark.driver.cores: 1
     spark.executor.cores: 4
-    spark.default.parallelism: 7 
+    spark.default.parallelism: 9 
     hive.server2.authentication: NOSASL
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
