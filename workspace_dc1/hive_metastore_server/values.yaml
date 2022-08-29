@@ -93,8 +93,8 @@ hive_spark_worker:
       memory: "3Gi"
       cpu: "2"
     limits:
-      memory: "14Gi"
-      cpu: "7"
+      memory: "38Gi"
+      cpu: "17"
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -199,14 +199,15 @@ conf:
     hive.compactor.initiator.on: true
     hive.compactor.delta.num.threshold: 2
     hive.compactor.delta.pct.threshold: "0.1f"
+    hive.compactor.cleaner.run.interval: "5000ms"
     hive.txn.strict.locking.mode: true
     hive.txn.retryable.sqlex.regex: ""
     NO_AUTO_COMPACTION: false
-    hive.compactor.max.num.delta: 10
+    hive.compactor.max.num.delta: 150
     hive.compactor.check.interval: 300
     hive.log.explain.output: true
     hive.metastore.runworker.in: hs2
-    hive.compactor.worker.threads: 1
+    hive.compactor.worker.threads: 20
     hive.compactor.job.queue: compaction
     hive.stats.column.autogather: false
     hive.optimize.sort.dynamic.partition: true
@@ -214,10 +215,10 @@ conf:
     hive.server2.idle.operation.timeout: "480000" # 8 minutes
     hive.server2.idle.session.timeout: "600000" # 10 minutes
     spark.driver.memory: 1024m
-    spark.executor.memory: 3072m
-    spark.cores.max: 2
+    spark.executor.memory: 8192m
+    spark.cores.max: 4
     spark.driver.cores: 1
-    spark.executor.cores: 2
+    spark.executor.cores: 4
     spark.default.parallelism: 7 
     hive.server2.authentication: NOSASL
     hive.server2.transport.mode: http
@@ -239,13 +240,16 @@ conf:
     spark.serializer: org.apache.spark.serializer.KryoSerializer
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
+    spark.driver.cores: 1
+    spark.cores.max: 4
+    spark.executor.cores: 4
     spark.driver.memory: 1024m
-    spark.executor.memory: 3072my
-    spark.default.parallelism: 7  
+    spark.executor.memory: 8192m
+    spark.default.parallelism: 9  
     spark.dynamicAllocation.enabled: true 
-    spark.dynamicAllocation.executorIdleTimeout: 60s
+    spark.dynamicAllocation.executorIdleTimeout: 120s
     spark.dynamicAllocation.minExecutors: 0
-    spark.worker.memory: 14g
+    spark.worker.memory: 38g
 
 ## Configure metrics exporter
 ##
