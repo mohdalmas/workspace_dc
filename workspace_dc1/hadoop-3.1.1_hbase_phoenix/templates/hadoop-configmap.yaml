@@ -405,9 +405,9 @@ data:
 
     <configuration>
       <property>      <name>yarn.scheduler.increment-allocation-mb</name>      <value>1024</value></property>
-	    <property>      <name>yarn.scheduler.increment-allocation-vcores</name>  <value>1</value>    </property>
-	    <property>      <name>yarn.scheduler.minimum-allocation-vcores</name>    <value>4</value>    </property>
-	    <property>      <name>yarn.scheduler.maximum-allocation-vcores</name>    <value>8</value>    </property>
+      <property>      <name>yarn.scheduler.increment-allocation-vcores</name>  <value>1</value>    </property>
+      <property>      <name>yarn.scheduler.minimum-allocation-vcores</name>    <value>4</value>    </property>
+      <property>      <name>yarn.scheduler.maximum-allocation-vcores</name>    <value>8</value>    </property>
       <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>{{ include "hadoop.fullname" . }}-yarn-rm</value>
