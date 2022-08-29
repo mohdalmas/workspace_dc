@@ -89,7 +89,7 @@ yarn:
       value: "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=6484 -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17105:/opt/jmx/hadoop_nm_jmx.yml"
 
     # The number of YARN NodeManager instances.
-    replicas: 2
+    replicas: 3
 
     # Create statefulsets in parallel (K8S 1.7+)
     parallelCreate: false
