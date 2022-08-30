@@ -3,7 +3,7 @@
   
 image:
   repository:  et01-harbor.safaricomet.net/bigdata/hive-spark
-  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-test
   pullPolicy: Always
 
 imagePullSecrets: 
@@ -224,8 +224,9 @@ conf:
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
     hive.server2.thrift.http.path:  cliservice
-    hive.kms.api.url: http://10.3.41.29:8080/api/v1/token
-    hive.kms.api.auth.token: hive
+    kms.api.url: http://10.3.41.29:8080
+    kms.api.auth.username: svc-bigdata-admin
+    kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
     hive.exec.orc.split.strategy: BI
     mapred.child.java.opts: "-Xmx4G -XX:+UseConcMarkSweepGC  -XX:-UseGCOverheadLimit"
     
@@ -250,6 +251,9 @@ conf:
     spark.dynamicAllocation.executorIdleTimeout: 120s
     spark.dynamicAllocation.minExecutors: 0
     spark.worker.memory: 38g
+    kms.api.url: http://10.3.41.29:8080
+    kms.api.auth.username: svc-bigdata-admin
+    kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
 
 ## Configure metrics exporter
 ##
