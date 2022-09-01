@@ -1,1 +1,4 @@
 *.exe
+
+workspace_dc2/hive_metastore_server/.metals/
+workspace_dc2/hive_metastore_server/.vscode/
