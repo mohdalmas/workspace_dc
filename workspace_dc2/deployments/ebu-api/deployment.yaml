@@ -20,9 +20,13 @@ spec:
         - name: regcred
       containers:
         - name: ebu-business-api
-          image: et02-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.3
+          image: et02-harbor.safaricomet.net/bigdata/ebu-business-api:1.0.4
           ports:
             - containerPort: 8080
+          command:
+            - sh
+            - -c
+            - java -jar /ebu-api-1.0.4.jar --spring.config.location=/tmp/application.properties
           imagePullPolicy: Always
           resources:
             requests:
@@ -30,7 +34,74 @@ spec:
               cpu: "250m"
             limits:
               memory: "2Gi"
-              cpu: "2"          
+              cpu: "2"
+          volumeMounts:
+            - mountPath: /tmp/application.properties
+              name: ebu-config
+              subPath: application.properties
+      volumes:
+        - name: ebu-config
+          configMap:
+            name: ebu-config
+            items:
+              - key: application.properties
+                path: application.properties
+
+---
+apiVersion: v1
+data:
+  application.properties: |
+    ## default connection pool
+    spring.datasource.hikari.connectionTimeout=20000
+    spring.datasource.hikari.maximumPoolSize=5
+
+
+    ### PostgreSQL User
+    spring.datasource.user.url=jdbc:postgresql://10.3.141.24:5432/appusers
+    spring.datasource.user.username=svc-bigdata-admin
+    spring.datasource.user.password=lyOdmSBwCsZnD4dLnOAE
+
+    ## PostgreSQL Business
+    spring.datasource.business.url=jdbc:postgresql://10.3.141.24:5432/analytics
+    spring.datasource.business.username=svc-bigdata-admin
+    spring.datasource.business.password=lyOdmSBwCsZnD4dLnOAE
+
+    #drop n create table again, good for testing, comment this in production
+    #spring.jpa.hibernate.ddl-auto=create
+
+    app.name = ebu-business-api
+    jwt.header = Authorization
+    jwt.expires_in = 600
+    jwt.secret = amasegnelahuedewdew
+
+    ldap.userDn=CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+    ldap.bind.password=lyOdmSBwCsZnD4dLnOAE
+    ldap.url=ldap://10.3.108.11:389
+    ldap.userSearchBase=OU=Domain Users,DC=safaricomet,DC=net
+    ldap.userSearchFilter=(sAMAccountName={0})
+    ldap.rawIdentityStrategy=USE_USERNAME
+
+    # Enable Request logging
+    #logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=DEBUG
+    #logging.file=/tmp/ebu/requests.log
+    
+    #management.endpoints.web.exposure.include=info,health,httptrace
+    management.endpoints.web.exposure.include=*
+    management.trace.http.include=AUTHORIZATION_HEADER,COOKIE_HEADERS,PRINCIPAL,REMOTE_ADDRESS,REQUEST_HEADERS,RESPONSE_HEADERS,SESSION_ID,TIME_TAKEN
+    management.endpoint.auditevents.enabled=true
+    management.endpoints.prometheus.enabled=true
+    management.endpoints.sessions.enabled=true
+    spring.mvc.dispatch-trace-request=true
+    management.endpoint.health.show-details=always
+    server.error.include-stacktrace=always
+    springdoc.show-actuator=true
+    management.server.port=9090
+    springdoc.packagesToScan= com.safaricomet.bigdata.ebu
+
+kind: ConfigMap
+metadata:
+  name: ebu-config
+
 ---
 apiVersion: v1
 kind: Service
@@ -71,5 +142,3 @@ spec:
                   number: 8080
             path: /
             pathType: ImplementationSpecific
-
-

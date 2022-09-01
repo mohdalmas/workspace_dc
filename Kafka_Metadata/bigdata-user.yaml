@@ -21,6 +21,12 @@ spec:
         name: 6d-
         patternType: prefix
         type: topic
+    - host: '*'
+      operation: Read
+      resource:
+        name: esb-
+        patternType: prefix
+        type: topic
 
     - host: '*'
       operation: Read
@@ -47,6 +53,12 @@ spec:
       operation: Read
       resource:
         name: bigdata-6d-group
+        patternType: literal
+        type: group
+    - host: '*'
+      operation: Read
+      resource:
+        name: bigdata-esb-group
         patternType: literal
         type: group
     - host: '*'
