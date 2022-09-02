@@ -229,11 +229,14 @@ conf:
     hive.server2.authentication: LDAP
     hive.server2.authentication.ldap.url: "ldap://blueprint.lab:389"
     hive.server2.authentication.ldap.baseDN: "OU=Blueprint,DC=blueprint,DC=lab"
-    hive.users.in.admin.role: Ajit-BI
+    #hive.users.in.admin.role: Ajit-BI
     hive.server2.authentication.ldap.binddn: "CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab"
     hive.server2.authentication.ldap.bindpw: cA6gYsJNL4meJJ6elyoc
-    hive.server2.authentication.ldap.userDNPattern: "CN=%s,OU=Blueprint BI Users,OU=Blueprint,DC=blueprint,DC=lab"
-    hive.server2.authentication.ldap.userFilter: Ajit-BI
+    #hive.server2.authentication.ldap.userDNPattern: "CN=%s,OU=Blueprint TechM Users,OU=Blueprint,DC=blueprint,DC=lab"
+    # hive.server2.authentication.ldap.userFilter: Ajit-BI,Kenneth-TechM
+    hive.server2.authentication.ldap.Domain: blueprint.lab
+    hive.server2.authentication.ldap.customLDAPQuery: <![CDATA[(&(objectClass=person)(|(memberOf=CN=BI-Linux Admins,OU=Blueprint Security Groups,OU=Blueprint,DC=blueprint,DC=lab)(memberOf= CN=tibco-Linux Admins,OU=Blueprint Security Groups,OU=Blueprint,DC=blueprint,DC=lab)))]]>
+
   
 
 
