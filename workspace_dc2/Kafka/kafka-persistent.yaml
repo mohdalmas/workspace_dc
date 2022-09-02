@@ -40,6 +40,7 @@ spec:
         port: 9092
         type: internal
         tls: false
+
       - name: external
         port: 9094
         type: loadbalancer
@@ -50,6 +51,32 @@ spec:
           externalTrafficPolicy: Local
           bootstrap:
             loadBalancerIP: 10.3.141.30
+          brokers:
+          - broker: 0
+            loadBalancerIP: 10.3.141.28
+          - broker: 1
+            loadBalancerIP: 10.3.141.32
+          - broker: 2
+            loadBalancerIP: 10.3.141.34
+
+      - name: tls
+        port: 9095
+        tls: true
+        type: loadbalancer
+        authentication:
+          type: tls
+        configuration:
+          externalTrafficPolicy: Local
+          bootstrap:
+            loadBalancerIP: 10.3.141.64
+          brokers:
+          - broker: 0
+            loadBalancerIP: 10.3.141.66
+          - broker: 1
+            loadBalancerIP: 10.3.141.65
+          - broker: 2
+            loadBalancerIP: 10.3.141.63
+
     authorization:
       type: simple
       superUsers:
