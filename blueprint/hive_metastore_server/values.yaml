@@ -219,7 +219,8 @@ conf:
     spark.driver.cores: 1
     spark.executor.cores: 2
     spark.default.parallelism: 7 
-
+        
+    hive.server2.enable.doAs: false
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
     hive.server2.thrift.http.path:  cliservice
