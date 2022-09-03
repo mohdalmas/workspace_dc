@@ -50,7 +50,9 @@ hive_metastore:
     value: spark://hive-0:7077
   - name: HADOOP_OPTS
     value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6444 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17102:/opt/jmx/hive_metastore_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
-      
+  - name: TZ
+    value: Africa/Addis_Ababa
+
 hive_server:  
   resources: 
     requests:
@@ -70,6 +72,8 @@ hive_server:
     value: spark://hive-0:7077
   - name: HADOOP_CLIENT_OPTS  
     value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
+  - name: TZ
+    value: Africa/Addis_Ababa
 
 hive_spark_master:
   resources: 
@@ -84,7 +88,9 @@ hive_spark_master:
     value: "master"
   - name: "SPARK_MASTER_HOST"
     value: "hive-0.hive-service"
-  
+  - name: TZ
+    value: Africa/Addis_Ababa
+
 hive_spark_worker:
   replicas: 1
   cores: 17
@@ -95,6 +101,10 @@ hive_spark_worker:
     limits:
       memory: "38Gi"
       cpu: "17"
+  extraEnvVars:
+  - name: TZ
+    value: Africa/Addis_Ababa
+    
   autoscaling:
     enabled: true
     minReplicas: 1
