@@ -229,6 +229,7 @@ conf:
     kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
     hive.exec.orc.split.strategy: BI
     mapred.child.java.opts: "-Xmx4G -XX:+UseConcMarkSweepGC  -XX:-UseGCOverheadLimit"
+    hive.druid.broker.address.default: 10.3.41.41:8082
     
   spark-Defaults:
     spark.master.rest.enabled: false
