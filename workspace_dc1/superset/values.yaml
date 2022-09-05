@@ -34,13 +34,6 @@ serviceAccount:
 # For production clusters it's recommended to build own image with this step done in CI
 bootstrapScript: |
   #!/bin/bash
-  rm -rf /var/lib/apt/lists/* && \
-  apt update && apt install libldap2-dev libsasl2-dev
-  pip install \
-    psycopg2-binary==2.9.1 \
-    pydruid \
-    python-ldap \
-    redis==3.5.3 && \
   if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
 
 ## The name of the secret which we will use to generate a superset_config.py file
@@ -233,11 +226,11 @@ resources: {}
   # The limits below will apply to all Superset components. To set individual resource limitations refer to the pod specific values below.
   # The pod specific values will overwrite anything that is set here.
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 5000m
+  #   memory: 6280Mi
   # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 2000m
+  #   memory: 2048Mi
 
 ##
 ## Custom hostAliases for all superset pods
@@ -284,13 +277,13 @@ supersetNode:
   ## Labels to be added to supersetNode pods
   podLabels: {}
   # Resource settings for the supersetNode pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: {}
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+  resources: 
+    limits:
+     cpu: 2000m
+     memory: 2048Mi
+    requests:
+     cpu: 1000m
+     memory: 1024Mi
   podSecurityContext: {}
   containerSecurityContext: {}
 ##
@@ -316,13 +309,13 @@ supersetWorker:
   ## Labels to be added to supersetWorker pods
   podLabels: {}
   # Resource settings for the supersetWorker pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: {}
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+  resources: 
+    limits:
+     cpu: 2000m
+     memory: 2048Mi
+    requests:
+     cpu: 1000m
+     memory: 1024Mi
   podSecurityContext: {}
   containerSecurityContext: {}
 ##
@@ -350,13 +343,13 @@ supersetCeleryBeat:
   ## Labels to be added to supersetCeleryBeat pods
   podLabels: {}
   # Resource settings for the CeleryBeat pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: {}
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+  resources: 
+    limits:
+     cpu: 2000m
+     memory: 2048Mi
+    requests:
+     cpu: 1000m
+     memory: 1024Mi
   podSecurityContext: {}
   containerSecurityContext: {}
 ##
