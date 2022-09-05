@@ -183,7 +183,7 @@ extraConfigMountPath: "/app/configs"
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/superset
-  tag: latest
+  tag: master
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
