@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: usage-service
+  name: usage-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usage-service
+  template:
+    metadata:
+      labels:
+        app: usage-service
+    spec:
+      containers:
+        - image: et01-harbor.safaricomet.net/bigdata/usage-service:latest
+          imagePullPolicy: Always
+          name: usage-service
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          command:
+            - sh
+            - -c
+            - java -jar /subscriber-0.0.1-SNAPSHOT.jar --spring.config.location=/tmp/application.properties
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 500Mi
+          volumeMounts:
+            - mountPath: /tmp/application.properties
+              name: usage-config
+              subPath: application.properties
+      volumes:
+        - name: usage-config
+          configMap:
+            name: usage-config
+            items:
+              - key: application.properties
+                path: application.properties
+      imagePullSecrets:
+        - name: regcred
+      serviceAccount: bigdata
+      serviceAccountName: bigdata
+
+---
+apiVersion: v1
+data:
+  application.properties: |
+    spring.datasource.url=jdbc:phoenix:bigdata-zk-zookeeper-headless:2181:/hbase
+    #datasource.driverClassName = org.apache.phoenix.jdbc.PhoenixDriver
+    server.port = 8080
+    springdoc.show-actuator=true
+    management.server.port=9090
+    springdoc.packagesToScan= com.safaricom.bigdata.subscriber
+    phoenix.table= "USAGE"."SUBSCRIBER_ACTIVITIES"
+kind: ConfigMap
+metadata:
+  name: usage-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usage-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: port
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: usage-service
