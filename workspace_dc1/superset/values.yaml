@@ -149,7 +149,7 @@ configOverrides:
     # Path for routing when APP_ICON image is clicked
     LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
     LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    FAVICONS = [{"href": "/tmp/logos/superset-logo-horiz.png"}]
+    FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
   FILTER_STATE_CACHE_CONFIG: |
     FILTER_STATE_CACHE_CONFIG = {
