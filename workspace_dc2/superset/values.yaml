@@ -197,7 +197,7 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets: 
-  - regcred
+  - name: regcred
 
 initImage:
   repository: et02-harbor.safaricomet.net/bigdata/busybox
