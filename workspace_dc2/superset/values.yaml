@@ -143,7 +143,7 @@ configOverrides:
 
   visual_edit: |
     # Visual Customizations
-    APP_NAME = "Bigdata Analytics"
+    APP_NAME = "Bigdata Analytics - DC2"
     APP_ICON = "/static/assets/images/saf.png"
     APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
