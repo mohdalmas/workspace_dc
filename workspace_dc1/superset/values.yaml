@@ -141,6 +141,38 @@ configOverrides:
     MAIL_PASSWORD = ''
     MAIL_DEFAULT_SENDER = 'noreply.big-data@safaricom.et'
 
+  visual_edit: |
+    # Visual Customizations
+    APP_NAME = "Bigdata Analytics"
+    APP_ICON = "/static/assets/images/saf.png"
+    APP_ICON_WIDTH = 600
+    # Path for routing when APP_ICON image is clicked
+    LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
+    LOGO_TOOLTIP = "Home" # Text displayed when hovering.
+    FAVICONS = [{"href": "/tmp/logos/superset-logo-horiz.png"}]
+
+  FILTER_STATE_CACHE_CONFIG: |
+    FILTER_STATE_CACHE_CONFIG = {
+      'CACHE_TYPE': 'redis',
+      'CACHE_DEFAULT_TIMEOUT': 300,
+      'CACHE_KEY_PREFIX': 'superset_filter_',
+      'CACHE_REDIS_HOST': env('REDIS_HOST'),
+      'CACHE_REDIS_PORT': env('REDIS_PORT'),
+      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
+      'CACHE_REDIS_DB': env('REDIS_DB', 2),
+
+    }
+
+  EXPLORE_FORM_DATA_CACHE_CONFIG: |
+    EXPLORE_FORM_DATA_CACHE_CONFIG = {
+      'CACHE_TYPE': 'redis',
+      'CACHE_DEFAULT_TIMEOUT': 300,
+      'CACHE_KEY_PREFIX': 'superset_form_',
+      'CACHE_REDIS_HOST': env('REDIS_HOST'),
+      'CACHE_REDIS_PORT': env('REDIS_PORT'),
+      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
+      'CACHE_REDIS_DB': env('REDIS_DB', 3),
+    }
 
 
   #   OAUTH_PROVIDERS = [
@@ -183,7 +215,7 @@ extraConfigMountPath: "/app/configs"
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/superset
-  tag: master
+  tag: master2
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
