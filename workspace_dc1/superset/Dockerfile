@@ -8,6 +8,6 @@ RUN rm -rf /var/lib/apt/lists/* \
     && pip install psycopg2-binary==2.9.1 pydruid python-ldap redis==3.5.3 mysqlclient
 COPY logo-lg.png /app/superset/static/assets/images/saf.png
 COPY saf-fav.png /app/superset/static/assets/images/saf-fav.png
-COPY theme.dfd72a332a2d6eb39e33.entry.css /app/superset/static/assets/
+COPY theme.dfd72a332a2d6eb39e33.entry.css /app/superset/static/assets/theme.4639b060fd9b6a4b89fb.entry.css
 # Switching back to using the `superset` user
 USER superset
