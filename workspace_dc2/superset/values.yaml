@@ -144,8 +144,8 @@ configOverrides:
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics"
-    APP_ICON = "/static/assets/images/superset-logo-horiz.png"
-    APP_ICON_WIDTH = 200
+    APP_ICON = "/static/assets/images/saf.png"
+    APP_ICON_WIDTH = 300
     # Path for routing when APP_ICON image is clicked
     LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
     LOGO_TOOLTIP = "Home" # Text displayed when hovering.
