@@ -141,6 +141,16 @@ configOverrides:
     MAIL_PASSWORD = ''
     MAIL_DEFAULT_SENDER = 'noreply.big-data@safaricom.et'
 
+  visual_edit: |
+    # Visual Customizations
+    APP_NAME = "Bigdata Analytics"
+    APP_ICON = "/tmp/logos/superset-logo-horiz.png"
+    APP_ICON_WIDTH = 200
+    # Path for routing when APP_ICON image is clicked
+    LOGO_TARGET_PATH = '/' # Forwards to /superset/welcome/home
+    LOGO_TOOLTIP = "Go Home" # Text displayed when hovering.
+    FAVICONS = [{"href": "/static/assets/images/custom_favicon.png"}]
+
 
 
   #   OAUTH_PROVIDERS = [
