@@ -404,7 +404,7 @@ init:
     - "/bin/sh"
     - "-c"
     - ". {{ .Values.configMountPath }}/superset_bootstrap.sh; . {{ .Values.configMountPath }}/superset_init.sh"
-  enabled: true
+  enabled: false
   loadExamples: false
   createAdmin: true
   adminUser:
