@@ -196,7 +196,8 @@ image:
   tag: master
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+imagePullSecrets: 
+  - regcred
 
 initImage:
   repository: et02-harbor.safaricomet.net/bigdata/busybox
