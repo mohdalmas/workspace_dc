@@ -151,6 +151,28 @@ configOverrides:
     LOGO_TOOLTIP = "Go Home" # Text displayed when hovering.
     FAVICONS = [{"href": "/static/assets/images/custom_favicon.png"}]
 
+  FILTER_STATE_CACHE_CONFIG: |
+    FILTER_STATE_CACHE_CONFIG = {
+      'CACHE_TYPE': 'redis',
+      'CACHE_DEFAULT_TIMEOUT': 300,
+      'CACHE_KEY_PREFIX': 'superset_filter_',
+      'CACHE_REDIS_HOST': env('REDIS_HOST'),
+      'CACHE_REDIS_PORT': env('REDIS_PORT'),
+      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
+      'CACHE_REDIS_DB': env('REDIS_DB', 2),
+
+    }
+
+  EXPLORE_FORM_DATA_CACHE_CONFIG: |
+    EXPLORE_FORM_DATA_CACHE_CONFIG = {
+      'CACHE_TYPE': 'redis',
+      'CACHE_DEFAULT_TIMEOUT': 300,
+      'CACHE_KEY_PREFIX': 'superset_form_',
+      'CACHE_REDIS_HOST': env('REDIS_HOST'),
+      'CACHE_REDIS_PORT': env('REDIS_PORT'),
+      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
+      'CACHE_REDIS_DB': env('REDIS_DB', 3),
+    }
 
 
   #   OAUTH_PROVIDERS = [
