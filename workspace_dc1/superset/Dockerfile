@@ -1,4 +1,4 @@
-FROM apache/superset:2.0.0
+FROM apache/superset:master
 # Switching to root to install the required packages
 USER root
 # Example: installing the MySQL driver to connect to the metadata database
@@ -8,6 +8,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     && pip install psycopg2-binary==2.9.1 pydruid python-ldap redis==3.5.3 mysqlclient PyHive elasticsearch-dbapi cx_Oracle pymssql pyodbc 
 COPY logo-lg.png /app/superset/static/assets/images/saf.png
 COPY saf-fav.png /app/superset/static/assets/images/saf-fav.png
-COPY theme.dfd72a332a2d6eb39e33.entry.css /app/superset/static/assets/theme.4639b060fd9b6a4b89fb.entry.css
+COPY theme.dfd72a332a2d6eb39e33.entry.css /app/superset/static/assets/
+# theme.4639b060fd9b6a4b89fb.entry.css
 # Switching back to using the `superset` user
 USER superset
