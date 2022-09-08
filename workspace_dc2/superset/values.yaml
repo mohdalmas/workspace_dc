@@ -137,22 +137,32 @@ configOverrides:
     # AUTH_LDAP_FIRSTNAME_FIELD = "name"
     AUTH_LDAP_EMAIL_FIELD = "userPrincipalName"
   
-    # Registration configs
+    # Email configs
     MAIL_SERVER = '10.3.124.25'
     MAIL_USE_TLS = False
     MAIL_USERNAME = 'BigdataAlerts@safaricom.et'
     MAIL_PASSWORD = ''
     MAIL_DEFAULT_SENDER = 'noreply.big-data@safaricom.et'
 
+    EMAIL_NOTIFICATIONS = False  # all the emails are sent using dryrun
+    SMTP_HOST = "10.3.124.25"
+    SMTP_STARTTLS = False
+    SMTP_SSL = False
+    SMTP_USER = "BigdataAlerts@safaricom.et"
+    SMTP_PORT = 25
+    SMTP_PASSWORD = ""
+    SMTP_MAIL_FROM = "noreply.big-data@safaricom.et"
+
+
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics - DC2"
-    # APP_ICON = "/static/assets/images/saf.png"
-    # APP_ICON_WIDTH = 600
+    #APP_ICON = "/static/assets/images/saf.png"
+    #APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
-    # LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
-    # LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    # FAVICONS = [{"href": "/static/assets/images/saf.png"}]
+    #LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
+    #LOGO_TOOLTIP = "Home" # Text displayed when hovering.
+    #FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
   FILTER_STATE_CACHE_CONFIG: |
     FILTER_STATE_CACHE_CONFIG = {
@@ -185,7 +195,7 @@ configOverrides:
       'LISTVIEWS_DEFAULT_CARD_VIEW': True,
       'SCHEDULED_QUERIES': True,
       'SQL_VALIDATORS_BY_ENGINE': True,
-      'THUMBNAILS': True,
+      'THUMBNAILS': False,
       'ALERT_REPORTS': True,
       'DYNAMIC_PLUGINS': True,
       'DASHBOARD_NATIVE_FILTERS': True,
@@ -194,6 +204,45 @@ configOverrides:
       'GENERIC_CHART_AXES': True
     }
 
+  celery-conf: |
+    class CeleryConfig:  # pylint: disable=too-few-public-methods
+        BROKER_URL = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        CELERY_IMPORTS = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
+        CELERY_RESULT_BACKEND = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        CELERYD_LOG_LEVEL = "DEBUG"
+        CELERYD_PREFETCH_MULTIPLIER = 10
+        CELERY_ACKS_LATE = False
+        CELERY_ANNOTATIONS = {
+            "sql_lab.get_sql_results": {"rate_limit": "100/s"},
+            "email_reports.send": {
+                "rate_limit": "1/s",
+                "time_limit": int(timedelta(seconds=120).total_seconds()),
+                "soft_time_limit": int(timedelta(seconds=150).total_seconds()),
+                "ignore_result": True,
+            },
+        }
+        CELERYBEAT_SCHEDULE = {
+            "email_reports.schedule_hourly": {
+                "task": "email_reports.schedule_hourly",
+                "schedule": crontab(minute=1, hour="*"),
+            },
+            "reports.scheduler": {
+                "task": "reports.scheduler",
+                "schedule": crontab(minute="*", hour="*"),
+            },
+            "reports.prune_log": {
+                "task": "reports.prune_log",
+                "schedule": crontab(minute=0, hour=0),
+            },
+        }
+
+
+    CELERY_CONFIG = CeleryConfig 
+
+    THUMBNAIL_SELENIUM_USER = Mathew.kiprop
+    SCREENSHOT_LOCATE_WAIT = 100
+    SCREENSHOT_LOAD_WAIT = 600
+    SLACK_API_TOKEN = xoxe.xoxp-1-Mi0yLTMzOTk4MTc5MTc2ODMtMzM5MzE2MDY3ODk4Mi0zNjQ3MDQwNzIxNzQ5LTQwNTUwNjAzNTQ4NjgtMmNkOWU2ZjMzNmM4MmUzMTA0YjkxODE2NDFkY2IzYWM5ODk3YzI3ZWViMjRkZTM0MWE1OGJkNThiYmRjMjljZA
 
   #   OAUTH_PROVIDERS = [
   #       {
