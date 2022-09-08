@@ -114,9 +114,9 @@ hive_spark_worker:
           averageUtilization: 80
 
 ingress:
-  #user: hive
-  #password: Xj9jzb4xtWzF3Pe6
-  #enabled: true
+  user: hive
+  password: Xj9jzb4xtWzF3Pe6
+  enabled: true
   hostPaths:
   - host: hive.bigdata.blueprint.lab
     http:
@@ -221,8 +221,7 @@ conf:
     spark.default.parallelism: 7 
         
     hive.server2.enable.doAs: true
-    hive.proxy.user.property: "hive.server2.proxy.user"
-    hive.metastore.execute.setugi: true
+    hive.server2.proxy.user: "${username}"
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
     hive.server2.thrift.http.path:  cliservice
