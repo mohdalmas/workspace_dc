@@ -56,7 +56,7 @@ spec:
   - name: container_memory
     rules:     
     - alert: Container Memory Usage - EMERGENCY
-      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 90
+      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 90
       for: 10m
       labels:
         severity: emergency
@@ -64,7 +64,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 90% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - CRITICAL
-      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 80
+      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 80
       for: 15m
       labels:
         severity: critical
@@ -72,7 +72,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 80% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - HIGH
-      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 70
+      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 70
       for: 30m
       labels:
         severity: high
@@ -80,7 +80,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 70% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - MEDIUM
-      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 60
+      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 60
       for: 1h
       labels:
         severity: medium
@@ -88,7 +88,7 @@ spec:
         summary: 'Container Memory usage for {{ $labels.pod }}'
         description: 'Container Memory usage is above 60% and  VALUE = {{ $value }}  LABELS = {{ $labels }}'
     - alert: Container Memory Usage - LOW
-      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!=""}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 50
+      expr: (sum(container_memory_working_set_bytes{namespace="et01-tkg-bigdata-prod",container!~"|nifi|kafka-gui"}) BY (pod, container) / sum(container_spec_memory_limit_bytes > 0) BY (pod, container) * 100) > 50
       for: 2h
       labels:
         severity: low
@@ -101,7 +101,7 @@ spec:
     rules:
     - alert: Pod Instance Down - EMERGENCY
       # Condition for alerting
-      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod",container!~"|superset-init-db"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 10m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -112,7 +112,7 @@ spec:
           severity: 'emergency'        
     - alert: Pod Instance Down - CRITICAL
       # Condition for alerting
-      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod",container!~"|superset-init-db"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 8m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -123,7 +123,7 @@ spec:
           severity: 'critical'    
     - alert: Pod Instance Down - HIGH
       # Condition for alerting
-      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod",container!~"|superset-init-db"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 6m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -134,7 +134,7 @@ spec:
           severity: 'high'    
     - alert: Pod Instance Down - MEDIUM
       # Condition for alerting
-      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod",container!~"|superset-init-db"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 4m
       # Annotation - additional informational labels to store more information
       annotations:
@@ -145,7 +145,7 @@ spec:
           severity: 'medium'    
     - alert: Pod Instance Down - LOW
       # Condition for alerting
-      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
+      expr: kube_pod_container_status_ready{namespace="et01-tkg-bigdata-prod",container!~"|superset-init-db"}==0 or kube_pod_container_status_ready{namespace="bigdata-monitoring"}==0  or kube_pod_container_status_ready{namespace="ingress-nginx"}==0
       for: 2m
       # Annotation - additional informational labels to store more information
       annotations:
