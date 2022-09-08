@@ -114,9 +114,9 @@ hive_spark_worker:
           averageUtilization: 80
 
 ingress:
-  #user: hive
-  #password: Xj9jzb4xtWzF3Pe6
-  #enabled: true
+  user: hive
+  password: Xj9jzb4xtWzF3Pe6
+  enabled: true
   hostPaths:
   - host: hive.bigdata.blueprint.lab
     http:
@@ -220,8 +220,11 @@ conf:
     spark.executor.cores: 2
     spark.default.parallelism: 7 
         
-    hive.server2.enable.doAs: true
-    hive.proxy.user.property: "hive.server2.proxy.user"
+    hive.server2.enable.doAs: false
+    hive.security.authorization.enabled: true
+    hive.security.authorization.manager: org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdHiveAuthorizerFactory
+    hive.security.authenticator.manager: org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator
+    #hive.proxy.user.property: "hive.server2.proxy.user"
     hive.metastore.execute.setugi: true
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
@@ -232,7 +235,7 @@ conf:
     hive.server2.authentication: LDAP
     hive.server2.authentication.ldap.url: "ldap://blueprint.lab:389"
     hive.server2.authentication.ldap.baseDN: "OU=Blueprint,DC=blueprint,DC=lab"
-    #hive.users.in.admin.role: Ajit-BI
+    hive.users.in.admin.role: Kenneth-TechM
     hive.server2.authentication.ldap.binddn: "CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab"
     hive.server2.authentication.ldap.bindpw: cA6gYsJNL4meJJ6elyoc
     #hive.server2.authentication.ldap.userDNPattern: "CN=%s,OU=Blueprint TechM Users,OU=Blueprint,DC=blueprint,DC=lab"
