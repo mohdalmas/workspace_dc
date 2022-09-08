@@ -115,6 +115,9 @@ configOverrides:
   # extend_timeout: |
   #   # Extend timeout to allow long running queries.
   #   SUPERSET_WEBSERVER_TIMEOUT = ...
+  server_props: |
+    # The base URL to query for accessing the user interface
+    WEBDRIVER_BASEURL = "http://superset:8088/"
   enable_oauth: |
     from flask_appbuilder.security.manager import (AUTH_LDAP)
     
@@ -144,12 +147,12 @@ configOverrides:
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics - DC2"
-    APP_ICON = "/static/assets/images/saf.png"
-    APP_ICON_WIDTH = 600
+    # APP_ICON = "/static/assets/images/saf.png"
+    # APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
-    LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
-    LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    FAVICONS = [{"href": "/static/assets/images/saf.png"}]
+    # LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
+    # LOGO_TOOLTIP = "Home" # Text displayed when hovering.
+    # FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
   FILTER_STATE_CACHE_CONFIG: |
     FILTER_STATE_CACHE_CONFIG = {
@@ -172,6 +175,23 @@ configOverrides:
       'CACHE_REDIS_PORT': env('REDIS_PORT'),
       'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
       'CACHE_REDIS_DB': env('REDIS_DB', 3),
+    }
+  FEATURE_FLAGS: |
+    FEATURE_FLAGS = {
+      'DASHBOARD_CROSS_FILTERS': True,
+      'DASHBOARD_RBAC': True,
+      'ESCAPE_MARKDOWN_HTML': True,
+      'ENABLE_TEMPLATE_PROCESSING': True,
+      'LISTVIEWS_DEFAULT_CARD_VIEW': True,
+      'SCHEDULED_QUERIES': True,
+      'SQL_VALIDATORS_BY_ENGINE': True,
+      'THUMBNAILS': True,
+      'ALERT_REPORTS': True,
+      'DYNAMIC_PLUGINS': True,
+      'DASHBOARD_NATIVE_FILTERS': True,
+      'VERSIONED_EXPORT': True,
+      'ENABLE_JAVASCRIPT_CONTROLS': True,
+      'GENERIC_CHART_AXES': True
     }
 
 
@@ -215,7 +235,7 @@ extraConfigMountPath: "/app/configs"
 
 image:
   repository: et02-harbor.safaricomet.net/bigdata/superset
-  tag: 2.0.0
+  tag: 1.5.2rc2-dev
   pullPolicy: Always
 
 imagePullSecrets: 
@@ -404,15 +424,15 @@ init:
     - "/bin/sh"
     - "-c"
     - ". {{ .Values.configMountPath }}/superset_bootstrap.sh; . {{ .Values.configMountPath }}/superset_init.sh"
-  enabled: false
-  loadExamples: false
+  enabled: true
+  loadExamples: true
   createAdmin: true
   adminUser:
     username: Mathew.kiprop
     firstname: Mathew
     lastname: Kiprop
     email: mathew.kiprop@safaricomet.net
-    password: ''
+    password: 'Chebarbar@12345'
   initContainers:
     - name: wait-for-postgres
       image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
