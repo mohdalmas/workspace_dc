@@ -186,7 +186,7 @@ configOverrides:
       'LISTVIEWS_DEFAULT_CARD_VIEW': True,
       'SCHEDULED_QUERIES': True,
       'SQL_VALIDATORS_BY_ENGINE': True,
-      'THUMBNAILS': True,
+      'THUMBNAILS': False,
       'ALERT_REPORTS': True,
       'DYNAMIC_PLUGINS': True,
       'DASHBOARD_NATIVE_FILTERS': True,
