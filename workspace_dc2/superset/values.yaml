@@ -205,7 +205,8 @@ configOverrides:
     }
 
   celery-conf: |
-    from datetime import date, timedelta
+    from datetime import timedelta
+    from celery.schedules import crontab
 
     class CeleryConfig:  # pylint: disable=too-few-public-methods
         BROKER_URL = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
