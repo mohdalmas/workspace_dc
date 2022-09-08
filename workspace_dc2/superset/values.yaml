@@ -425,7 +425,7 @@ init:
     - "-c"
     - ". {{ .Values.configMountPath }}/superset_bootstrap.sh; . {{ .Values.configMountPath }}/superset_init.sh"
   enabled: true
-  loadExamples: true
+  loadExamples: false
   createAdmin: true
   adminUser:
     username: Mathew.kiprop

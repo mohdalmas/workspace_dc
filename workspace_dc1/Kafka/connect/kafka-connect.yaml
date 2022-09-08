@@ -88,8 +88,26 @@ spec:
     pod:
       imagePullSecrets:
         - name: regcred
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/cluster
+                    operator: In
+                    values:
+                      - kafka-connect
+              topologyKey: "kubernetes.io/hostname"
 
   logging:
     type: inline
     loggers:
       log4j.rootLogger: "INFO"
+      
+  resources:
+    requests:
+      cpu: "2"
+      memory: 10Gi
+    limits:
+      cpu: "4"
+      memory: 30Gi
