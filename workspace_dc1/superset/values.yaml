@@ -206,6 +206,9 @@ configOverrides:
     }
 
   celery-conf: |
+    from datetime import timedelta
+    from celery.schedules import crontab
+
     class CeleryConfig:  # pylint: disable=too-few-public-methods
         BROKER_URL = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
         CELERY_IMPORTS = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
@@ -240,11 +243,10 @@ configOverrides:
 
     CELERY_CONFIG = CeleryConfig 
 
-    THUMBNAIL_SELENIUM_USER = Mathew.kiprop
+    THUMBNAIL_SELENIUM_USER = 'Mathew.kiprop'
     SCREENSHOT_LOCATE_WAIT = 100
     SCREENSHOT_LOAD_WAIT = 600
-    SLACK_API_TOKEN = xoxe.xoxp-1-Mi0yLTMzOTk4MTc5MTc2ODMtMzM5MzE2MDY3ODk4Mi0zNjQ3MDQwNzIxNzQ5LTQwNTUwNjAzNTQ4NjgtMmNkOWU2ZjMzNmM4MmUzMTA0YjkxODE2NDFkY2IzYWM5ODk3YzI3ZWViMjRkZTM0MWE1OGJkNThiYmRjMjljZA
-
+    SLACK_API_TOKEN = 'xoxb-3399817917683-3592811614901-RKGjNiSLgrok3SceYY68gHJ7'
 
   #   OAUTH_PROVIDERS = [
   #       {
@@ -474,7 +476,7 @@ init:
     - "/bin/sh"
     - "-c"
     - ". {{ .Values.configMountPath }}/superset_bootstrap.sh; . {{ .Values.configMountPath }}/superset_init.sh"
-  enabled: false
+  enabled: true
   loadExamples: false
   createAdmin: true
   adminUser:
