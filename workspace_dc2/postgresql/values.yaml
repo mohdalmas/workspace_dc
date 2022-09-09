@@ -87,14 +87,14 @@ volumePermissions:
 ##
 securityContext:
   enabled: false
-  fsGroup: 0
+  fsGroup: 1000
 
 ## Container Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 containerSecurityContext:
   enabled: false
-  runAsUser: 0
+  runAsUser: 1000
 
 ## Pod Service Account
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
