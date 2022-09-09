@@ -71,7 +71,7 @@ hive_server:
   - name: SPARK_MASTER_URL
     value: spark://hive-0:7077
   - name: HADOOP_CLIENT_OPTS  
-    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false"
+    value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=6454 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -javaagent:/opt/jmx/jmx_prometheus_javaagent-0.14.0.jar=17101:/opt/jmx/hive_server_jmx.yml -Dcom.sun.management.jmxremote.ssl=false -Xmx8192m"
   - name: TZ
     value: Africa/Addis_Ababa
 
