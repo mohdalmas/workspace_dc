@@ -104,4 +104,4 @@ spec:
       memory: 10Gi
     limits:
       cpu: "4"
-      memory: 30Gi
+      memory: 40Gi
