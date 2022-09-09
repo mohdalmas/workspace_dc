@@ -244,10 +244,13 @@ extraVolumeMounts:
     subPath: yarn-site.xml
   - mountPath: /tmp/nifi
     name: cert-config
-    readOnly: true
+    readOnly: false
   - mountPath: /tmp/splunk
     name: splunk-cert-config
-    readOnly: true
+    readOnly: false
+  - mountPath: /opt/nifi/nifi-current/ext-config/xsltjson.xml
+    name: xml-conf
+    subPath: xsltjson.xml
   # - mountPath: /opt/nifi/external-nar
     # name: ext-nar
   # - mountPath: /opt/nifi/external-jar
@@ -287,6 +290,13 @@ extraVolumes:
   - name: splunk-cert-config
     secret:
       secretName: splunk-tls
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: xsltjson.xml
+        path: xsltjson.xml
+      name: nifi-config
+    name: xml-conf
 
 ## Extra containers
 extraContainers: []
