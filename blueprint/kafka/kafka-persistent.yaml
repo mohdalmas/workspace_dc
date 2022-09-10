@@ -45,15 +45,15 @@ spec:
         configuration:
           externalTrafficPolicy: Local
           bootstrap:
-            loadBalancerIP: ""
+            loadBalancerIP: 192.168.21.20
           brokers:
           - broker: 0
-            loadBalancerIP: ""
+            loadBalancerIP: 192.168.21.20
           - broker: 1
-            loadBalancerIP: ""
+            loadBalancerIP: 192.168.21.22
           - broker: 2
-            loadBalancerIP: ""
-      
+            loadBalancerIP: 192.168.21.18
+            
       - name: tls
         port: 9095
         type: loadbalancer
@@ -62,22 +62,21 @@ spec:
           type: tls
         configuration:
           externalTrafficPolicy: Local
-          brokerCertChainAndKey:
-             secretName: my-kafka-secret
-             certificate: server.crt
-             key: server.key
           bootstrap:
-            loadBalancerIP: ""
-      - name: tlsstrimzi
-        port: 9096
-        type: loadbalancer
-        tls: true
-        authentication:
-          type: tls
-        configuration:
-          externalTrafficPolicy: Local
-          bootstrap:
-            loadBalancerIP: ""
+            loadBalancerIP: 192.168.21.42
+          brokers:
+          - broker: 0
+            advertisedHost: 192.168.21.40
+            advertisedPort: 9095
+            loadBalancerIP: 192.168.21.40
+          - broker: 1
+            advertisedHost: 192.168.21.41
+            advertisedPort: 9095
+            loadBalancerIP: 192.168.21.41
+          - broker: 2
+            advertisedHost: 192.168.21.42
+            advertisedPort: 9095
+            loadBalancerIP: 192.168.21.42
 
     authorization:
       type: simple
@@ -90,6 +89,8 @@ spec:
       default.replication.factor: 2
       min.insync.replicas: 1
       inter.broker.protocol.version: "3.2"
+      ssl.endpoint.identification.algorithm: ""
+      
     storage:
       type: persistent-claim
       size: 10Gi
