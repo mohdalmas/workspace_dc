@@ -240,7 +240,10 @@ extraVolumeMounts:
     subPath: yarn-site.xml
   - mountPath: /tmp
     name: cert-config
-    readOnly: true
+    readOnly: false
+  - mountPath: /opt/nifi/nifi-current/ext-config/xsltjson.xml
+    name: xml-conf
+    subPath: xsltjson.xml
   # - mountPath: /opt/nifi/extensions
   #   name: nifi-extensions
   # - mountPath: /opt/nifi/external-nar
@@ -279,6 +282,13 @@ extraVolumes:
   - name: cert-config
     secret:
       secretName: nifi-tls
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: xsltjson.xml
+        path: xsltjson.xml
+      name: nifi-config
+    name: xml-conf
 
 ## Extra containers
 extraContainers: []

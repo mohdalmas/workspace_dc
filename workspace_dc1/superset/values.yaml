@@ -119,6 +119,7 @@ configOverrides:
   server_props: |
     # The base URL to query for accessing the user interface
     WEBDRIVER_BASEURL = "http://superset:8088/"
+    WEBDRIVER_BASEURL_USER_FRIENDLY = "https://superset.big-data.safaricomet.net/"
   enable_oauth: |
     from flask_appbuilder.security.manager import (AUTH_LDAP)
     
@@ -138,20 +139,30 @@ configOverrides:
     # AUTH_LDAP_FIRSTNAME_FIELD = "name"
     AUTH_LDAP_EMAIL_FIELD = "userPrincipalName"
   
-    # Registration configs
+    # Email configs
     MAIL_SERVER = '10.3.124.25'
     MAIL_USE_TLS = False
     MAIL_USERNAME = 'BigdataAlerts@safaricom.et'
     MAIL_PASSWORD = ''
     MAIL_DEFAULT_SENDER = 'noreply.big-data@safaricom.et'
 
+    EMAIL_NOTIFICATIONS = False  # all the emails are sent using dryrun
+    SMTP_HOST = "10.3.124.25"
+    SMTP_STARTTLS = False
+    SMTP_SSL = False
+    SMTP_USER = "BigdataAlerts@safaricom.et"
+    SMTP_PORT = 25
+    SMTP_PASSWORD = ""
+    SMTP_MAIL_FROM = "noreply.big-data@safaricom.et"
+
+
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics - DC1"
     APP_ICON = "/static/assets/images/saf.png"
-    APP_ICON_WIDTH = 600
+    # APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
-    LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
+    LOGO_TARGET_PATH = '' # Forwards to /superset/welcome/home
     LOGO_TOOLTIP = "Home" # Text displayed when hovering.
     FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
@@ -195,6 +206,48 @@ configOverrides:
       'GENERIC_CHART_AXES': True
     }
 
+  celery-conf: |
+    from datetime import timedelta
+    from celery.schedules import crontab
+
+    class CeleryConfig:  # pylint: disable=too-few-public-methods
+        broker_url = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        imports = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
+        result_backend = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        worker_log_level = "DEBUG"
+        worker_prefetch_multiplier = 10
+        task_acks_late = False
+        task_annotations = {
+            "sql_lab.get_sql_results": {"rate_limit": "100/s"},
+            "email_reports.send": {
+                "rate_limit": "1/s",
+                "time_limit": int(timedelta(seconds=120).total_seconds()),
+                "soft_time_limit": int(timedelta(seconds=150).total_seconds()),
+                "ignore_result": True,
+            },
+        }
+        beat_schedule = {
+            "email_reports.schedule_hourly": {
+                "task": "email_reports.schedule_hourly",
+                "schedule": crontab(minute=1, hour="*"),
+            },
+            "reports.scheduler": {
+                "task": "reports.scheduler",
+                "schedule": crontab(minute="*", hour="*"),
+            },
+            "reports.prune_log": {
+                "task": "reports.prune_log",
+                "schedule": crontab(minute=0, hour=0),
+            },
+        }
+
+
+    CELERY_CONFIG = CeleryConfig 
+
+    THUMBNAIL_SELENIUM_USER = 'Mathew.kiprop'
+    SCREENSHOT_LOCATE_WAIT = 100
+    SCREENSHOT_LOAD_WAIT = 600
+    SLACK_API_TOKEN = 'xoxb-3399817917683-3592811614901-RKGjNiSLgrok3SceYY68gHJ7'
 
   #   OAUTH_PROVIDERS = [
   #       {
@@ -426,7 +479,7 @@ init:
     - ". {{ .Values.configMountPath }}/superset_bootstrap.sh; . {{ .Values.configMountPath }}/superset_init.sh"
   enabled: false
   loadExamples: false
-  createAdmin: true
+  createAdmin: false
   adminUser:
     username: Mathew.kiprop
     firstname: Mathew

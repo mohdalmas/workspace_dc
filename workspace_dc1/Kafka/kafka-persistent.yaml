@@ -11,15 +11,16 @@ spec:
           # operator: "Equal"
           # value: "Kafka-Nifi"
           # effect: "NoSchedule"
-        # affinity:
-          # nodeAffinity:
-            # requiredDuringSchedulingIgnoredDuringExecution:
-              # nodeSelectorTerms:
-              # - matchExpressions:
-                # - key: dedicated
-                  # operator: In
-                  # values:
-                  # - Kafka-Nifi
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: strimzi.io/cluster
+                      operator: In
+                      values:
+                        - kafka
+                topologyKey: "kubernetes.io/hostname"
         metadata:
           annotations:
             prometheus.io/scrape: "true"
