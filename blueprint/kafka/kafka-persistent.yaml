@@ -54,16 +54,17 @@ spec:
           - broker: 2
             loadBalancerIP: 192.168.21.18
             
-      - name: plain
-        port: 9095
+      - name: custom
+        port: 9096
         type: loadbalancer
         tls: true
         authentication:
           type: custom
           sasl: true
           listenerConfig:
-            plain.sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required;
-            plain.sasl.enabled.mechanisms: PLAIN
+            listener.name.custom-9096.sasl.jaas.config: |
+              org.apache.kafka.common.security.plain.PlainLoginModule required;
+            listener.name.custom-9096.sasl.enabled.mechanisms: PLAIN
 
         configuration:
           externalTrafficPolicy: Local
@@ -71,16 +72,13 @@ spec:
             loadBalancerIP: 192.168.21.42
           brokers:
           - broker: 0
-            advertisedHost: 192.168.21.40
-            advertisedPort: 9095
+  
             loadBalancerIP: 192.168.21.40
           - broker: 1
-            advertisedHost: 192.168.21.41
-            advertisedPort: 9095
+          
             loadBalancerIP: 192.168.21.41
           - broker: 2
-            advertisedHost: 192.168.21.42
-            advertisedPort: 9095
+        
             loadBalancerIP: 192.168.21.42
 
     authorization:
