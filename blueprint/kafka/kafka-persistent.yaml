@@ -65,7 +65,8 @@ spec:
             listener.name.custom-9096.sasl.jaas.config: |
               org.apache.kafka.common.security.plain.PlainLoginModule required;
             listener.name.custom-9096.sasl.enabled.mechanisms: PLAIN
-
+            listener.name.custom-9096.principal.builder.class: org.apache.kafka.common.security.authenticator. DefaultKafkaPrincipalBuilder
+        
         configuration:
           externalTrafficPolicy: Local
           bootstrap:
@@ -92,7 +93,7 @@ spec:
       default.replication.factor: 2
       min.insync.replicas: 1
       inter.broker.protocol.version: "3.2"
-      ssl.endpoint.identification.algorithm: ""
+  
       
     storage:
       type: persistent-claim
@@ -164,7 +165,7 @@ spec:
             prometheus.io/scrape: "true"
             prometheus.io/port: "9404"
           labels:
-            namespace: "et01-tkg-bigdata-prod"
+            namespace: "it-w01-bigdata"
         securityContext:
           runAsUser: 1001
           fsGroup: 0
