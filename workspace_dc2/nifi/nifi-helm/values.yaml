@@ -177,8 +177,8 @@ persistence:
 
 resources: 
   limits:
-   cpu: 5
-   memory: 45Gi
+   cpu: 10
+   memory: 60Gi
    ephemeral-storage: 10Gi
   requests:
    cpu: 2
