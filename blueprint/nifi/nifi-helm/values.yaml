@@ -146,7 +146,7 @@ sidecar:
 persistence:
   enabled: true
 
-  storageClass: topology-aware-standard
+  storageClass: nfs-bigdata
 
   accessModes:  [ReadWriteOnce]
   ## Storage Capacities for persistent volumes
