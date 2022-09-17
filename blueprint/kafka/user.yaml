@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+   name: plain        
+   labels:
+    strimzi.io/cluster: kafka
+spec:
+  authentication:
+    type: tls-external
+  authorization:
+    acls:
+    - host: '*'
+      operation: Write
+      resource:
+        name: test
+        patternType: prefix
+        type: topic
+    - host: '*'
+      operation: Read
+      resource:
+        name: test
+        patternType: prefix
+        type: topic
+    type: simple
+
