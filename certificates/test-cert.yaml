@@ -16,5 +16,5 @@ spec:
     pkcs12:
       create: true
       passwordSecretRef:
-        key: test-secret
-        name: CertificatePassword
+        key: password
+        name: admin
