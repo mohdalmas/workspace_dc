@@ -51,3 +51,6 @@ docker run --rm -it -v /home/mathew.kiprop@safaricomet.net/gitlabrunner:/etc/git
 
 
 mvn install:install-file -Dfile=/home/kapkiai/Safaricomet/workspace/repo/report/lib/reportEngine-1.0.jar -DgroupId=com.CommonIntrest.reportEngine -DartifactId=reportEngine -Dversion=1.0 -Dpackaging=jar -DlocalRepositoryPath=libs -DcreateChecksum=true
+
+#JKS to PKCS12
+keytool -importkeystore -srckeystore [MY_KEYSTORE.jks] -destkeystore [MY_FILE.p12] -srcstoretype JKS -deststoretype PKCS12 -deststorepass [PASSWORD_PKCS12]

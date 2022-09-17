@@ -5,13 +5,20 @@ metadata:
   namespace: it-w01-bigdata
 spec:
   secretName: test-cert
-  commonName: "test"
+  commonName: "nifi-0.nifi-headless.it-w01-bigdata.svc.cluster.local"
   dnsNames:
-  - "*.it-w01-bigdata.svc.cluster.local"
+  - "nifi-0.nifi-headless.it-w01-bigdata.svc.cluster.local"
   isCA: false
   issuerRef:
     name: bigdata-ca-issuer
     kind: Issuer
+  usages:
+  - client auth
+  - server auth
+  - digital signature
+  - key agreement
+  - data encipherment
+  - key encipherment
   keystores:
     pkcs12:
       create: true
