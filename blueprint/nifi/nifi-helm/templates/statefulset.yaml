@@ -259,7 +259,7 @@ spec:
       volumes:
       - name: {{ template "apache-nifi.fullname" . }}-cert
         secret:
-          secretName: {{ template "apache-nifi.fullname" . }}-cert
+          secretName: {{ template "apache-nifi.fullname" . }}-cert2
       - name: "bootstrap-conf"
         configMap:
           name: {{ template "apache-nifi.fullname" . }}-config

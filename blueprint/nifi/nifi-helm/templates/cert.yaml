@@ -10,7 +10,7 @@ metadata:
   name: {{ $fullname }}-cert
   namespace: it-w01-bigdata
 spec:
-  secretName: {{ $fullname }}-cert
+  secretName: {{ $fullname }}-cert2
   commonName: "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
   subject:
     organizationalUnits:
