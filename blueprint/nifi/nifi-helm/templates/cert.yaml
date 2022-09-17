@@ -10,7 +10,7 @@ metadata:
   name: {{ $fullname }}-cert
   namespace: it-w01-bigdata
 spec:
-  secretName: test-cert
+  secretName: {{ $fullname }}-cert
   commonName: "{{ $fullname }}-{{ $i }}"
   subject:
     organizationalUnits:
