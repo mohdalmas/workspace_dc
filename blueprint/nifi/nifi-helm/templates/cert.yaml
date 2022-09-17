@@ -1,0 +1,37 @@
+{{- $replicas := int .Values.replicaCount }}
+{{- $chart := .Chart.Name }}
+{{- $release := .Release.Name }}
+{{- $fullname := include "apache-nifi.fullname" . }}
+{{- $namespace := .Release.Namespace }}
+{{- range $i := until $replicas }}
+apiVersion: cert-manager.io/v1beta1
+kind: Certificate
+metadata:
+  name: {{ template "apache-nifi.fullname" . }}-cert
+  namespace: it-w01-bigdata
+spec:
+  secretName: test-cert
+  commonName: "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
+  subject:
+    organizationalUnits:
+    - NIFI
+  dnsNames:
+  - "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
+  isCA: false
+  issuerRef:
+    name: bigdata-ca-issuer
+    kind: Issuer
+  usages:
+  - client auth
+  - server auth
+  - digital signature
+  - key agreement
+  - data encipherment
+  - key encipherment
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef:
+        key: password
+        name: admin
+{{- end}}

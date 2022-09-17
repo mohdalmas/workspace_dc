@@ -206,6 +206,8 @@ spec:
           - name: "startup"
             mountPath: /opt/nifi/scripts/startup.sh
             subPath: "startup.sh"
+          - name: {{ template "apache-nifi.fullname" . }}-cert
+            mountPath: /opt/nifi/certs
           {{- range $secret := .Values.secrets }}
             {{- if $secret.mountPath }}
               {{- if $secret.keys }}
@@ -255,6 +257,9 @@ spec:
         - name: logs
           mountPath: /opt/nifi/nifi-current/logs
       volumes:
+      - name: {{ template "apache-nifi.fullname" . }}-cert
+        secret:
+          secretName: {{ template "apache-nifi.fullname" . }}-cert
       - name: "bootstrap-conf"
         configMap:
           name: {{ template "apache-nifi.fullname" . }}-config
