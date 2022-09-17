@@ -1,6 +1,6 @@
 ---
 # Number of nifi nodes
-replicaCount: 3
+replicaCount: 1
 
 image:
   repository: registry.tools.blueprint.lab/bigdata/nifi
