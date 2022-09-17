@@ -14,7 +14,7 @@ spec:
   commonName: "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
   subject:
     organizationalUnits:
-    - NIFI
+    - BIGDATA
   dnsNames:
   - "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
   isCA: false
