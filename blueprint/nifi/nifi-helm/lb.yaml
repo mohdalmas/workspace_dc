@@ -4,7 +4,8 @@ metadata:
   name: nicert-nifi-lb
 spec:
   selector:
-    app: nicert-nifi-headless
+    app: nifi
+    release: nicert
   ports:
     - port: 8443
       targetPort: 8443
