@@ -3,7 +3,7 @@
   
 image:
   repository:  et02-harbor.safaricomet.net/bigdata/hive-spark
-  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-sha-3d6c37878fe54a4525110626f79bcc2ccad23d448ba57749342363b99dc3ef41
   pullPolicy: Always
 
 imagePullSecrets: 
