@@ -7,7 +7,7 @@
 apiVersion: cert-manager.io/v1beta1
 kind: Certificate
 metadata:
-  name: {{ $fullname }}-cert
+  name: {{ $fullname }}-cert2
   namespace: it-w01-bigdata
 spec:
   secretName: {{ $fullname }}-cert2
