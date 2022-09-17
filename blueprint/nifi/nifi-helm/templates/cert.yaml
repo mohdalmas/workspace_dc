@@ -11,7 +11,7 @@ metadata:
   namespace: it-w01-bigdata
 spec:
   secretName: {{ $fullname }}-cert
-  commonName: "{{ $fullname }}-{{ $i }}"
+  commonName: "{{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local"
   subject:
     organizationalUnits:
     - NIFI
