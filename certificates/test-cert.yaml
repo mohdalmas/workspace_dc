@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Certificate
+metadata:
+  name: test-cert
+  namespace: it-w01-bigdata
+spec:
+  secretName: test-cert
+  commonName: "test"
+  dnsNames:
+  - "*.it-w01-bigdata.svc.cluster.local"
+  isCA: false
+  issuerRef:
+    name: bigdata-ca-issuer
+    kind: Issuer
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        key: test-secret
+        name: CertificatePassword
