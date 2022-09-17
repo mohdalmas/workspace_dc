@@ -70,7 +70,7 @@ auth:
     host: ldap://blueprint.lab:389
     searchBase: OU=Blueprint,DC=blueprint,DC=lab
     admin: CN=BigData Admin,OU=Blueprint Service Accounts,OU=Blueprint,DC=blueprint,DC=lab
-    username: 'CN=Ankit-BI, OU=BIGDATA'
+    username: CN=Ankit-BI, OU=BIGDATA
     pass: cA6gYsJNL4meJJ6elyoc
     searchFilter: (sAMAccountName={0})
     userIdentityAttribute: cn={0}
