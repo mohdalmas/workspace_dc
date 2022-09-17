@@ -20,7 +20,7 @@ spec:
   - data encipherment
   - key encipherment
   keystores:
-    pkcs12:
+    jks:
       create: true
       passwordSecretRef:
         key: password
