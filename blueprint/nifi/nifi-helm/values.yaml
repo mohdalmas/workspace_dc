@@ -127,7 +127,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 40m
   tls: []
   hosts: 
-    - nifi.bigdata.blueprint.lab
+    - nicert.bigdata.blueprint.lab
   path: /
   pathType: ImplementationSpecific
   
