@@ -27,6 +27,7 @@ spec:
             prometheus.io/port: "9404"
           labels:
             namespace: "et01-tkg-bigdata-prod"
+      
     resources:
       requests:
         memory: 8Gi
@@ -36,6 +37,10 @@ spec:
         cpu: "5"
     version: 3.0.0
     replicas: 3
+    # jvmOptions:
+    #     javaSystemProperties:
+    #         - name: java.security.auth.login.config
+    #           value: /opt/kafka/custom-authn-secrets/custom-listener-custom-9095/kafka-plain/jaas.conf
     listeners:
       - name: plain
         port: 9092
@@ -60,23 +65,30 @@ spec:
           - broker: 2
             loadBalancerIP: 10.3.41.33
       
-      - name: tls
-        port: 9095
-        tls: true
-        type: loadbalancer
-        authentication:
-          type: tls
-        configuration:
-          externalTrafficPolicy: Local
-          bootstrap:
-            loadBalancerIP: 10.3.41.42
-          brokers:
-          - broker: 0
-            loadBalancerIP: 10.3.41.11
-          - broker: 1
-            loadBalancerIP: 10.3.41.45
-          - broker: 2
-            loadBalancerIP: 10.3.41.52  
+      # - name: custom
+      #   port: 9095
+      #   tls: true
+      #   type: loadbalancer
+      #   authentication:
+      #     type: custom
+      #     sasl: true
+      #     listenerConfig:
+      #       sasl.enabled.mechanisms: PLAIN
+      #       principal.builder.class: org.apache.kafka.common.security.authenticator.DefaultKafkaPrincipalBuilder
+      #     secrets:
+      #         - secretName: kafka-plain
+      #           key: jaas.conf 
+      #   configuration:
+      #     externalTrafficPolicy: Local
+      #     bootstrap:
+      #       loadBalancerIP: 10.3.41.42
+      #     brokers:
+      #     - broker: 0
+      #       loadBalancerIP: 10.3.41.11
+      #     - broker: 1
+      #       loadBalancerIP: 10.3.41.45
+      #     - broker: 2
+      #       loadBalancerIP: 10.3.41.52  
         
  
     authorization:
