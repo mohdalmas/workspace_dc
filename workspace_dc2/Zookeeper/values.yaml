@@ -27,7 +27,7 @@ imagePullSecrets:
 - name: regcred
 
 service:
-  type: ClusterIP  # Exposes zookeeper on a cluster-internal IP.
+  type: LoadBalancer  # Exposes zookeeper on a cluster-LoadBalancer IP.
   annotations: {}  # Arbitrary non-identifying metadata for zookeeper service.
     ## AWS example for use with LoadBalancer service type.
     # external-dns.alpha.kubernetes.io/hostname: zookeeper.cluster.local
