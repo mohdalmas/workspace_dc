@@ -11,7 +11,9 @@ vaultAddress: ""
 # vaultSecret containing a `ca.crt` key with the Vault CA Certificate
 vaultSecret: ""
 # set of namespaces where the operator watches resources
-namespaces: []
+namespaces: 
+- nifi-operator
+- it-w01-bigdata
 
 # Optional labels to add to all deployed resources
 labels: {}
