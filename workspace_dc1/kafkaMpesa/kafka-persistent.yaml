@@ -35,7 +35,7 @@ spec:
       limits:
         memory: 8Gi
         cpu: "2"
-    version: 3.0.0
+    version: 3.2.0
     replicas: 2
     jvmOptions:
         javaSystemProperties:
@@ -80,12 +80,14 @@ spec:
         configuration:
           externalTrafficPolicy: Local
           bootstrap:
-            loadBalancerIP: 10.3.41.42
+            loadBalancerIP: ""
           brokers:
           - broker: 0
             loadBalancerIP: 10.3.41.11
+            nodePort: 30090
           - broker: 1
             loadBalancerIP: 10.3.41.45
+            
           # - broker: 2
           #   loadBalancerIP: 10.3.41.52  
         
@@ -95,12 +97,12 @@ spec:
       superUsers:
         - admin
     config:
-      offsets.topic.replication.factor: 3
+      offsets.topic.replication.factor: 2
       transaction.state.log.replication.factor: 2
       transaction.state.log.min.isr: 1
       default.replication.factor: 2
       min.insync.replicas: 1
-      inter.broker.protocol.version: "3.0"
+      inter.broker.protocol.version: "3.2.0"
     storage:
       type: persistent-claim
       size: 10Gi

@@ -1,0 +1,107 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name:  kafka-connect
+  annotations:
+#  # use-connector-resources configures this KafkaConnect
+#  # to use KafkaConnector resources to avoid
+#  # needing to call the Connect REST API directly
+   strimzi.io/use-connector-resources: "true"
+spec:
+  version: 3.0.0
+  replicas: 3
+  bootstrapServers: kafka-kafka-0:9094,kafka-kafka-1:9094,kafka-kafka-2:9094
+  authentication:
+    type: scram-sha-512
+    username: admin
+    passwordSecret:
+      secretName: admin
+      password: password
+  config:
+    group.id: connect-cluster
+    offset.storage.topic: connect-cluster-offsets
+    config.storage.topic: connect-cluster-configs
+    status.storage.topic: connect-cluster-status
+    # -1 means it will use the default replication factor configured in the broker
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+
+  build:
+    output:
+      type: docker
+      additionalKanikoOptions:
+      - --skip-tls-verify
+      - --verbosity=info
+      # - --build-arg "http_proxy=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "HTTP_PROXY=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "https_proxy=http://proxy1.safaricomet.net:3128"
+      # - --build-arg "HTTPS_PROXY=http://proxy1.safaricomet.net:3128"
+      image: et01-harbor.safaricomet.net/bigdata/kafka-connect:3.0
+      pushSecret: regcred
+    plugins: 
+      - name: splunk-connector
+        artifacts:
+          - type: jar
+            url: https://github.com/splunk/kafka-connect-splunk/releases/download/v2.0.9/splunk-kafka-connect-v2.0.9.jar
+            sha512sum: 14e793bebf7f0b196884b68c68cc7ac7a8c80cedcb8bb296af57781f8ad5450f3d6d45f60abebaf5310a46cdc2fa85e01a20f8bff4ce66e94cb180002f8127c5
+      - name: jdbc-connector
+        artifacts:
+          - type: zip
+            url: https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-jdbc/versions/10.5.2/confluentinc-kafka-connect-jdbc-10.5.2.zip
+      - name: elasticsearch-connector
+        artifacts:
+          - type: zip
+            url: https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-elasticsearch/versions/14.0.0/confluentinc-kafka-connect-elasticsearch-14.0.0.zip
+      - name: oracle-connector
+        artifacts:
+          - type: tgz
+            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/1.9.5.Final/debezium-connector-oracle-1.9.5.Final-plugin.tar.gz
+      - name: postgres-connector
+        artifacts:
+          - type: tgz
+            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/1.9.5.Final/debezium-connector-postgres-1.9.5.Final-plugin.tar.gz
+      - name: sqlserver-connector
+        artifacts:
+          - type: tgz
+            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-sqlserver/1.9.5.Final/debezium-connector-sqlserver-1.9.5.Final-plugin.tar.gz
+
+      #     - type: maven
+      #       repository: https://packages.confluent.io/maven/
+      #       group: io.confluent
+      #       artifact: kafka-connect-jdbc
+      #       version: 10.4.0
+      # # - name: elasticsearch-connector
+      #   artifacts:
+      #     - type: maven
+      #       repository: https://packages.confluent.io/maven/
+      #       group: io.confluent
+      #       artifact: kafka-connect-elasticsearch
+      #       version: 11.1.10
+  template:
+    pod:
+      imagePullSecrets:
+        - name: regcred
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/cluster
+                    operator: In
+                    values:
+                      - kafka-connect
+              topologyKey: "kubernetes.io/hostname"
+
+  logging:
+    type: inline
+    loggers:
+      log4j.rootLogger: "INFO"
+
+  resources:
+    requests:
+      cpu: "2"
+      memory: 10Gi
+    limits:
+      cpu: "4"
+      memory: 40Gi
