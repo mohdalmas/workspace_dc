@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Certificate
+metadata:
+  name: test-cert
+  namespace: it-w01-bigdata
+spec:
+  secretName: test-cert
+  commonName: "nifi-0.nifi-headless.it-w01-bigdata.svc.cluster.local"
+  dnsNames:
+  - "nifi-0.nifi-headless.it-w01-bigdata.svc.cluster.local"
+  isCA: false
+  issuerRef:
+    name: bigdata-ca-issuer
+    kind: Issuer
+  usages:
+  - client auth
+  - server auth
+  - digital signature
+  - key agreement
+  - data encipherment
+  - key encipherment
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef:
+        key: password
+        name: admin

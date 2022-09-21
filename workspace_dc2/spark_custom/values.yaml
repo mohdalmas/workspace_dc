@@ -2,6 +2,7 @@
 image:
   repository: et02-harbor.safaricomet.net/bigdata/hive-spark
   tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-test
+  pullPolicy: IfNotPresent
 
 serviceAccount: bigdata
 
