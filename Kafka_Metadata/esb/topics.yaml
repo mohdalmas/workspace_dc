@@ -34,4 +34,15 @@ spec:
   replicas: 3
   config:
     retention.ms: 518400000
-
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: esb-business-events
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    retention.ms: 518400000
