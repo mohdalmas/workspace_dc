@@ -63,7 +63,6 @@ spec:
           - broker: 1
             loadBalancerIP: ""
          
-      
       - name: custom
         port: 9095
         tls: true
@@ -83,10 +82,10 @@ spec:
             loadBalancerIP: ""
           brokers:
           - broker: 0
-            loadBalancerIP: 10.3.41.11
+            loadBalancerIP: ""
             nodePort: 30090
           - broker: 1
-            loadBalancerIP: 10.3.41.45
+            loadBalancerIP: ""
             
           # - broker: 2
           #   loadBalancerIP: 10.3.41.52  

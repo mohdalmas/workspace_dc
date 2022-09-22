@@ -1,7 +1,7 @@
 
-serviceAccountName: bigdata
+serviceAccountName: default
 serviceAccount:
-  create: "true"
+  create: "false"
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/akhq
@@ -183,262 +183,7 @@ configuration:
           - username: Martin.Mathu
             groups:
               - cvm
-          - username: Muhammad.Bashir
-            groups:
-              - cvm
-          - username: Haris.Tanwir
-            groups:
-              - cvm
-          - username: Saad.Zahoor
-            groups:
-              - cvm
 
-          - username: Srinidhi.Srinivasrao
-            groups:
-              - 6d
-          - username: arun.kumar
-            groups:
-              - 6d
-          - username: jami.lahari
-            groups:
-              - 6d
-          - username: sobhan.mohapatra
-            groups:
-              - 6d
-          - username: unni.mohan
-            groups:
-              - 6d
-
-          - username: sayed.nawaz
-            groups:
-              - 6d
-
-          - username: sanjay.nair
-            groups:
-              - 6d
-
-          - username: viajula
-            groups:
-              - 6d
-
-          - username: Anjali.Mathew
-            groups:
-              - 6d
-
-          - username: Vinaya.Hugar
-            groups:
-              - 6d
-
-          - username: Priyanka.Rebello
-            groups:
-              - 6d
-
-          - username: Amal.Chand
-            groups:
-              - 6d
-
-          - username: Ansu.Yohannan
-            groups:
-              - 6d
-
-          - username: Dheeraj.A
-            groups:
-              - 6d
-
-          - username: Ritesh.Goenka
-            groups:
-              - 6d
-
-          - username: Rajan.Kumar
-            groups:
-              - 6d
-
-          - username: rohan.ch
-            groups:
-              - 6d
-
-          - username: Mohammed.Arif
-            groups:
-              - 6d
-
-          - username: Pragati.Nayak
-            groups:
-              - 6d
-
-          - username: Vijay.Medisetty
-            groups:
-              - 6d
-
-          - username: Jashwanth.S
-            groups:
-              - 6d
-
-          - username: Arun.Vinoth
-            groups:
-              - 6d
-
-          - username: Sashi.Kumar
-            groups:
-              - 6d
-
-          - username: Shrikant.Ganapati
-            groups:
-              - 6d
-
-          - username: ajith.selvan
-            groups:
-              - 6d
-
-          - username: AnjaliS.Pradeep
-            groups:
-              - 6d
-
-          - username: Niranjan.Ramesh
-            groups:
-              - 6d
-
-          - username: Muhammed.Isham
-            groups:
-              - 6d
-
-          - username: Sebastian.Jose
-            groups:
-              - 6d
-
-          - username: Yashaswini.Basavaraj
-            groups:
-              - 6d
-
-          - username: Sangeeth.Mohan
-            groups:
-              - 6d
-
-          - username: Ann Minnu.Sam
-            groups:
-              - 6d
-
-          - username: Pranav.M R
-            groups:
-              - 6d
-
-          - username: Prashanthkumar.
-            groups:
-              - 6d
-
-          - username: Manulal.Balagopalan
-            groups:
-              - 6d
-
-          - username: vishnu.Raveendran
-            groups:
-              - 6d
-
-          - username: Muhammed .Adnan
-            groups:
-              - 6d
-
-          - username: adharsh.Sunil
-            groups:
-              - 6d
-
-          - username: angel.Kunj varghese
-            groups:
-              - 6d
-
-          - username: Sashi.Kumar
-            groups:
-              - 6d
-
-          - username: Arnold .Dixen
-            groups:
-              - 6d
-
-          - username: Manik.p
-            groups:
-              - 6d
-
-          - username: Debdyut .Sarker
-            groups:
-              - 6d
-
-          - username: Srinivas .Chikoti
-            groups:
-              - 6d
-
-          - username: Surya.M
-            groups:
-              - 6d
-
-          - username: Anila.P
-            groups:
-              - 6d
-
-          - username: Yugandar.Rajendran
-            groups:
-              - 6d
-
-          - username: Rajan .Kumar
-            groups:
-              - 6d
-
-          - username: Mohammed .Arif
-            groups:
-              - 6d
-
-          - username: arun .kumar
-            groups:
-              - 6d
-
-          - username: Pragati .Nayak
-            groups:
-              - 6d
-
-          - username: Vijay .Medisetty
-            groups:
-              - 6d
-
-          - username: RammezK.Rasack
-            groups:
-              - 6d
-
-          - username: Sruthy .Thomas
-            groups:
-              - 6d
-
-          - username: Shyam .Mohan
-            groups:
-              - 6d
-
-          - username: Navin .Mahato
-            groups:
-              - 6d
-
-          - username: Umme .Hani
-            groups:
-              - 6d
-
-          - username: Vishal .Sharma
-            groups:
-              - 6d
-
-          - username: Anjali S .Pradeep
-            groups:
-              - 6d
-
-          - username: Deepak.R
-            groups:
-              - 6d
-
-          - username: Niranjan .Ramesh
-            groups:
-              - 6d
-
-          - username: chandra.shekar
-            groups:
-              - 6d
-          - username: Rahul.Gupta
-            groups:
-              - ncc
 
     server:
       access-log: # Access log configuration (optional)
@@ -457,8 +202,8 @@ configuration:
     connections:
       dc1-cluster: # url friendly name for the cluster (letter, number, _, -, ... dot are not allowed here)
         properties: # standard kafka properties (optional)
-          bootstrap.servers: "10.3.41.4:9094"
-          sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="cu5RAwn7tk18";'
+          bootstrap.servers: "10.3.41.73:9094"
+          sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="llTOcBfldsnN";'
           security.protocol: SASL_PLAINTEXT
           sasl.mechanism: SCRAM-SHA-512
 
@@ -584,7 +329,7 @@ ingress:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka.big-data.safaricomet.net
+    - kafka-mpesa.big-data.safaricomet.net
   tls: []
   #  - secretName: akhq
   #    hosts:
