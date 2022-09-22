@@ -1,0 +1,27 @@
+# To use the KafkaConnector resource, you have to first enable the connector operator using
+# the strimzi.io/use-connector-resources annotation on the KafkaConnect custom resource.
+# From Apache Kafka 3.1.1 and 3.2.0, you also have to add the FileStreamSourceConnector
+# connector to the container image. You can do that using the kafka-connect-build.yaml example.
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: splunk-sink-connector
+  labels:
+    # The strimzi.io/cluster label identifies the KafkaConnect instance
+    # in which to create this connector. That KafkaConnect instance
+    # must have the strimzi.io/use-connector-resources annotation
+    # set to true.
+    strimzi.io/cluster: kafka-connect
+spec:
+  class: com.splunk.kafka.connect.SplunkSinkConnector
+  tasksMax: 5
+  config:
+    splunk.indexes: step_bss_kafka_logs
+    topics: 6d-sm-log
+    splunk.hec.uri: https://10.3.74.109:8088
+    splunk.hec.token: 12fbf6fb-af9d-4eb0-8bd5-cf3ea4f5749c
+    splunk.hec.ssl.validate.certs: false
+
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    

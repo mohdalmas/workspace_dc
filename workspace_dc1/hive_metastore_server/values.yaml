@@ -185,6 +185,7 @@ conf:
     hive.server2.zookeeper.namespace: hiveserver2
     hive.txn.manager: org.apache.hadoop.hive.ql.lockmgr.DbTxnManager
     hive.zookeeper.client.port: "2181"
+    hbase.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
     hive.zookeeper.quorum: bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181
     javax.jdo.option.ConnectionDriverName: org.postgresql.Driver
     javax.jdo.option.ConnectionPassword: lyOdmSBwCsZnD4dLnOAE
@@ -206,7 +207,7 @@ conf:
     spark.eventLog.enabled: false
     spark.master: spark://hive-0.hive-service:7077
     spark.serializer: org.apache.spark.serializer.KryoSerializer
-    hive.compactor.initiator.on: true
+    hive.compactor.initiator.on: "true"
     hive.compactor.delta.num.threshold: 2
     hive.compactor.delta.pct.threshold: "0.1f"
     hive.compactor.cleaner.run.interval: "5000ms"
@@ -243,7 +244,7 @@ conf:
     
   spark-Defaults:
     spark.master.rest.enabled: false
-    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0.hive-service:10000"
+    spark.sql.hive.hiveserver2.jdbc.url: "jdbc:hive2://hive-0.hive-service:10000" 
     spark.datasource.hive.warehouse.metastoreUri: "thrift://hive-0.hive-service:9083"
     spark.hadoop.hive.zookeeper.quorum: "bigdata-zk-zookeeper-0.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-1.bigdata-zk-zookeeper-headless:2181,bigdata-zk-zookeeper-2.bigdata-zk-zookeeper-headless:2181"
     spark.master: "spark://hive-0.hive-service:7077"

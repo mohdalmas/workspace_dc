@@ -1,7 +1,7 @@
   
 image:
   repository: et02-harbor.safaricomet.net/bigdata/hive-spark
-  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-sha-3d6c37878fe54a4525110626f79bcc2ccad23d448ba57749342363b99dc3ef41
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-test
   pullPolicy: IfNotPresent
 
 serviceAccount: bigdata
@@ -237,6 +237,6 @@ conf:
     spark.dynamicAllocation.executorIdleTimeout: 60s
     spark.dynamicAllocation.minExecutors: 0
     spark.worker.memory: 11g
-    kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
-    kms.api.auth.username: svc-bigdata-admin
-    kms.api.url: http://10.3.41.29:8080
+    # kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
+    # kms.api.auth.username: svc-bigdata-admin
+    # kms.api.url: http://10.3.41.29:8080

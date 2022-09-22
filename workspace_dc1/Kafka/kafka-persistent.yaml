@@ -27,6 +27,7 @@ spec:
             prometheus.io/port: "9404"
           labels:
             namespace: "et01-tkg-bigdata-prod"
+      
     resources:
       requests:
         memory: 8Gi
@@ -36,6 +37,10 @@ spec:
         cpu: "5"
     version: 3.0.0
     replicas: 3
+    # jvmOptions:
+    #     javaSystemProperties:
+    #         - name: java.security.auth.login.config
+    #           value: /opt/kafka/custom-authn-secrets/custom-listener-custom-9095/kafka-plain/jaas.conf
     listeners:
       - name: plain
         port: 9092
@@ -66,6 +71,13 @@ spec:
         type: loadbalancer
         authentication:
           type: tls
+      #     sasl: true
+      #     listenerConfig:
+      #       sasl.enabled.mechanisms: PLAIN
+      #       principal.builder.class: org.apache.kafka.common.security.authenticator.DefaultKafkaPrincipalBuilder
+      #     secrets:
+      #         - secretName: kafka-plain
+      #           key: jaas.conf 
         configuration:
           externalTrafficPolicy: Local
           bootstrap:
