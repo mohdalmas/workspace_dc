@@ -7,6 +7,9 @@ image:
   repository: et01-harbor.safaricomet.net/bigdata/akhq
   tag: "latest" # uses Chart.AppVersion by default
 
+imagePullSecrets: 
+- name: regcred
+
 # custom annotations (example: for prometheus)
 annotations:
   prometheus.io/scrape: "true"
@@ -584,7 +587,7 @@ ingress:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka.big-data.safaricomet.net
+    - kafka-mpesa.big-data.safaricomet.net
   tls: []
   #  - secretName: akhq
   #    hosts:
