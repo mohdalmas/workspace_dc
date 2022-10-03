@@ -4,7 +4,7 @@ replicaCount: 3
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/nifi
-  tag: "1.16.3-test"
+  tag: "1.16.3-test1"
   pullPolicy: "Always"
 
 securityContext:
@@ -238,9 +238,9 @@ extraVolumeMounts:
   - mountPath: /opt/nifi/nifi-current/ext-config/yarn-site.xml
     name: hadoop-config
     subPath: yarn-site.xml
-  - mountPath: /tmp
-    name: cert-config
-    readOnly: false
+  # - mountPath: /tmp
+  #   name: cert-config
+  #   readOnly: false
   - mountPath: /opt/nifi/nifi-current/ext-config/xsltjson.xml
     name: xml-conf
     subPath: xsltjson.xml
@@ -279,9 +279,9 @@ extraVolumes:
         path: yarn-site.xml
       name: hadoop-hadoop
     name: hadoop-config
-  - name: cert-config
-    secret:
-      secretName: nifi-tls
+  # - name: cert-config
+  #   secret:
+  #     secretName: nifi-tls
   - configMap:
       defaultMode: 420
       items:
