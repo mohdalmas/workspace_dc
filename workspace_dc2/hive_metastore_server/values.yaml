@@ -3,7 +3,7 @@
   
 image:
   repository:  et02-harbor.safaricomet.net/bigdata/hive-spark
-  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-sha-3d6c37878fe54a4525110626f79bcc2ccad23d448ba57749342363b99dc3ef41
+  tag: hive-3.1.0-spark-2.3.0-scala-2.11.6-kms-test 
   pullPolicy: Always
 
 imagePullSecrets: 
@@ -87,14 +87,14 @@ hive_spark_master:
   
 hive_spark_worker:
   replicas: 1
-  cores: 17
+  cores: 9
   resources: 
     requests:
       memory: "3Gi"
       cpu: "2"
     limits:
-      memory: "38Gi"
-      cpu: "17"
+      memory: "26i"
+      cpu: "9"
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -215,9 +215,9 @@ conf:
     hive.server2.idle.session.timeout: "600000" # 10 minutes
     spark.driver.memory: 1024m
     spark.executor.memory: 8192m
-    spark.cores.max: 4
+    spark.cores.max: 3
     spark.driver.cores: 1
-    spark.executor.cores: 4
+    spark.executor.cores: 3
     spark.default.parallelism: 9 
     hive.server2.authentication: NOSASL
     hive.server2.transport.mode: http
@@ -242,8 +242,8 @@ conf:
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
     spark.driver.cores: 1
-    spark.cores.max: 4
-    spark.executor.cores: 4
+    spark.cores.max: 3
+    spark.executor.cores: 3
     spark.driver.memory: 1024m
     spark.executor.memory: 8192m
     spark.default.parallelism: 9  
