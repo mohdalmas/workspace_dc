@@ -172,6 +172,12 @@ configuration:
           - username: Alphonce.Oniala
             groups:
               - reader
+          - username: Joe.Thorpe
+            groups:
+              - reader
+          - username: JEthan.Pike
+            groups:
+              - reader
           - username: Mohd.Almas
             groups:
               - admin

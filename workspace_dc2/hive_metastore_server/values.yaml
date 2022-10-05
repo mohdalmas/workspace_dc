@@ -93,7 +93,7 @@ hive_spark_worker:
       memory: "3Gi"
       cpu: "2"
     limits:
-      memory: "26i"
+      memory: "26Gi"
       cpu: "9"
   autoscaling:
     enabled: true
@@ -250,7 +250,7 @@ conf:
     spark.dynamicAllocation.enabled: true 
     spark.dynamicAllocation.executorIdleTimeout: 120s
     spark.dynamicAllocation.minExecutors: 0
-    spark.worker.memory: 38g
+    spark.worker.memory: 26g
     kms.api.url: http://10.3.41.29:8080
     kms.api.auth.username: svc-bigdata-admin
     kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
