@@ -110,10 +110,10 @@ hbase:
     resources:
       requests:
         memory: "2Gi"
-        cpu: "1"
-      limits:
-        memory: "8Gi"
         cpu: "2"
+      limits:
+        memory: "20Gi"
+        cpu: "6"
     extraEnvVars:
     - name: HADOOP_USER_NAME
       value: root
@@ -128,10 +128,10 @@ hbase:
     resources:
       requests:
         memory: "2Gi"
-        cpu: "1"
-      limits:
-        memory: "4Gi"
         cpu: "2"
+      limits:
+        memory: "12Gi"
+        cpu: "6"
     extraEnvVars:
     - name: HADOOP_USER_NAME
       value: root
@@ -190,7 +190,7 @@ hbase_conf:
     hbase.hstore.compactionThreshold: "3"
     hbase.master.wait.on.regionservers.timeout: "90000"
     hbase.region.server.rpc.scheduler.factory.class: org.apache.hadoop.hbase.ipc.PhoenixRpcSchedulerFactory
-    hbase.regionserver.executor.openregion.threads: "20"
+    # hbase.regionserver.executor.openregion.threads: "20"
     hbase.regionserver.global.memstore.size: "0.4"
     hbase.regionserver.handler.count: "100"
     hbase.regionserver.info.port: "16030"
@@ -209,6 +209,9 @@ hbase_conf:
     zookeeper.session.timeout: "90000"
     zookeeper.znode.parent: /hbase
     phoenix.functions.allowUserDefinedFunctions: true
+    phoenix.query.threadPoolSize: 128
+    phoenix.query.queueSize: 5000
+    phoenix.stats.guidepost.width: 104857600
     hbase.dynamic.jars.dir: hdfs://hadoop-hadoop-hdfs-nn:9000/hbase/lib
 
 ## Configure metrics exporter
