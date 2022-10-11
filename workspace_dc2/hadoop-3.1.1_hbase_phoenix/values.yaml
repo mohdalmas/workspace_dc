@@ -112,7 +112,7 @@ hbase:
         memory: "2Gi"
         cpu: "2"
       limits:
-        memory: "20Gi"
+        memory: "10Gi"
         cpu: "6"
     extraEnvVars:
     - name: HADOOP_USER_NAME
@@ -130,7 +130,7 @@ hbase:
         memory: "2Gi"
         cpu: "2"
       limits:
-        memory: "12Gi"
+        memory: "8Gi"
         cpu: "6"
     extraEnvVars:
     - name: HADOOP_USER_NAME
