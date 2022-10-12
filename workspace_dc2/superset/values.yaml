@@ -376,9 +376,8 @@ supersetNode:
     db_pass: lyOdmSBwCsZnD4dLnOAE
     db_name: superset
   env: 
-    log: 
-    - name: FLASK_ENV
-    - value: "development"
+    FLASK_ENV: "development"
+    
   forceReload: true # If true, forces deployment to reload on each upgrade
   initContainers:
     - name: wait-for-postgres
