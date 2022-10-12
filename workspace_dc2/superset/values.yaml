@@ -382,7 +382,7 @@ supersetNode:
   env: 
     FLASK_ENV: "development"
     
-  forceReload: true # If true, forces deployment to reload on each upgrade
+  forceReload: false # If true, forces deployment to reload on each upgrade
   initContainers:
     - name: wait-for-postgres
       image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
