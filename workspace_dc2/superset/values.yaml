@@ -294,7 +294,7 @@ extraConfigMountPath: "/app/configs"
 
 image:
   repository: et02-harbor.safaricomet.net/bigdata/superset
-  tag: 1.5.2rc2-dev
+  tag: 2.0.1rc1-dev
   pullPolicy: Always
 
 imagePullSecrets: 
