@@ -26916,6 +26916,10 @@ textarea.ant-input-number {
   border-bottom: none
 }
 
+.css-pyvf21 {
+  background-color: #31b44c;
+}
+
 .ant-list-split .ant-list-header {
   border-bottom: 1px solid #f0f0f0
 }
@@ -27445,7 +27449,7 @@ textarea.ant-mentions {
 
 .ant-menu {
   font-feature-settings: "tnum";
-  background: #fff;
+  background: #31b44c;
   box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px 0 #00000014, 0 9px 28px 8px #0000000d;
   box-sizing: border-box;
   color: #000000d9;
@@ -27552,7 +27556,7 @@ textarea.ant-mentions {
 .ant-menu-submenu-active,
 .ant-menu-submenu-title:hover,
 .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open {
-  color: #20a7c9
+  color: #fff
 }
 
 .ant-menu-horizontal .ant-menu-item,
@@ -27836,7 +27840,7 @@ textarea.ant-mentions {
 }
 
 .ant-menu-horizontal>.ant-menu-item-selected a {
-  color: #20a7c9
+  color: #fff
 }
 
 .ant-menu-horizontal:after {
@@ -38288,4 +38292,4 @@ div.ant-typography-edit-content.ant-typography-rtl {
   padding: 0
 }
 
-/*# sourceMappingURL=theme.4639b060fd9b6a4b89fb.entry.css.map*/
+/*# sourceMappingURL=theme.dfd72a332a2d6eb39e33.entry.css.map*/
