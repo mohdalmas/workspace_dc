@@ -252,9 +252,9 @@ configOverrides:
     SLACK_API_TOKEN = 'xoxb-3399817917683-3592811614901-RKGjNiSLgrok3SceYY68gHJ7'
 
   session-conf: |
-    SESSION_COOKIE_HTTPONLY = False  # Prevent cookie from being read by frontend JS?
+    SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
     SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
-    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SAMESITE = "Lax"
     WTF_CSRF_ENABLED = False
     
   #   OAUTH_PROVIDERS = [
