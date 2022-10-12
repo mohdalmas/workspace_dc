@@ -318,14 +318,15 @@ service:
 ingress:
   enabled: true
   ingressClassName: nginx
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     # kubernetes.io/tls-acme: "true"
     ## Extend timeout to allow long running queries.
     # nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
     # nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     # nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
-  path: /
-  pathType: ImplementationSpecific
+  path: /(.*)
+  pathType: Prefix
   hosts:
     - superset.big-data2.safaricomet.net
   tls: []
