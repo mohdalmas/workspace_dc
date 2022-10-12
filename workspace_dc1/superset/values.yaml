@@ -252,7 +252,7 @@ configOverrides:
   session-conf: |
     # SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
     # SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
-    # SESSION_COOKIE_SAMESITE = "None"
+    # SESSION_COOKIE_SAMESITE = "Lax"
     # WTF_CSRF_ENABLED = False
 
   #   OAUTH_PROVIDERS = [

@@ -120,8 +120,8 @@ configOverrides:
     WEBDRIVER_BASEURL = "http://superset:8088/"
     WEBDRIVER_BASEURL_USER_FRIENDLY = "https://superset.big-data2.safaricomet.net/"
 
-    LOG_LEVEL = "DEBUG"
-    DEBUG = True
+    # LOG_LEVEL = "DEBUG"
+    # DEBUG = True
   enable_oauth: |
     from flask_appbuilder.security.manager import (AUTH_LDAP)
     
@@ -161,12 +161,12 @@ configOverrides:
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics - DC2"
-    #APP_ICON = "/static/assets/images/saf.png"
-    #APP_ICON_WIDTH = 600
+    APP_ICON = "/static/assets/images/saf.png"
+    # APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
-    #LOGO_TARGET_PATH = '/superset/welcome/' # Forwards to /superset/welcome/home
-    #LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    #FAVICONS = [{"href": "/static/assets/images/saf.png"}]
+    LOGO_TARGET_PATH = '' # Forwards to /superset/welcome/home
+    LOGO_TOOLTIP = "Home" # Text displayed when hovering.
+    FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
   FILTER_STATE_CACHE_CONFIG: |
     FILTER_STATE_CACHE_CONFIG = {
@@ -380,8 +380,8 @@ supersetNode:
     db_user: svc-bigdata-admin
     db_pass: lyOdmSBwCsZnD4dLnOAE
     db_name: superset
-  env: 
-    FLASK_ENV: "development"
+  env: {}
+    # FLASK_ENV: "development"
     
   forceReload: false # If true, forces deployment to reload on each upgrade
   initContainers:
