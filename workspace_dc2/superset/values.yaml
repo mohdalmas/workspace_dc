@@ -158,12 +158,12 @@ configOverrides:
   visual_edit: |
     # Visual Customizations
     APP_NAME = "Bigdata Analytics - DC2"
-    APP_ICON = "/static/assets/images/saf.png"
+    # APP_ICON = "/static/assets/images/saf.png"
     # APP_ICON_WIDTH = 600
     # Path for routing when APP_ICON image is clicked
-    LOGO_TARGET_PATH = '' # Forwards to /superset/welcome/home
-    LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    FAVICONS = [{"href": "/static/assets/images/saf.png"}]
+    # LOGO_TARGET_PATH = '' # Forwards to /superset/welcome/home
+    # LOGO_TOOLTIP = "Home" # Text displayed when hovering.
+    # FAVICONS = [{"href": "/static/assets/images/saf.png"}]
 
   FILTER_STATE_CACHE_CONFIG: |
     FILTER_STATE_CACHE_CONFIG = {
