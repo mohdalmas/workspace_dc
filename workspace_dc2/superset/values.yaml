@@ -320,7 +320,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: "/"
     # ingress.kubernetes.io/rewrite-target: $1/
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^(/login|/superset/welcome|/users/list|/dashboard/new|/superset/profile/Mathew.kiprop)$ $1/ redirect;
+      rewrite ^(/login|/superset/welcome|/users/list|/roles/list|/dashboard/new|/superset/profile/Mathew.kiprop)$ $1/ redirect;
     # rewrite ^([^.?]*[^/])$ $1/ redirect;
     # kubernetes.io/tls-acme: "true"
     ## Extend timeout to allow long running queries.
