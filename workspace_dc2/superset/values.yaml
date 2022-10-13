@@ -293,7 +293,7 @@ configMountPath: "/app/pythonpath"
 extraConfigMountPath: "/app/configs"
 
 image:
-  repository: et02-harbor.safaricomet.net/bigdata/superset
+  repository: apache/superset
   tag: 2.0.1rc1-dev
   pullPolicy: Always
 
