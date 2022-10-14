@@ -168,7 +168,7 @@ configuration:
               - reader
 
         users:
-          - username: Kenneth.Kipkogei
+          - username: Kenneth.Chirchir
             groups:
               - admin
           - username: Mathew.Kiprop
