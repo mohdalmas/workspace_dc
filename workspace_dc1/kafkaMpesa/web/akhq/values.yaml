@@ -110,19 +110,19 @@ configuration:
             - connect/state/update
 
         cvm:
-          name: cvm # Group name
+          name: mpesa # Group name
           roles: # roles for the group
             - topic/read
             - topic/data/read
             - group/read
           attributes:
             topics-filter-regexp:
-              - "cvm.*" # Individual topic
+              - "cps.*" # Individual topic
               # - "ncc-recharge"ssssss
-              - "ncc.*"
+              - "cps.*"
 
             consumer-groups-filter-regexp:
-              - "cvm.*"
+              - "cps.*"
        
         ncc:
           name: ncc # Group name
@@ -177,12 +177,13 @@ configuration:
           - username: Alphonce.Oniala
             groups:
               - reader
-          - username: Mohd.Almas
-            groups:
-              - admin
+              
           - username: Martin.Mathu
             groups:
               - cvm
+          - username: Clement.Gitome
+            groups:
+              - mpesa
 
 
     server:
