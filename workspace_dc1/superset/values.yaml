@@ -115,7 +115,6 @@ configOverrides:
   # extend_timeout: |
   #   # Extend timeout to allow long running queries.
   #   SUPERSET_WEBSERVER_TIMEOUT = ...
-
   server_props: |
     # The base URL to query for accessing the user interface
     WEBDRIVER_BASEURL = "http://superset:8088/"
@@ -211,13 +210,13 @@ configOverrides:
     from celery.schedules import crontab
 
     class CeleryConfig:  # pylint: disable=too-few-public-methods
-        broker_url = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
-        imports = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
-        result_backend = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
-        worker_log_level = "DEBUG"
-        worker_prefetch_multiplier = 10
-        task_acks_late = False
-        task_annotations = {
+        BROKER_URL = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        CELERY_IMPORTS = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
+        CELERY_RESULT_BACKEND = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
+        CELERYD_LOG_LEVEL = "DEBUG"
+        CELERYD_PREFETCH_MULTIPLIER = 10
+        CELERY_ACKS_LATE = False
+        CELERY_ANNOTATIONS = {
             "sql_lab.get_sql_results": {"rate_limit": "100/s"},
             "email_reports.send": {
                 "rate_limit": "1/s",
@@ -226,7 +225,7 @@ configOverrides:
                 "ignore_result": True,
             },
         }
-        beat_schedule = {
+        CELERYBEAT_SCHEDULE = {
             "email_reports.schedule_hourly": {
                 "task": "email_reports.schedule_hourly",
                 "schedule": crontab(minute=1, hour="*"),
@@ -250,10 +249,10 @@ configOverrides:
     SLACK_API_TOKEN = 'xoxb-3399817917683-3592811614901-RKGjNiSLgrok3SceYY68gHJ7'
 
   session-conf: |
-    # SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
-    # SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
-    # SESSION_COOKIE_SAMESITE = "None"
-    # WTF_CSRF_ENABLED = False
+    SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
+    SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
+    SESSION_COOKIE_SAMESITE = "Lax"
+    WTF_CSRF_ENABLED = False
 
   #   OAUTH_PROVIDERS = [
   #       {
@@ -295,7 +294,7 @@ extraConfigMountPath: "/app/configs"
 
 image:
   repository: et01-harbor.safaricomet.net/bigdata/superset
-  tag: master-dev
+  tag: 2.0.1rc1-dev
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -306,7 +305,7 @@ initImage:
   pullPolicy: IfNotPresent
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 8088
   annotations: {}
     # cloud.google.com/load-balancer-type: "Internal"
@@ -315,7 +314,12 @@ service:
 ingress:
   enabled: true
   ingressClassName: nginx
-  annotations: {}
+  annotations: 
+        # nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/login|/superset/welcome)$ $1/ redirect;
+    # rewrite ^([^.?]*[^/])$ $1/ redirect;
     # kubernetes.io/tls-acme: "true"
     ## Extend timeout to allow long running queries.
     # nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
@@ -373,7 +377,7 @@ supersetNode:
     db_pass: lyOdmSBwCsZnD4dLnOAE
     db_name: superset
   env: {}
-  forceReload: true # If true, forces deployment to reload on each upgrade
+  forceReload: false # If true, forces deployment to reload on each upgrade
   initContainers:
     - name: wait-for-postgres
       image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"

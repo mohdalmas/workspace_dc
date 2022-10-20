@@ -19,21 +19,24 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 # User ID directive. This user must have enough permissions to run the bootstrap script
 # Runn containers as root is not recommended in production. Change this to another UID - e.g. 1000 to be more secure
 runAsUser: 0
 
 # Create custom service account for Superset. If create: true and name is not provided, superset.fullname will be used.
-serviceAccountName: bigdata
+# serviceAccountName: superset
 serviceAccount:
   create: false
+  annotations: {}
 
 # Install additional packages and do any other bootstrap configuration in this script
 # For production clusters it's recommended to build own image with this step done in CI
 bootstrapScript: |
   #!/bin/bash
+  rm -rf /var/lib/apt/lists/* && \
+  pip install \
+    psycopg2-binary==2.9.1 \
+    redis==3.5.3 && \
   if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
 
 ## The name of the secret which we will use to generate a superset_config.py file
@@ -51,9 +54,21 @@ envFromSecrets: []
 ## Extra environment variables that will be passed into pods
 ##
 extraEnv: {}
+  # Different gunicorn settings, refer to the gunicorn documentation
+  # https://docs.gunicorn.org/en/stable/settings.html#
+  # These variables are used as Flags at the gunicorn startup
+  # https://github.com/apache/superset/blob/master/docker/run-server.sh#L22
   # Extend timeout to allow long running queries.
   # GUNICORN_TIMEOUT: 300
-
+  # Increase the gunicorn worker amount, can improve performance drastically
+  # See: https://docs.gunicorn.org/en/stable/design.html#how-many-workers
+  # SERVER_WORKER_AMOUNT: 4
+  # WORKER_MAX_REQUESTS: 0
+  # WORKER_MAX_REQUESTS_JITTER: 0
+  # SERVER_THREADS_AMOUNT: 20
+  # GUNICORN_KEEPALIVE: 2
+  # SERVER_LIMIT_REQUEST_LINE: 0
+  # SERVER_LIMIT_REQUEST_FIELD_SIZE: 0
 
   # OAUTH_HOME_DOMAIN: ..
   # # If a whitelist is not set, any address that can use your OAuth2 endpoint will be able to login.
@@ -111,149 +126,14 @@ extraVolumeMounts: []
 
 # A dictionary of overrides to append at the end of superset_config.py - the name does not matter
 # WARNING: the order is not guaranteed
-configOverrides: 
-  # extend_timeout: |
-  #   # Extend timeout to allow long running queries.
-  #   SUPERSET_WEBSERVER_TIMEOUT = ...
-  server_props: |
-    # The base URL to query for accessing the user interface
-    WEBDRIVER_BASEURL = "http://superset:8088/"
-    WEBDRIVER_BASEURL_USER_FRIENDLY = "https://superset.big-data2.safaricomet.net/"
-  enable_oauth: |
-    from flask_appbuilder.security.manager import (AUTH_LDAP)
-    
-    AUTH_TYPE = AUTH_LDAP
-    AUTH_LDAP_SERVER = "ldap://10.3.108.11:389"
-    AUTH_LDAP_USE_TLS = False
+configOverrides: {}
+  #  extend_timeout: |
+  #    # Extend timeout to allow long running queries.
+  #    SUPERSET_WEBSERVER_TIMEOUT = ...
+  # enable_oauth: |
+  #   from flask_appbuilder.security.manager import (AUTH_DB, AUTH_OAUTH)
+  #   AUTH_TYPE = AUTH_OAUTH
 
-    # Search Config
-    AUTH_LDAP_BIND_USER = "CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net"
-    AUTH_LDAP_BIND_PASSWORD = "lyOdmSBwCsZnD4dLnOAE"
-    AUTH_LDAP_SEARCH = "OU=Domain Users,DC=safaricomet,DC=net"
-    AUTH_LDAP_UID_FIELD = "sAMAccountName"
-
-    # registration configs
-    AUTH_USER_REGISTRATION = True
-    AUTH_USER_REGISTRATION_ROLE = "Public"
-    # AUTH_LDAP_FIRSTNAME_FIELD = "name"
-    AUTH_LDAP_EMAIL_FIELD = "userPrincipalName"
-  
-    # Email configs
-    MAIL_SERVER = '10.3.124.25'
-    MAIL_USE_TLS = False
-    MAIL_USERNAME = 'BigdataAlerts@safaricom.et'
-    MAIL_PASSWORD = ''
-    MAIL_DEFAULT_SENDER = 'noreply.big-data@safaricom.et'
-
-    EMAIL_NOTIFICATIONS = False  # all the emails are sent using dryrun
-    SMTP_HOST = "10.3.124.25"
-    SMTP_STARTTLS = False
-    SMTP_SSL = False
-    SMTP_USER = "BigdataAlerts@safaricom.et"
-    SMTP_PORT = 25
-    SMTP_PASSWORD = ""
-    SMTP_MAIL_FROM = "noreply.big-data@safaricom.et"
-
-
-  visual_edit: |
-    # Visual Customizations
-    APP_NAME = "Bigdata Analytics - DC2"
-    APP_ICON = "/static/assets/images/saf.png"
-    # APP_ICON_WIDTH = 600
-    # Path for routing when APP_ICON image is clicked
-    LOGO_TARGET_PATH = '' # Forwards to /superset/welcome/home
-    LOGO_TOOLTIP = "Home" # Text displayed when hovering.
-    FAVICONS = [{"href": "/static/assets/images/saf.png"}]
-
-  FILTER_STATE_CACHE_CONFIG: |
-    FILTER_STATE_CACHE_CONFIG = {
-      'CACHE_TYPE': 'redis',
-      'CACHE_DEFAULT_TIMEOUT': 300,
-      'CACHE_KEY_PREFIX': 'superset_filter_',
-      'CACHE_REDIS_HOST': env('REDIS_HOST'),
-      'CACHE_REDIS_PORT': env('REDIS_PORT'),
-      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
-      'CACHE_REDIS_DB': env('REDIS_DB', 2),
-
-    }
-
-  EXPLORE_FORM_DATA_CACHE_CONFIG: |
-    EXPLORE_FORM_DATA_CACHE_CONFIG = {
-      'CACHE_TYPE': 'redis',
-      'CACHE_DEFAULT_TIMEOUT': 300,
-      'CACHE_KEY_PREFIX': 'superset_form_',
-      'CACHE_REDIS_HOST': env('REDIS_HOST'),
-      'CACHE_REDIS_PORT': env('REDIS_PORT'),
-      'CACHE_REDIS_PASSWORD': env('REDIS_PASSWORD'),
-      'CACHE_REDIS_DB': env('REDIS_DB', 3),
-    }
-  FEATURE_FLAGS: |
-    FEATURE_FLAGS = {
-      'DASHBOARD_CROSS_FILTERS': True,
-      'DASHBOARD_RBAC': True,
-      'ESCAPE_MARKDOWN_HTML': True,
-      'ENABLE_TEMPLATE_PROCESSING': True,
-      'LISTVIEWS_DEFAULT_CARD_VIEW': True,
-      'SCHEDULED_QUERIES': True,
-      'SQL_VALIDATORS_BY_ENGINE': True,
-      'THUMBNAILS': False,
-      'ALERT_REPORTS': True,
-      'DYNAMIC_PLUGINS': True,
-      'DASHBOARD_NATIVE_FILTERS': True,
-      'VERSIONED_EXPORT': True,
-      'ENABLE_JAVASCRIPT_CONTROLS': True,
-      'GENERIC_CHART_AXES': True
-    }
-
-  celery-conf: |
-    from datetime import timedelta
-    from celery.schedules import crontab
-
-    class CeleryConfig:  # pylint: disable=too-few-public-methods
-        BROKER_URL = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
-        CELERY_IMPORTS = ('superset.sql_lab', "superset.tasks", "superset.tasks.thumbnails", )
-        CELERY_RESULT_BACKEND = 'redis://%s:%s/4' % (env('REDIS_HOST'), env('REDIS_PORT'))
-        CELERYD_LOG_LEVEL = "DEBUG"
-        CELERYD_PREFETCH_MULTIPLIER = 10
-        CELERY_ACKS_LATE = False
-        CELERY_ANNOTATIONS = {
-            "sql_lab.get_sql_results": {"rate_limit": "100/s"},
-            "email_reports.send": {
-                "rate_limit": "1/s",
-                "time_limit": int(timedelta(seconds=120).total_seconds()),
-                "soft_time_limit": int(timedelta(seconds=150).total_seconds()),
-                "ignore_result": True,
-            },
-        }
-        CELERYBEAT_SCHEDULE = {
-            "email_reports.schedule_hourly": {
-                "task": "email_reports.schedule_hourly",
-                "schedule": crontab(minute=1, hour="*"),
-            },
-            "reports.scheduler": {
-                "task": "reports.scheduler",
-                "schedule": crontab(minute="*", hour="*"),
-            },
-            "reports.prune_log": {
-                "task": "reports.prune_log",
-                "schedule": crontab(minute=0, hour=0),
-            },
-        }
-
-
-    CELERY_CONFIG = CeleryConfig 
-
-    THUMBNAIL_SELENIUM_USER = 'Mathew.kiprop'
-    SCREENSHOT_LOCATE_WAIT = 100
-    SCREENSHOT_LOAD_WAIT = 600
-    SLACK_API_TOKEN = 'xoxb-3399817917683-3592811614901-RKGjNiSLgrok3SceYY68gHJ7'
-
-  session-conf: |
-    SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
-    SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
-    SESSION_COOKIE_SAMESITE = "Lax"
-    WTF_CSRF_ENABLED = False
-    
   #   OAUTH_PROVIDERS = [
   #       {
   #           "name": "google",
@@ -293,15 +173,14 @@ configMountPath: "/app/pythonpath"
 extraConfigMountPath: "/app/configs"
 
 image:
-  repository: et02-harbor.safaricomet.net/bigdata/superset
-  tag: 2.0.1rc1-dev
-  pullPolicy: Always
+  repository: apache/superset
+  tag: latest
+  pullPolicy: IfNotPresent
 
-imagePullSecrets: 
-  - name: regcred
+imagePullSecrets: []
 
 initImage:
-  repository: et02-harbor.safaricomet.net/bigdata/busybox
+  repository: busybox
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -313,15 +192,9 @@ service:
   loadBalancerIP: null
 
 ingress:
-  enabled: true
-  ingressClassName: nginx
-  annotations:
-    # nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/rewrite-target: "/"
-    # ingress.kubernetes.io/rewrite-target: $1/
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^(/login|/superset/welcome|/users/list|/roles/list|/dashboard/new|/dynamic-plugins/list|/rowlevelsecurityfiltersmodelview/list|/superset/profile/Mathew.kiprop)$ $1/ redirect;
-    # rewrite ^([^.?]*[^/])$ $1/ redirect;
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
     # kubernetes.io/tls-acme: "true"
     ## Extend timeout to allow long running queries.
     # nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
@@ -330,7 +203,7 @@ ingress:
   path: /
   pathType: ImplementationSpecific
   hosts:
-    - superset.big-data2.safaricomet.net
+    - chart-example.local
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -344,11 +217,11 @@ resources: {}
   # The limits below will apply to all Superset components. To set individual resource limitations refer to the pod specific values below.
   # The pod specific values will overwrite anything that is set here.
   # limits:
-  #   cpu: 5000m
-  #   memory: 6280Mi
+  #   cpu: 100m
+  #   memory: 128Mi
   # requests:
-  #   cpu: 2000m
-  #   memory: 2048Mi
+  #   cpu: 100m
+  #   memory: 128Mi
 
 ##
 ## Custom hostAliases for all superset pods
@@ -362,6 +235,7 @@ hostAliases: []
 ##
 ## Superset node configuration
 supersetNode:
+  replicaCount: 1
   command:
     - "/bin/sh"
     - "-c"
@@ -372,11 +246,10 @@ supersetNode:
     # redis_password: superset
     redis_port: "6379"
     # You need to change below configuration incase bringing own PostgresSQL instance and also set postgresql.enabled:false
-    # db_host: '{{ template "superset.fullname" . }}-postgresql'
-    db_host: 10.3.141.24
+    db_host: '{{ template "superset.fullname" . }}-postgresql'
     db_port: "5432"
-    db_user: svc-bigdata-admin
-    db_pass: lyOdmSBwCsZnD4dLnOAE
+    db_user: superset
+    db_pass: superset
     db_name: superset
   env: {}
   forceReload: false # If true, forces deployment to reload on each upgrade
@@ -394,19 +267,38 @@ supersetNode:
   podAnnotations: {}
   ## Labels to be added to supersetNode pods
   podLabels: {}
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 1
+    failureThreshold: 3
+    periodSeconds: 15
+    successThreshold: 1
+  readinessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 1
+    failureThreshold: 3
+    periodSeconds: 15
+    successThreshold: 1
   # Resource settings for the supersetNode pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: 
-    limits:
-     cpu: 2000m
-     memory: 2048Mi
-    requests:
-     cpu: 1000m
-     memory: 1024Mi
+  resources: {}
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
   podSecurityContext: {}
   containerSecurityContext: {}
+  strategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
 ##
 ## Superset worker configuration
 supersetWorker:
+  replicaCount: 1
   command:
     - "/bin/sh"
     - "-c"
@@ -427,20 +319,26 @@ supersetWorker:
   ## Labels to be added to supersetWorker pods
   podLabels: {}
   # Resource settings for the supersetWorker pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: 
-    limits:
-     cpu: 2000m
-     memory: 10024Mi
-    requests:
-     cpu: 1000m
-     memory: 4096Mi
+  resources: {}
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
   podSecurityContext: {}
   containerSecurityContext: {}
+  strategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
 ##
 ## Superset beat configuration (to trigger scheduled jobs like reports)
 supersetCeleryBeat:
   # This is only required if you intend to use alerts and reports
-  enabled: true
+  enabled: false
   command:
     - "/bin/sh"
     - "-c"
@@ -461,13 +359,13 @@ supersetCeleryBeat:
   ## Labels to be added to supersetCeleryBeat pods
   podLabels: {}
   # Resource settings for the CeleryBeat pods - these settings overwrite might existing values from the global resources object defined above.
-  resources: 
-    limits:
-     cpu: 2000m
-     memory: 2048Mi
-    requests:
-     cpu: 1000m
-     memory: 1024Mi
+  resources: {}
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
   podSecurityContext: {}
   containerSecurityContext: {}
 ##
@@ -493,11 +391,11 @@ init:
   loadExamples: false
   createAdmin: true
   adminUser:
-    username: Mathew.kiprop
-    firstname: Mathew
-    lastname: Kiprop
-    email: mathew.kiprop@safaricomet.net
-    password: 'Chebarbar@12345'
+    username: admin
+    firstname: Superset
+    lastname: Admin
+    email: admin@superset.com
+    password: admin
   initContainers:
     - name: wait-for-postgres
       image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
@@ -542,7 +440,7 @@ postgresql:
   ##
   ## Use the PostgreSQL chart dependency.
   ## Set to false if bringing your own PostgreSQL.
-  enabled: false
+  enabled: true
 
   ## Authentication parameters
   auth:

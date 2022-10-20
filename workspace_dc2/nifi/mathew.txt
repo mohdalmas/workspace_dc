@@ -54,3 +54,6 @@ mvn install:install-file -Dfile=/home/kapkiai/Safaricomet/workspace/repo/report/
 
 #JKS to PKCS12
 keytool -importkeystore -srckeystore [MY_KEYSTORE.jks] -destkeystore [MY_FILE.p12] -srcstoretype JKS -deststoretype PKCS12 -deststorepass [PASSWORD_PKCS12]
+
+-- Hbase scan with filter
+scan 'USAGE:SUBSCRIBER_ACTIVITIES', {FILTER => SingleColumnValueFilter.new(Bytes.toBytes('cf'),Bytes.toBytes('data'), CompareFilter::CompareOp.valueOf('EQUAL'),BinaryComparator.new(Bytes.toBytes('10.0||||MONTHLY CBU D 120MB RC|||||||||||Postmed_DWH_Nokia_NCC_EDRs_20220928192602_286.csv|20220928192727')))}
