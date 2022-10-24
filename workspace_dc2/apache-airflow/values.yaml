@@ -1525,8 +1525,7 @@ config:
   metrics:
     statsd_on: '{{ ternary "True" "False" .Values.statsd.enabled }}'
     statsd_port: 9125
-    statsd_prefix: airflow
-    statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
+    statsd_prefix: airflowairflow-scheduler-6b8bd5c6fd-blbqsd" .Release.Name }}'
   webserver:
     enable_proxy_fix: 'True'
     # For Airflow 1.10
@@ -1610,12 +1609,12 @@ dags:
     ## optional subpath for dag volume mount
     subPath: ~
   gitSync:
-    enabled: true
+    enabled: false
     # git repo clone url
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://github.com/mohdalmas/airflow-dags.git
+    repo: git@gitlab.safaricomet.net:bigdata/airflow-dags.git
     branch: dc2
     rev: HEAD
     depth: 1
@@ -1624,40 +1623,15 @@ dags:
     # subpath within the repo where dags are located
     # should be "" if dags are at repo root
     subPath: ""
-    # if your repo needs a user name password
-    # you can load them to a k8s secret like the one below
-    #   ---
-    #   apiVersion: v1
-    #   kind: Secret
-    #   metadata:
-    #     name: git-credentials
-    #   data:
-    #     GIT_SYNC_USERNAME: <base64_encoded_git_username>
-    #     GIT_SYNC_PASSWORD: <base64_encoded_git_password>
-    # and specify the name of the secret below
-    #
-    # credentialsSecret: git-credentials
-    #
-    #
-    # If you are using an ssh clone url, you can load
-    # the ssh private key to a k8s secret like the one below
-    #   ---
-    #   apiVersion: v1
-    #   kind: Secret
-    #   metadata:
-    #     name: airflow-ssh-secret
-    #   data:
-    #     # key needs to be gitSshKey
-    #     gitSshKey: <base64_encoded_data>
-    # and specify the name of the secret below
-    # sshKeySecret: airflow-ssh-secret
+ 
+    sshKeySecret: airflow-ssh-secret
     #
     # If you are using an ssh private key, you can additionally
     # specify the content of your known_hosts file, example:
     #
-    # knownHosts: |
-    #    <host1>,<ip1> <key1>
-    #    <host2>,<ip2> <key2>
+    knownHosts: |
+      gitlab.safaricomet.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDOH/fuofW9aezGuOWhZrqAlvt8Ly5DKb9hrNSj+JfbDUzX5nciHSbu4t6aLgyDYk7dKA6Nrx8tCcHBuXjnPgqX0Gm+uR9NfHb0avo4rHAktGeOqMhNbrqdIUXDh9SoeQxgrrYJ/pTq29yhIprCVMepH30aXtqx9P6505TLaBhp+czsx+Wr5GtcJ4zC6K/lVuki3DKlSLNKpQmjIkX5hDQSDVDl++fSJ1YNGqzkY1ZIF3rs9vD2BMGo9AAIX4ILJJx0Dxo+Qpcato5YoqRhFzGfOlT8KGXT1Hm22HWO8O+/+3fNYl33j+aR3iS0x/aQCR0BysaDKaPLnYSMTfgNt2W+NbweaUMr2x0mlNkPFI340fJcdOI6Ilt+0olj94n9TWxr1ckDuqf0og9SGFYHXk3AH0HJV1Fhif1EQNsICZgm6yEp7ZagIOhYvc33SxbZMxLrzJ9XeXF6ZXE3giM97w/hMb/yu/XzwZK3xem7eXNGbNoDT4kAxeGOQU7NckQ7F+M=
+  
     # interval between git sync attempts in seconds
     wait: 60
     containerName: git-sync
