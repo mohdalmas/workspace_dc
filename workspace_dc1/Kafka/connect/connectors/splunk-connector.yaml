@@ -20,6 +20,7 @@ spec:
     splunk.hec.ack.enabled : false
     splunk.hec.raw: true
     splunk.hec.raw.line.breaker: "####"
+    splunk.hec.track.data: true
 
     key.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter: org.apache.kafka.connect.storage.StringConverter
