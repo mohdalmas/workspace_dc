@@ -10,17 +10,24 @@ metadata:
     strimzi.io/cluster: kafka-connect
 spec:
   class: com.splunk.kafka.connect.SplunkSinkConnector
-  tasksMax: 25
+  tasksMax: 138
   config:
     splunk.indexes: step_bss_kafka_logs
-    splunk.sources: 6d-sm-log,6d-med-log,6d-ccbl-log,6d-slm-log,6d-rpt-log,6d-nms-log,6d-arm-log,6d-prm-log,6d-lms-log,6d-com-log,6d-crm-log,6d-ns-log,6d-cm-log,6d-ums-log,6d-keycloak-log,6d-bil-log,6d-scm-log,6d-apigw-log,6d-som-log,6d-upc-log,6d-esb-log,6d-com-edr,6d-kc-session
-    topics: 6d-sm-log,6d-med-log,6d-ccbl-log,6d-slm-log,6d-rpt-log,6d-nms-log,6d-arm-log,6d-prm-log,6d-lms-log,6d-com-log,6d-crm-log,6d-ns-log,6d-cm-log,6d-ums-log,6d-keycloak-log,6d-bil-log,6d-scm-log,6d-apigw-log,6d-som-log,6d-upc-log,6d-esb-log,6d-com-edr,6d-kc-session
-    splunk.hec.uri: https://10.3.74.109:8088
+    splunk.sourcetypes: kafka-6d-logs 
+    splunk.sources: 6d-sm-log,6d-med-log,6d-ccbl-log,6d-slm-log,6d-rpt-log,6d-nms-log,6d-arm-log,6d-prm-log,6d-lms-log,6d-com-log,6d-crm-log,6d-ns-log,6d-cm-log,6d-ums-log,6d-keycloak-log,6d-bil-log,6d-scm-log,6d-apigw-log,6d-som-log,6d-upc-log,6d-esb-log,6d-com-edr
+    topics: 6d-sm-log,6d-med-log,6d-ccbl-log,6d-slm-log,6d-rpt-log,6d-nms-log,6d-arm-log,6d-prm-log,6d-lms-log,6d-com-log,6d-crm-log,6d-ns-log,6d-cm-log,6d-ums-log,6d-keycloak-log,6d-bil-log,6d-scm-log,6d-apigw-log,6d-som-log,6d-upc-log,6d-esb-log,6d-com-edr 
+    
+    splunk.hec.uri: https://10.3.74.109:8088,https://10.3.174.109:8088
     splunk.hec.token: 12fbf6fb-af9d-4eb0-8bd5-cf3ea4f5749c
     splunk.hec.ssl.validate.certs: false
     splunk.hec.ack.enabled : false
-    splunk.hec.raw: false
-    splunk.hec.threads: 20
+    splunk.hec.raw: true
+    splunk.hec.threads: 10
+    splunk.hec.track.data: "false"
+    splunk.hec.ack.poll.threads: 4
+    splunk.hec.raw.line.breaker: "####"
+    splunk.hec.max.http.connection.per.channel: 4
+
 
     key.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter: org.apache.kafka.connect.storage.StringConverter
@@ -30,5 +37,10 @@ spec:
     internal.value.converter: org.apache.kafka.connect.json.JsonConverter
     internal.key.converter.schemas.enable: false
     internal.value.converter.schemas.enable: false
-    offset.flush.interval.ms: 10000
-    splunk.hec.json.event.formatted: true
+    offset.flush.interval.ms: 60000
+    buffer.memory: 60000
+    splunk.hec.json.event.formatted: false
+
+
+
+
