@@ -18,6 +18,9 @@ spec:
     spec:
       imagePullSecrets:
       - name: regcred
+      securityContext:
+        fsGroup: 1006
+        runAsUser: 1006
       serviceAccountName: bigdata
       nodeName: et02-tkg-bigdata-prod-workload-cluster-workers-bbkq9-99bbbwqsf2
       containers:
