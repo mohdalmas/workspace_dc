@@ -175,6 +175,9 @@ configuration:
           - username: Joe.Thorpe
             groups:
               - reader
+          - username: Bereket.hewangizaw
+            groups:
+              - reader
           - username: JEthan.Pike
             groups:
               - reader
@@ -201,6 +204,9 @@ configuration:
             groups:
               - 6d
           - username: jami.lahari
+            groups:
+              - 6d
+          - username: Marylene.Jepkemboi
             groups:
               - 6d
           - username: sobhan.mohapatra

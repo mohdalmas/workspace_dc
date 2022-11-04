@@ -184,7 +184,12 @@ configuration:
           - username: Clement.Gitome
             groups:
               - mpesa
-
+          - username: Bereket.Shewangizaw
+            groups:
+              - mpesa
+          - username: Abel.Tessema
+            groups:
+              - mpesa
 
     server:
       access-log: # Access log configuration (optional)
