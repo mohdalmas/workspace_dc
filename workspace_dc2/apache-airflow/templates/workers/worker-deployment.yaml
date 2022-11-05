@@ -178,6 +178,24 @@ spec:
 {{- if .Values.workers.extraVolumeMounts }}
 {{ toYaml .Values.workers.extraVolumeMounts | indent 12 }}
 {{- end }}
+            - mountPath: /opt/spark/conf/hive-site.xml
+              name: spark-config
+              subPath: hive-site.xml
+            - mountPath: /opt/spark/conf/spark-defaults.conf
+              name: spark-config
+              subPath: spark-defaults.conf
+            - mountPath: /opt/spark/conf/core-site.xml
+              name: hadoop-config
+              subPath: core-site.xml
+            - mountPath: /opt/spark/conf/hdfs-site.xml
+              name: hadoop-config
+              subPath: hdfs-site.xml
+            - mountPath: /opt/spark/conf/mapred-site.xml
+              name: hadoop-config
+              subPath: mapred-site.xml
+            - mountPath: /opt/spark/conf/yarn-site.xml
+              name: hadoop-config
+              subPath: yarn-site.xml
             - name: logs
               mountPath: {{ template "airflow_logs" . }}
             - name: config
@@ -291,6 +309,30 @@ spec:
 {{- if .Values.workers.extraVolumes }}
 {{ toYaml .Values.workers.extraVolumes | indent 8 }}
 {{- end }}
+        - name: spark-config
+          configMap:
+            name: spark-cm
+            items:
+            - key: hive-site.xml
+              path: hive-site.xml
+            - key: spark-defaults.conf
+              path: spark-defaults.conf
+            - key: startup.sh
+              path: startup.sh
+        - name: hadoop-config
+          configMap:
+        
+            name: hadoop-hadoop
+            items:
+            - key: core-site.xml
+              path: core-site.xml
+            - key: hdfs-site.xml
+              path: hdfs-site.xml
+            - key: mapred-site.xml
+              path: mapred-site.xml
+            - key: yarn-site.xml
+              path: yarn-site.xml
+          
         - name: config
           configMap:
             name: {{ template "airflow_config" . }}

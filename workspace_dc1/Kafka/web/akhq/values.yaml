@@ -171,7 +171,7 @@ configuration:
               - reader
 
         users:
-          - username: Kenneth.Kipkogei
+          - username: Kenneth.Chirchir
             groups:
               - admin
           - username: Mathew.Kiprop
@@ -180,9 +180,12 @@ configuration:
           - username: Alphonce.Oniala
             groups:
               - reader
-          - username: Mohd.Almas
+          - username: Joe.Thorpe
             groups:
-              - admin
+              - reader
+          - username: JEthan.Pike
+            groups:
+              - reader
           - username: Martin.Mathu
             groups:
               - cvm
@@ -587,7 +590,7 @@ ingress:
     - /
   pathType: ImplementationSpecific
   hosts:
-    - kafka-mpesa.big-data.safaricomet.net
+    - kafka.big-data.safaricomet.net
   tls: []
   #  - secretName: akhq
   #    hosts:

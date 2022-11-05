@@ -163,13 +163,22 @@ configuration:
               - reader
 
         users:
-          - username: Kenneth.Kipkogei
+          - username: Kenneth.Chirchir
             groups:
               - admin
           - username: Mathew.Kiprop
             groups:
               - admin
           - username: Alphonce.Oniala
+            groups:
+              - reader
+          - username: Joe.Thorpe
+            groups:
+              - reader
+          - username: Bereket.hewangizaw
+            groups:
+              - reader
+          - username: JEthan.Pike
             groups:
               - reader
           - username: Mohd.Almas
@@ -195,6 +204,9 @@ configuration:
             groups:
               - 6d
           - username: jami.lahari
+            groups:
+              - 6d
+          - username: Marylene.Jepkemboi
             groups:
               - 6d
           - username: sobhan.mohapatra
