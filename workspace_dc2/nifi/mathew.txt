@@ -57,3 +57,15 @@ keytool -importkeystore -srckeystore [MY_KEYSTORE.jks] -destkeystore [MY_FILE.p1
 
 -- Hbase scan with filter
 scan 'USAGE:SUBSCRIBER_ACTIVITIES', {FILTER => SingleColumnValueFilter.new(Bytes.toBytes('cf'),Bytes.toBytes('data'), CompareFilter::CompareOp.valueOf('EQUAL'),BinaryComparator.new(Bytes.toBytes('10.0||||MONTHLY CBU D 120MB RC|||||||||||Postmed_DWH_Nokia_NCC_EDRs_20220928192602_286.csv|20220928192727')))}
+
+
+0021230871
+0000103628
+0044723497
+0024169776
+0026101383
+0005553163
+0000518730
+0026999315
+0020977953
+0022426281
