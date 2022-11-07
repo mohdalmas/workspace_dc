@@ -39,13 +39,14 @@ spark_master:
   
 spark_worker:
   replicas: 1
+  cores: 9
   resources: 
     requests:
       memory: "3Gi"
       cpu: "2"
     limits:
-      memory: "14Gi"
-      cpu: "7"
+      memory: "26Gi"
+      cpu: "9"
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -70,8 +71,8 @@ spark:
     url: spark://spark-master-0.spark-headless:7077
     host: spark-master-0.spark-headless
   worker:
-    executioncores: "6"
-    executionmemory: "14G"
+    executioncores: "9"
+    executionmemory: "8192m"
 
 ## @section Traffic Exposure parameters
 
@@ -204,10 +205,10 @@ conf:
     hive.server2.idle.session.timeout: "600000" # 10 minutes
     spark.driver.memory: 1024m
     spark.executor.memory: 3072m
-    spark.cores.max: 2
+    # spark.cores.max: 3
     spark.driver.cores: 1
-    spark.executor.cores: 2
-    spark.default.parallelism: 7 
+    # spark.executor.cores: 3
+    spark.default.parallelism: 9
     hive.server2.authentication: NOSASL
     hive.server2.transport.mode: http
     hive.server2.thrift.http.port: 10000
@@ -228,15 +229,13 @@ conf:
     spark.executor.extraJavaOptions: -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
     spark.yarn.submit.waitAppCompletion: true
     spark.driver.memory: 1024m
-    spark.executor.memory: 3072m
-    spark.cores.max: 2
+    spark.executor.memory: 8192m
+    spark.cores.max: 3
     spark.driver.cores: 1
-    spark.executor.cores: 2
-    spark.default.parallelism: 7  
-    spark.dynamicAllocation.enabled: false 
-    spark.dynamicAllocation.executorIdleTimeout: 60s
+    spark.executor.cores: 3
+    spark.default.parallelism: 9  
+    spark.dynamicAllocation.enabled: true 
+    spark.shuffle.service.enabled: true
+    spark.dynamicAllocation.executorIdleTimeout: 120s
     spark.dynamicAllocation.minExecutors: 0
-    spark.worker.memory: 11g
-    # kms.api.auth.password: lyOdmSBwCsZnD4dLnOAE
-    # kms.api.auth.username: svc-bigdata-admin
-    # kms.api.url: http://10.3.41.29:8080
+    spark.worker.memory: 26g

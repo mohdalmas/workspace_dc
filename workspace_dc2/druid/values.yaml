@@ -68,7 +68,7 @@ configVars:
   druid_auth_authenticator_ldap_credentialsValidator_url: ldap://10.3.108.11:389
   druid_auth_authenticator_ldap_credentialsValidator_bindUser: CN=Bigdata Service Account,OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
   druid_auth_authenticator_ldap_credentialsValidator_bindPassword: lyOdmSBwCsZnD4dLnOAE
-  druid_auth_authenticator_ldap_credentialsValidator_baseDn: OU=BigData Users,OU=Domain Users,DC=safaricomet,DC=net
+  druid_auth_authenticator_ldap_credentialsValidator_baseDn: OU=Domain Users,DC=safaricomet,DC=net
   druid_auth_authenticator_ldap_credentialsValidator_userSearch: (sAMAccountName=%s)
   druid_auth_authenticator_ldap_credentialsValidator_userAttribute: sAMAccountName
   druid_auth_authenticator_ldap_authorizerName: ldapauth  
@@ -447,7 +447,7 @@ mysql:
   enabled: false
   mysqlRootPassword: druidroot
   mysqlUser: svc-bigdata-admin
-  mysqlPassword: lyOdmSBwCsZnD4dLnOAE
+  mysqlPassword:  
   mysqlDatabase: druid
   configurationFiles:
     mysql_collate.cnf: |-
